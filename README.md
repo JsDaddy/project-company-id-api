@@ -1,4 +1,4 @@
-# ng-shop-server
+# Company-ID-Server
 
 ```bash
 $ npm install
