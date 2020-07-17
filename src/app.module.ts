@@ -1,8 +1,14 @@
+import { RuleModule } from './rule/rule.module';
+import { TechnologyModule } from './technology/technology.module';
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { VacationModule } from './vacation/vacation.module';
+import { HolidayModule } from './holiday/holiday.module';
+import { TimelogModule } from './timelog/timelog.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -17,6 +23,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
     }),
     UserModule,
+    VacationModule,
+    HolidayModule,
+    TimelogModule,
+    TechnologyModule,
+    RuleModule,
+    ProjectModule,
   ],
   providers: [AppService],
 })
