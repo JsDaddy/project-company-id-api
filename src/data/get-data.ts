@@ -1,9 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const firebase = require('firebase-admin');
+import * as firebase from 'firebase-admin';
 
+export const GOOGLE_APPLICATION_CREDENTIALS =
+  'src/data/companyid-74562-firebase-adminsdk-85397-1dbc868ab2.json';
 const firebaseConfig = {
   apiKey: 'AIzaSyCNL4nHTApAksYAAknrGMyZF5hBP2rkqIk',
   authDomain: 'companyid-74562.firebaseapp.com',
+  credential: firebase.credential.cert(GOOGLE_APPLICATION_CREDENTIALS),
   databaseURL: 'https://companyid-74562.firebaseio.com',
   projectId: 'companyid-74562',
   storageBucket: 'companyid-74562.appspot.com',
@@ -12,15 +14,44 @@ const firebaseConfig = {
   measurementId: 'G-E3V680RHTQ',
 };
 firebase.initializeApp(firebaseConfig);
-// firebase.analytics();
+const db = firebase.firestore();
 
-const db = firebase.database();
-// console.log(db);
-const ref = db.ref();
-console.log(ref);
-ref.once('value', function(snapshot: { val: () => any }) {
-  console.log(snapshot.val());
-});
+// getCollection('holidays');
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export async function getCollection(collectionName: string) {
+  const res: (FirebaseFirestore.DocumentData | undefined)[] = [];
+  db.collection(collectionName)
+    .listDocuments()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        doc.get().then(value => {
+          res.push(value.data());
+        });
+      });
+    });
+  return res;
+}
 
-const usersRef = ref.child('holidays');
-usersRef.set({});
+// getUsers();
+// async function getUsers() {
+//   db.collection('users')
+//     .listDocuments()
+//     .then(snapshot => {
+//       snapshot.forEach(doc => {
+//         doc.get().then(value => {
+//           console.log(value.data());
+//         });
+//         doc
+//           .collection('tokens')
+//           .listDocuments()
+//           .then(snapshot => {
+//             snapshot.forEach(doc => {
+//               doc.get().then(value => {
+//                 console.log(value.data());
+//               });
+//             });
+//           });
+//       });
+//     });
+// }
+
