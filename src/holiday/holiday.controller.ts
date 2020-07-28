@@ -2,7 +2,6 @@ import { Controller, HttpStatus, Post, Body, Get, Res } from '@nestjs/common';
 import { HolidayService } from './holiday.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HolidayDto } from './holiday.dto';
-// import { getCollection } from 'src/data/get-data';
 
 @ApiTags('holiday')
 @Controller('Holiday')
@@ -44,7 +43,6 @@ export class HolidayController {
   })
   @Post()
   async createHoliday(@Body() holiday: HolidayDto): Promise<any> {
-    // const holidays = getCollection('holidays');
     return this.holidayService.createHoliday(holiday);
   }
 }

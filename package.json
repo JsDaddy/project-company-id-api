@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "get:data": "ts-node src/data/get-data.ts"
+    "get:data": "ts-node scripts/get-data.ts",
+    "clear:db": "ts-node scripts/clear-db.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
@@ -29,6 +30,7 @@
     "@types/mongoose": "^5.7.32",
     "firebase-admin": "^9.0.0",
     "firebase-tools": "^8.6.0",
+    "ora": "^4.0.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4"
