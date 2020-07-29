@@ -16,7 +16,6 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// const res: (FirebaseFirestore.DocumentData | undefined)[] = [];
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function getCollection(collectionName: string): Promise<any> {
   const documents = await db.collection(collectionName).listDocuments();
@@ -28,26 +27,3 @@ export async function getCollection(collectionName: string): Promise<any> {
   );
   return collectionItems;
 }
-
-// getUsers();
-// async function getUsers() {
-//   db.collection('users')
-//     .listDocuments()
-//     .then(snapshot => {
-//       snapshot.forEach(doc => {
-//         doc.get().then(value => {
-//           console.log(value.data());
-//         });
-//         doc
-//           .collection('tokens')
-//           .listDocuments()
-//           .then(snapshot => {
-//             snapshot.forEach(doc => {
-//               doc.get().then(value => {
-//                 console.log(value.data());
-//               });
-//             });
-//           });
-//       });
-//     });
-// }
