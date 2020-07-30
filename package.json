@@ -20,7 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "get:data": "ts-node scripts/get-data.ts",
-    "clear:db": "ts-node scripts/clear-db.ts"
+    "refill:db": "ts-node scripts/refill-db.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
