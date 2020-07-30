@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class TypeDto {
+export class ProjectTypeDto {
   @ApiProperty() public readonly name!: string;
 }

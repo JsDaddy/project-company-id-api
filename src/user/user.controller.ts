@@ -5,7 +5,7 @@ import { Response } from 'express';
 import { UserService } from './user.service';
 
 @ApiTags('user')
-@Controller('user')
+@Controller('User')
 export class UserController {
   public constructor(private readonly userService: UserService) {}
 

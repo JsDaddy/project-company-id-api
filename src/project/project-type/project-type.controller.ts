@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
 @Controller('project_type')
-export class TypeController {}
+export class ProjectTypeController {}
