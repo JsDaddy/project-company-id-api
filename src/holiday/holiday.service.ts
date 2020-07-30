@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class HolidayService {
   public constructor(
-    @InjectModel('Holiday') private readonly holidayModel: Model<any>,
+    @InjectModel('holiday') private readonly holidayModel: Model<any>,
   ) {}
 
   public async createHoliday(holiday: HolidayDto): Promise<HolidayDto> {

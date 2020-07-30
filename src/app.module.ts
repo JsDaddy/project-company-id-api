@@ -19,7 +19,7 @@ import { ProjectModule } from './project/project.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get('mongodb://mongodb:27017/company-id-mongodb'),
+        uri: configService.get('DATABASE'),
       }),
     }),
     UserModule,

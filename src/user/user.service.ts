@@ -7,7 +7,7 @@ import { UserDto } from './user.dto';
 @Injectable()
 export class UserService {
   public constructor(
-    @InjectModel('User') private readonly userModel: Model<any>,
+    @InjectModel('user') private readonly userModel: Model<any>,
   ) {}
 
   public async createUser(user: UserDto): Promise<UserDto> {

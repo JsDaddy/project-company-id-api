@@ -8,7 +8,7 @@ import { holidaySchema } from './holiday.schema';
   controllers: [HolidayController],
   exports: [HolidayService],
   imports: [
-    MongooseModule.forFeature([{ name: 'Holiday', schema: holidaySchema }]),
+    MongooseModule.forFeature([{ name: 'holiday', schema: holidaySchema }]),
   ],
   providers: [HolidayService],
 })

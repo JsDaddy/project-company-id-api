@@ -4,7 +4,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HolidayDto } from './holiday.dto';
 
 @ApiTags('holiday')
-@Controller('Holiday')
+@Controller('holiday')
 export class HolidayController {
   public constructor(private readonly holidayService: HolidayService) {}
 
