@@ -21,4 +21,8 @@ export class UserService {
       .lean()
       .exec();
   }
+
+  public async findUser(id: string): Promise<UserDto[]> {
+    return await this.userModel.aggregate([{ $match: { _id: id } }]);
+  }
 }

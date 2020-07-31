@@ -18,6 +18,10 @@ export const timelogSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       type: String,
     },
+    uid: {
+      required: true,
+      type: String,
+    },
   },
   {
     versionKey: false,

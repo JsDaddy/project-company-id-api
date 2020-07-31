@@ -3,15 +3,15 @@ import * as mongoose from 'mongoose';
 export const userSchema: mongoose.Schema = new mongoose.Schema(
   {
     name: {
-      required: true,
+      required: false,
       type: String,
     },
     secondName: {
-      required: true,
+      required: false,
       type: String,
     },
     avatar: {
-      required: true,
+      required: false,
       type: String,
     },
     initialLogin: {
@@ -19,7 +19,7 @@ export const userSchema: mongoose.Schema = new mongoose.Schema(
       type: Boolean,
     },
     dob: {
-      required: true,
+      required: false,
       type: Date,
     },
     email: {
@@ -27,39 +27,67 @@ export const userSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       unique: true,
     },
-    englishLevel: {
+    password: {
+      type: String,
       required: true,
+    },
+    accessToken: {
+      type: String,
+      required: false,
+    },
+    englishLevel: {
+      required: false,
       type: String,
     },
     github: {
-      required: true,
+      required: false,
       type: String,
       unique: true,
     },
     phone: {
-      required: true,
+      required: false,
       type: String,
       unique: true,
     },
     position: {
-      required: true,
+      required: false,
       type: String,
     },
     role: {
-      required: true,
+      required: false,
       type: String,
     },
     skype: {
-      required: true,
+      required: false,
       type: String,
       unique: true,
     },
     activeProjects: {
-      required: true,
+      required: false,
       type: Array,
     },
   },
-  {
-    versionKey: false,
-  },
+  // {
+  //   versionKey: false,
+  // },
 );
+
+export type User = {
+  email: string;
+  name?: string;
+  secondName?: string;
+  role?: string;
+  dob?: Date;
+  englishLevel?: string;
+  password: string;
+  github?: string;
+  initialLogin: boolean;
+  accessToken?: string;
+  position?: string;
+  avatar?: string;
+  phone?: string;
+  skype?: string;
+  activeProjects?: string[];
+};
+
+export interface IUser extends mongoose.Document, User {}

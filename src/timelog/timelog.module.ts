@@ -8,7 +8,7 @@ import { timelogSchema } from './timelog.schema';
   controllers: [TimelogController],
   exports: [TimelogService],
   imports: [
-    MongooseModule.forFeature([{ name: 'Timelog', schema: timelogSchema }]),
+    MongooseModule.forFeature([{ name: 'timelog', schema: timelogSchema }]),
   ],
   providers: [TimelogService],
 })

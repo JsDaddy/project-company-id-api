@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ProjectDto {
+  @ApiProperty() public readonly _id?: string;
   @ApiProperty() public readonly customer!: string;
   @ApiProperty() public readonly industry!: string;
   @ApiProperty() public readonly isActivity!: boolean;
