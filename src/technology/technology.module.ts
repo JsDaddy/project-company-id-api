@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TechnologyController } from './technology.controller';
-import { TechnologyService } from './technology.service';
-import { technologySchema } from './technology.schema';
+import { TechnologyController } from './controllers/technology.controller';
+import { TechnologyService } from './services/technology.service';
+import { technologySchema } from './schemas/technology.schema';
 
 @Module({
   controllers: [TechnologyController],

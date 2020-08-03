@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HolidayController } from './holiday.controller';
-import { HolidayService } from './holiday.service';
-import { holidaySchema } from './holiday.schema';
+import { HolidayController } from './controllers/holiday.controller';
+import { HolidayService } from './services/holiday.service';
+import { holidaySchema } from './schemas/holiday.schema';
 
 @Module({
   controllers: [HolidayController],

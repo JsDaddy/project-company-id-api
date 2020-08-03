@@ -1,8 +1,8 @@
-import { TechnologyDto } from './../src/technology/technology.dto';
 import * as mongodb from 'mongodb';
 import * as ora from 'ora';
 import { Db } from 'mongodb';
 import { getCollection } from './get-data';
+import { TechnologyDto } from 'src/technology/dto/technology.dto';
 
 const dbName = 'company-id-mongodb';
 const dbPath = 'mongodb://localhost:27017/company-id-mongodb';

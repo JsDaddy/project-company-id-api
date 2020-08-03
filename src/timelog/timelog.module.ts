@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TimelogController } from './timelog.controller';
-import { TimelogService } from './timelog.service';
-import { timelogSchema } from './timelog.schema';
+import { TimelogController } from './controllers/timelog.controller';
+import { TimelogService } from './services/timelog.service';
+import { timelogSchema } from './schemas/timelog.schema';
 
 @Module({
   controllers: [TimelogController],

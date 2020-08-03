@@ -1,14 +1,14 @@
-import { RuleModule } from './rule/rule.module';
-import { TechnologyModule } from './technology/technology.module';
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { VacationModule } from './vacation/vacation.module';
 import { HolidayModule } from './holiday/holiday.module';
 import { TimelogModule } from './timelog/timelog.module';
+import { TechnologyModule } from './technology/technology.module';
+import { RuleModule } from './rule/rule.module';
 import { ProjectModule } from './project/project.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { ProjectModule } from './project/project.module';
         uri: configService.get('DATABASE'),
       }),
     }),
-    UserModule,
+    AuthModule,
     VacationModule,
     HolidayModule,
     TimelogModule,
