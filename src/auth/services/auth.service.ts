@@ -2,20 +2,20 @@ import * as jwt from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
-import { IUser, User } from 'src/auth/dto/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserDto } from '../dto/user.dto';
+import { User, IUser } from '../schemas/user.schema';
+import { SignUpDto } from '../dto/signup.dto';
 
 @Injectable()
 export class AuthService {
   public constructor(
-    @InjectModel('user')
+    @InjectModel('users')
     private readonly _userModel: Model<IUser>,
     private readonly _config: ConfigService,
   ) {}
 
-  public async createToken(user: UserDto): Promise<User> {
-    const secret: any = this._config.get('secret');
+  public async createToken(user: SignUpDto): Promise<User> {
+    const secret: any = this._config.get('SECRET');
     const { email } = user;
 
     const payload: { email: string } = {
@@ -37,6 +37,7 @@ export class AuthService {
       .exec();
   }
   // SignUpDto
+
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public async createUser(createUserDto: any): Promise<IUser> {
     return await this._userModel.create(createUserDto);

@@ -1,7 +1,8 @@
+import { CreateTimelogDto } from './../dto/timelog.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { TimelogDto } from '../dto/timelog.dto';
+import { ITimelog } from 'scripts/interfaces/timelog.interface';
 
 @Injectable()
 export class TimelogService {
@@ -9,7 +10,7 @@ export class TimelogService {
     @InjectModel('timelog') private readonly timelogModel: Model<any>,
   ) {}
 
-  public async createTimelog(timelog: TimelogDto): Promise<TimelogDto> {
+  public async createTimelog(timelog: CreateTimelogDto): Promise<ITimelog> {
     const createdTimelog = new this.timelogModel(timelog);
     return createdTimelog.save();
   }
@@ -22,7 +23,7 @@ export class TimelogService {
       .exec();
   }
 
-  public async findByUser(uid: string): Promise<TimelogDto[]> {
-    return await this.timelogModel.aggregate([{ $match: { uid: uid } }]);
+  public async findTimelogsByUser(_id: string): Promise<ITimelog[]> {
+    return await this.timelogModel.find({ _id });
   }
 }

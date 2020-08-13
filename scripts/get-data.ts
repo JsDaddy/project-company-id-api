@@ -1,4 +1,13 @@
+import { ITimelog } from './interfaces/timelog.interface';
 import * as firebase from 'firebase-admin';
+import * as util from 'util';
+import * as fs from 'fs';
+import { IUser } from './interfaces/user.interface';
+import * as mongoose from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import * as mongodb from 'mongodb';
+import * as jwt from 'jsonwebtoken';
+import { Db } from 'mongodb';
 
 export const GOOGLE_APPLICATION_CREDENTIALS =
   'scripts/companyid-74562-firebase-adminsdk-85397-1dbc868ab2.json';
@@ -16,14 +25,127 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const dbName = 'company-id';
+const dbPath = 'mongodb://mongodb:27017/company-id-mongodb';
+const asyncFileWriter: (
+  filename: string,
+  data: any,
+  encode: string,
+) => Promise<void> = util.promisify(fs.writeFile);
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function getCollection(collectionName: string): Promise<any> {
-  const documents = await db.collection(collectionName).listDocuments();
-  const collectionItems = await Promise.all(
-    documents.map(async document => {
-      const doc = await document.get();
-      return doc.data();
-    }),
+export async function main(): Promise<any> {
+  const connection: mongodb.MongoClient = await mongodb.MongoClient.connect(
+    dbPath,
+    { useNewUrlParser: true },
   );
-  return collectionItems;
+  const mongoDb: Db = connection.db(dbName);
+  await mongoDb.dropDatabase();
+  const allTimelogs: any[] = [];
+  const allUsers = [];
+  const allProjects: any[] = [];
+  const allStack: any[] = [];
+  const allVacs: any[] = [];
+  const users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
+    .collection('users')
+    .get();
+  const projects: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
+    .collection('projects')
+    .get();
+  const stack: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
+    .collection('technologies')
+    .get();
+  for (const stackDocument of stack.docs) {
+    const stackDoc = stackDocument.data();
+    stackDoc._id = mongoose.Types.ObjectId();
+    delete stackDoc.id;
+    allStack.push({ ...stackDoc, id: stackDocument.id });
+  }
+  for (const user of users.docs) {
+    const userData = user.data() as IUser;
+    userData._id = mongoose.Types.ObjectId();
+    userData.password = await bcrypt.hash('jsdaddy2020', 10);
+    const { email } = userData;
+    const payload: { email: string } = {
+      email,
+    };
+    userData.accessToken = jwt.sign(payload, 'company-id');
+    userData.dob = userData.dob.toDate();
+    const timelogs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
+      .collection('timelogs')
+      .where('uid', '==', user.data().uid)
+      .get();
+    const vacation: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
+      .collection('vacation')
+      .where('uid', '==', user.data().uid)
+      .get();
+    for (const vacationDocument of vacation.docs) {
+      const vacDoc = vacationDocument.data();
+      vacDoc._id = mongoose.Types.ObjectId();
+      vacDoc.uid = userData._id;
+      vacDoc.date = vacDoc.date.toDate();
+      await mongoDb.collection('vacations').insertOne(vacDoc);
+      allVacs.push(vacDoc);
+    }
+
+    for (const timelogDocument of timelogs.docs) {
+      const projectDoc = projects.docs.find(
+        project => project.id === timelogDocument.data().project,
+      );
+      if (projectDoc) {
+        const project = projectDoc.data() as any;
+        delete project.types;
+        delete project.services;
+        delete project.methodology;
+        delete project.nda;
+        project.startDate = project.startDate.toDate();
+        if (project.endDate) {
+          project.endDate = project.endDate.toDate();
+        }
+        project._id = mongoose.Types.ObjectId();
+        const timelog = timelogDocument.data() as ITimelog;
+        timelog._id = mongoose.Types.ObjectId();
+        timelog.date = timelog.date.toDate();
+        timelog.project = project._id;
+        timelog.uid = userData._id;
+        if (!allProjects.includes(project)) {
+          allProjects.push(project);
+        }
+        await mongoDb.collection('timelogs').insertOne(timelog);
+        allTimelogs.push(timelog);
+      }
+    }
+    await mongoDb.collection('users').insertOne(userData);
+    allUsers.push(userData);
+  }
+  for (const proj of allProjects) {
+    proj.stack = proj.stack.map(
+      (project: any) => allStack.find(stack => stack.id === project)._id,
+    );
+    await mongoDb.collection('projects').insertOne(proj);
+  }
+  for (const stack of allStack) {
+    delete stack.id;
+    await mongoDb.collection('stack').insertOne(stack);
+  }
+  await writeFile('users', allUsers);
+  await writeFile('projects', allProjects);
+  await writeFile('timelogs', allTimelogs);
+  await writeFile('stack', allStack);
+  await writeFile('vacations', allVacs);
 }
+
+async function writeFile(name: string, items: any[]): Promise<void> {
+  if (!fs.existsSync(`${__dirname}/output`)) {
+    fs.mkdirSync(`${__dirname}/output`);
+  }
+  try {
+    await asyncFileWriter(
+      `${__dirname}/output/json-${name}.json`,
+      JSON.stringify(items, null, 4),
+      'utf8',
+    );
+  } catch (e) {
+    console.log('save', e);
+  }
+}
+main();

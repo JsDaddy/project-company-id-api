@@ -7,38 +7,39 @@ import {
   Post,
   Body,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { TimelogService } from '../services/timelog.service';
-import { TimelogDto } from '../dto/timelog.dto';
+import { CreateTimelogDto } from '../dto/timelog.dto';
+import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('timelog')
 @Controller('timelog')
 export class TimelogController {
   public constructor(private readonly timelogService: TimelogService) {}
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   @ApiOperation({
     summary: 'Find all timelogs.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Found timelogs',
+    description: 'Timelogs found successfully',
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'Record not found',
+    description: 'Timelogs not found',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  public async findTimelogs(@Res() res: any) {
+  public async findTimelogs(@Res() res: Response): Promise<Response> {
     try {
       const timelogs = await this.timelogService.findTimelogs();
       return res.status(HttpStatus.OK).json({ data: timelogs, error: null });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ data: null, e });
+        .json({ data: null, error });
     }
   }
 
@@ -53,9 +54,20 @@ export class TimelogController {
     status: HttpStatus.NOT_FOUND,
     description: 'Record not found',
   })
-  @Get('findByUid/:uid')
-  async findByUser(@Param('uid') uid: string): Promise<TimelogDto[]> {
-    return this.timelogService.findByUser(uid);
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':user')
+  async findByUser(
+    @Param('user') userId: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const timelogs = this.timelogService.findTimelogsByUser(userId);
+      return res.status(HttpStatus.OK).json({ data: timelogs, error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
   }
 
   @ApiOperation({
@@ -63,10 +75,23 @@ export class TimelogController {
   })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: 'Success add timelog',
+    description: 'Timelog has been created',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  async createTimelog(@Body() timelog: TimelogDto): Promise<any> {
-    return this.timelogService.createTimelog(timelog);
+  async createTimelog(
+    @Body() timelog: CreateTimelogDto,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      await this.timelogService.createTimelog(timelog);
+      return res
+        .status(HttpStatus.OK)
+        .json({ data: 'Timelog has been created', error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
   }
 }

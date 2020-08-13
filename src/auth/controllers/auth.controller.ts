@@ -12,9 +12,10 @@ import { Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../services/auth.service';
-import { User } from 'src/auth/dto/user.schema';
 import { LoginDto } from '../dto/login.dto';
-import { UserDto } from '../dto/user.dto';
+
+import { User } from '../schemas/user.schema';
+import { SignUpDto } from '../dto/signup.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -31,7 +32,7 @@ export class AuthController {
     description: 'The record already exists',
   })
   public async signUp(
-    @Body() createUserDto: UserDto,
+    @Body() createUserDto: SignUpDto,
     @Res() res: Response,
   ): Promise<Response> {
     try {
@@ -44,7 +45,7 @@ export class AuthController {
         });
       }
       const hash: string = await bcrypt.hash(password, 10);
-      let userForCreate: UserDto = {
+      let userForCreate: User = {
         ...createUserDto,
         password: hash,
       };

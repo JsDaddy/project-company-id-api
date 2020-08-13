@@ -1,3 +1,4 @@
+import { SignUpDto } from './../dto/signup.dto';
 import {
   Controller,
   HttpStatus,
@@ -10,7 +11,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserService } from '../services/user.service';
-import { UserDto } from '../dto/user.dto';
+import { User } from '../schemas/user.schema';
 
 @ApiTags('user')
 @Controller('user')
@@ -54,7 +55,7 @@ export class UserController {
     description: 'Record not found',
   })
   @Get(':id')
-  async findUser(@Param('id') id: string): Promise<UserDto[]> {
+  async findUser(@Param('id') id: string): Promise<User> {
     return this.userService.findUser(id);
   }
 
@@ -66,7 +67,7 @@ export class UserController {
     description: 'Success add user',
   })
   @Post()
-  async createUser(@Body() user: UserDto): Promise<any> {
+  async createUser(@Body() user: SignUpDto): Promise<any> {
     return this.userService.createUser(user);
   }
 }

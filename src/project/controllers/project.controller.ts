@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProjectService } from '../services/project.service';
-import { ProjectDto } from 'src/rule/dto/rule.dto';
+import { CreateProjectDto } from 'src/rule/dto/rule.dto';
 
-@ApiTags('project')
-@Controller('project')
+@ApiTags('projects')
+@Controller('projects')
 export class ProjectController {
   public constructor(private readonly projectService: ProjectService) {}
 
@@ -53,7 +53,7 @@ export class ProjectController {
     description: 'Record not found',
   })
   @Get('findByUid/:uid')
-  async findByUser(@Param('uid') uid: string): Promise<ProjectDto[]> {
+  async findByUser(@Param('uid') uid: string): Promise<any[]> {
     return this.projectService.findByUser(uid);
   }
 
@@ -65,7 +65,7 @@ export class ProjectController {
     description: 'Success add project',
   })
   @Post()
-  async createProject(@Body() project: ProjectDto): Promise<any> {
+  async createProject(@Body() project: CreateProjectDto): Promise<any> {
     return this.projectService.createProject(project);
   }
 }
