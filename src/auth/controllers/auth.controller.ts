@@ -57,6 +57,7 @@ export class AuthController {
       return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
     }
   }
+
   @Post('signin')
   @ApiOperation({ description: 'User sign in' })
   @ApiResponse({ status: HttpStatus.OK })
@@ -87,6 +88,38 @@ export class AuthController {
         .json({ data: null, error: 'Invalid email and/or password' });
     }
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('set-password')
+  @ApiOperation({ description: 'User sign in' })
+  @ApiResponse({ status: HttpStatus.OK })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Wrong email or password',
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST })
+  public async setPassword(
+    @Body() loginUserDto: { password: string },
+    @Req() req: any,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const email: string = req.user.email;
+      const { password } = loginUserDto;
+      const hash: string = await bcrypt.hash(password, 10);
+      await this._authService.setPassword(email, hash);
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ data: 'Your password has been changed', error: null });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(HttpStatus.UNAUTHORIZED)
+        .json({ data: null, error: 'Someting went wrong' });
+    }
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Post('checktoken')
   @ApiOperation({ description: 'Check user token' })

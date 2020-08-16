@@ -8,16 +8,19 @@ import {
   Body,
   Param,
   UseGuards,
+  Query,
+  // Req,
 } from '@nestjs/common';
 import { TimelogService } from '../services/timelog.service';
 import { CreateTimelogDto } from '../dto/timelog.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { FilterTimelogDto } from '../dto/filter-timelog.dto';
 
-@ApiTags('timelog')
-@Controller('timelog')
+@ApiTags('timelogs')
+@Controller('timelogs')
 export class TimelogController {
-  public constructor(private readonly timelogService: TimelogService) {}
+  public constructor(private readonly _timelogService: TimelogService) {}
 
   @ApiOperation({
     summary: 'Find all timelogs.',
@@ -32,14 +35,17 @@ export class TimelogController {
   })
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  public async findTimelogs(@Res() res: Response): Promise<Response> {
+  public async findTimelogs(
+    @Res() res: Response,
+    @Query() query: FilterTimelogDto,
+    // @Req() req: any,
+  ): Promise<Response> {
     try {
-      const timelogs = await this.timelogService.findTimelogs();
+      const timelogs = await this._timelogService.findTimelogs(query);
       return res.status(HttpStatus.OK).json({ data: timelogs, error: null });
     } catch (error) {
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ data: null, error });
+      console.log(error);
+      return res.status(HttpStatus.NOT_FOUND).json({ data: null, error });
     }
   }
 
@@ -61,7 +67,7 @@ export class TimelogController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      const timelogs = this.timelogService.findTimelogsByUser(userId);
+      const timelogs = this._timelogService.findTimelogsByUser(userId);
       return res.status(HttpStatus.OK).json({ data: timelogs, error: null });
     } catch (error) {
       return res
@@ -84,7 +90,7 @@ export class TimelogController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      await this.timelogService.createTimelog(timelog);
+      await this._timelogService.createTimelog(timelog);
       return res
         .status(HttpStatus.OK)
         .json({ data: 'Timelog has been created', error: null });

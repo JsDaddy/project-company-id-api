@@ -36,8 +36,15 @@ export class AuthService {
       .lean()
       .exec();
   }
-  // SignUpDto
-
+  public async setPassword(
+    email: string,
+    password: string,
+  ): Promise<User | null> {
+    return this._userModel.findOneAndUpdate(
+      { email },
+      { password, initialLogin: false },
+    );
+  }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public async createUser(createUserDto: any): Promise<IUser> {
     return await this._userModel.create(createUserDto);

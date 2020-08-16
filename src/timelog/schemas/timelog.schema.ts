@@ -22,3 +22,13 @@ export const timelogSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
   },
 });
+type Timelog = {
+  // _id: mongoose.Schema.Types.ObjectId;
+  desc: string;
+  date: string;
+  project: mongoose.Schema.Types.ObjectId;
+  time: string;
+  user: mongoose.Schema.Types.ObjectId;
+};
+
+export interface ITimelog extends mongoose.Document, Timelog {}

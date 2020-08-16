@@ -26,7 +26,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const dbName = 'company-id';
-const dbPath = 'mongodb://mongodb:27017/company-id-mongodb';
+const dbPath = 'mongodb://127.0.0.1:27017/company-id';
 const asyncFileWriter: (
   filename: string,
   data: any,
@@ -68,6 +68,7 @@ export async function main(): Promise<any> {
     const payload: { email: string } = {
       email,
     };
+    userData.initialLogin = true;
     userData.accessToken = jwt.sign(payload, 'company-id');
     userData.dob = userData.dob.toDate();
     const timelogs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
