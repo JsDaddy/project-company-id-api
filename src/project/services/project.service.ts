@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ProjectDto } from 'src/rule/dto/rule.dto';
+// import { ProjectDto } from 'src/rule/dto/rule.dto';
 
 @Injectable()
 export class ProjectService {
@@ -17,12 +17,12 @@ export class ProjectService {
       .exec();
   }
 
-  public async createProject(project: ProjectDto): Promise<ProjectDto> {
+  public async createProject(project: any): Promise<any> {
     const createdProject = new this.projectModel(project);
     return createdProject.save();
   }
 
-  public async findByUser(uid: string): Promise<ProjectDto[]> {
+  public async findByUser(uid: string): Promise<any[]> {
     return await this.projectModel.aggregate([{ $match: { uid: uid } }]);
   }
 }

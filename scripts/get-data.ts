@@ -114,7 +114,11 @@ export async function main(): Promise<any> {
         allTimelogs.push(timelog);
       }
     }
+    delete userData.uid;
+    delete userData.activeProjects;
+    delete userData.projects;
     await mongoDb.collection('users').insertOne(userData);
+
     allUsers.push(userData);
   }
   for (const proj of allProjects) {

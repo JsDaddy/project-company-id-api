@@ -7,6 +7,7 @@ export interface IUser {
   lastName: string;
   englishLevel: string;
   activeProjects: string[];
+  projects: string[];
   role: string;
   skype: string;
   uid: string;
