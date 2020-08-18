@@ -1,3 +1,4 @@
+import { FilterLogDto } from './../dto/filter-log.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   Controller,
@@ -11,37 +12,35 @@ import {
   Query,
   // Req,
 } from '@nestjs/common';
-import { TimelogService } from '../services/timelog.service';
-import { CreateTimelogDto } from '../dto/timelog.dto';
+import { CreateTimelogDto } from '../dto/create-timelog.dto';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { FilterTimelogDto } from '../dto/filter-timelog.dto';
+import { LogService } from '../services/log.service';
 
-@ApiTags('timelogs')
-@Controller('timelogs')
-export class TimelogController {
-  public constructor(private readonly _timelogService: TimelogService) {}
+@ApiTags('logs')
+@Controller('logs')
+export class LogController {
+  public constructor(private readonly _timelogService: LogService) {}
 
   @ApiOperation({
-    summary: 'Find all timelogs.',
+    summary: 'Find all logs.',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Timelogs found successfully',
+    description: 'Logs found successfully',
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'Timelogs not found',
+    description: 'Logs not found',
   })
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  public async findTimelogs(
+  public async findLogs(
     @Res() res: Response,
-    @Query() query: FilterTimelogDto,
-    // @Req() req: any,
+    @Query() query: FilterLogDto,
   ): Promise<Response> {
     try {
-      const timelogs = await this._timelogService.findTimelogs(query);
+      const timelogs = await this._timelogService.findLogs(query);
       return res.status(HttpStatus.OK).json({ data: timelogs, error: null });
     } catch (error) {
       console.log(error);
@@ -64,12 +63,14 @@ export class TimelogController {
   @Get(':user')
   async findByUser(
     @Param('user') userId: string,
+    @Query('first') first: string,
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      const timelogs = this._timelogService.findTimelogsByUser(userId);
+      const timelogs = await this._timelogService.findUserLogs(userId, first);
       return res.status(HttpStatus.OK).json({ data: timelogs, error: null });
     } catch (error) {
+      console.log(error);
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ data: null, error });

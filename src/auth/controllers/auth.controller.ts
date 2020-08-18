@@ -98,6 +98,7 @@ export class AuthController {
     description: 'Wrong email or password',
   })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST })
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public async setPassword(
     @Body() loginUserDto: { password: string },
     @Req() req: any,

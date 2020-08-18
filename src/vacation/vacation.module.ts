@@ -8,7 +8,7 @@ import { vacationSchema } from './schemas/vacation.schema';
   controllers: [VacationController],
   exports: [VacationService],
   imports: [
-    MongooseModule.forFeature([{ name: 'Vacation', schema: vacationSchema }]),
+    MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
   ],
   providers: [VacationService],
 })

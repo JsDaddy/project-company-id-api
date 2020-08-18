@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TimelogController } from './controllers/timelog.controller';
-import { TimelogService } from './services/timelog.service';
 import { timelogSchema } from './schemas/timelog.schema';
 import { vacationSchema } from 'src/vacation/schemas/vacation.schema';
+import { LogService } from './services/log.service';
+import { LogController } from './controllers/log.controller';
 
 @Module({
-  controllers: [TimelogController],
-  exports: [TimelogService],
+  controllers: [LogController],
+  exports: [LogService],
   imports: [
     MongooseModule.forFeature([{ name: 'timelog', schema: timelogSchema }]),
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
   ],
-  providers: [TimelogService],
+  providers: [LogService],
 })
-export class TimelogModule {}
+export class LogModule {}

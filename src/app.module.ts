@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { VacationModule } from './vacation/vacation.module';
 import { HolidayModule } from './holiday/holiday.module';
-import { TimelogModule } from './timelog/timelog.module';
 import { TechnologyModule } from './technology/technology.module';
 import { RuleModule } from './rule/rule.module';
 import { ProjectModule } from './project/project.module';
 import { AuthModule } from './auth/auth.module';
+import { LogModule } from './log/log.module';
 
 @Module({
   imports: [
@@ -23,9 +22,8 @@ import { AuthModule } from './auth/auth.module';
       }),
     }),
     AuthModule,
-    VacationModule,
     HolidayModule,
-    TimelogModule,
+    LogModule,
     TechnologyModule,
     RuleModule,
     ProjectModule,

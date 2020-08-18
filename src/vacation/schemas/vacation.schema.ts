@@ -13,10 +13,23 @@ export const vacationSchema: mongoose.Schema = new mongoose.Schema(
     },
     type: {
       required: true,
-      type: String,
+      type: Number,
+    },
+    uid: {
+      required: true,
+      type: mongoose.Types.ObjectId,
     },
   },
   {
     versionKey: false,
   },
 );
+type Vacation = {
+  desc: string;
+  date: string;
+  type: number;
+  time: string;
+  user: mongoose.Schema.Types.ObjectId;
+};
+
+export interface IVacation extends mongoose.Document, Vacation {}

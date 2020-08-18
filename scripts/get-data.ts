@@ -1,4 +1,4 @@
-import { ITimelog } from './interfaces/timelog.interface';
+// import { ITimelog } from './interfaces/timelog.interface';
 import * as firebase from 'firebase-admin';
 import * as util from 'util';
 import * as fs from 'fs';
@@ -26,7 +26,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const dbName = 'company-id';
-const dbPath = 'mongodb://127.0.0.1:27017/company-id';
+const dbPath = 'mongodb://mongodb/company-id';
 const asyncFileWriter: (
   filename: string,
   data: any,
@@ -60,6 +60,20 @@ export async function main(): Promise<any> {
     delete stackDoc.id;
     allStack.push({ ...stackDoc, id: stackDocument.id });
   }
+  for (const projectDoc of projects.docs) {
+    let project = projectDoc.data();
+    delete project.types;
+    delete project.services;
+    delete project.methodology;
+    delete project.nda;
+    project.startDate = project.startDate.toDate();
+    if (project.endDate) {
+      project.endDate = project.endDate.toDate();
+    }
+    project._id = mongoose.Types.ObjectId();
+    project = { ...project, fbId: projectDoc.id };
+    allProjects.push(project);
+  }
   for (const user of users.docs) {
     const userData = user.data() as IUser;
     userData._id = mongoose.Types.ObjectId();
@@ -79,6 +93,7 @@ export async function main(): Promise<any> {
       .collection('vacation')
       .where('uid', '==', user.data().uid)
       .get();
+
     for (const vacationDocument of vacation.docs) {
       const vacDoc = vacationDocument.data();
       vacDoc._id = mongoose.Types.ObjectId();
@@ -89,31 +104,16 @@ export async function main(): Promise<any> {
     }
 
     for (const timelogDocument of timelogs.docs) {
-      const projectDoc = projects.docs.find(
-        project => project.id === timelogDocument.data().project,
-      );
-      if (projectDoc) {
-        const project = projectDoc.data() as any;
-        delete project.types;
-        delete project.services;
-        delete project.methodology;
-        delete project.nda;
-        project.startDate = project.startDate.toDate();
-        if (project.endDate) {
-          project.endDate = project.endDate.toDate();
-        }
-        project._id = mongoose.Types.ObjectId();
-        const timelog = timelogDocument.data() as ITimelog;
-        timelog._id = mongoose.Types.ObjectId();
-        timelog.date = timelog.date.toDate();
-        timelog.project = project._id;
-        timelog.uid = userData._id;
-        if (!allProjects.includes(project)) {
-          allProjects.push(project);
-        }
-        await mongoDb.collection('timelogs').insertOne(timelog);
-        allTimelogs.push(timelog);
-      }
+      const timelog = timelogDocument.data();
+
+      timelog.project = allProjects.find(
+        item => item.fbId === timelog.project,
+      )._id;
+      timelog._id = mongoose.Types.ObjectId();
+      timelog.date = timelog.date.toDate();
+      timelog.uid = userData._id;
+      await mongoDb.collection('timelogs').insertOne(timelog);
+      allTimelogs.push(timelog);
     }
     delete userData.uid;
     delete userData.activeProjects;
@@ -126,6 +126,7 @@ export async function main(): Promise<any> {
     proj.stack = proj.stack.map(
       (project: any) => allStack.find(stack => stack.id === project)._id,
     );
+    delete proj.fbId;
     await mongoDb.collection('projects').insertOne(proj);
   }
   for (const stack of allStack) {
