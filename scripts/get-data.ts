@@ -54,6 +54,15 @@ export async function main(): Promise<any> {
   const stack: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
     .collection('technologies')
     .get();
+  const holidays: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
+    .collection('holidays')
+    .get();
+  for (const holiday of holidays.docs) {
+    const holidayDoc = holiday.data();
+    holidayDoc._id = mongoose.Types.ObjectId();
+    holidayDoc.date = holidayDoc.date.toDate();
+    await mongoDb.collection('holidays').insertOne(holidayDoc);
+  }
   for (const stackDocument of stack.docs) {
     const stackDoc = stackDocument.data();
     stackDoc._id = mongoose.Types.ObjectId();
@@ -64,6 +73,7 @@ export async function main(): Promise<any> {
     let project = projectDoc.data();
     delete project.types;
     delete project.services;
+    delete project.ongoing;
     delete project.methodology;
     delete project.nda;
     project.startDate = project.startDate.toDate();

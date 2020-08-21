@@ -1,7 +1,8 @@
+import { holidaySchema } from './../holiday/schemas/holiday.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { timelogSchema } from './schemas/timelog.schema';
-import { vacationSchema } from 'src/vacation/schemas/vacation.schema';
+import { timelogSchema } from '../timelogs/schemas/timelog.schema';
+import { vacationSchema } from 'src/vacations/schemas/vacation.schema';
 import { LogService } from './services/log.service';
 import { LogController } from './controllers/log.controller';
 
@@ -10,6 +11,7 @@ import { LogController } from './controllers/log.controller';
   exports: [LogService],
   imports: [
     MongooseModule.forFeature([{ name: 'timelog', schema: timelogSchema }]),
+    MongooseModule.forFeature([{ name: 'holidays', schema: holidaySchema }]),
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
   ],
   providers: [LogService],

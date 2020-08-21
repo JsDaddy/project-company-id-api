@@ -8,6 +8,8 @@ import { RuleModule } from './rule/rule.module';
 import { ProjectModule } from './project/project.module';
 import { AuthModule } from './auth/auth.module';
 import { LogModule } from './log/log.module';
+import { VacationsModule } from './vacations/vacations.module';
+import { TimelogsModule } from './timelogs/timelogs.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { LogModule } from './log/log.module';
     }),
     AuthModule,
     HolidayModule,
+    VacationsModule,
+    TimelogsModule,
     LogModule,
     TechnologyModule,
     RuleModule,

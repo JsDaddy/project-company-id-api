@@ -21,7 +21,7 @@ services:
     image: mongo:latest
     container_name: company-id-mongodb
     ports:
-      - 27017:27017
+      - 27018:27017
     networks:
       - company-id-network
 
