@@ -1,3 +1,4 @@
+import { DateService } from './date.service';
 import { IHoliday } from './../schemas/holiday.schema';
 import { IVacation } from '../../vacations/schemas/vacation.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,6 +17,7 @@ export class LogService {
     private readonly _vacationModel: Model<IVacation>,
     @InjectModel('holidays')
     private readonly _holidayModel: Model<IHoliday>,
+    private readonly _dateService: DateService,
   ) {}
   // tslint:disable-next-line: no-any
   public async findLogs(filterLog: FilterLogDto): Promise<any> {
@@ -37,36 +39,21 @@ export class LogService {
     if (filterLog.uid) {
       filterByUser = { uid: Types.ObjectId(filterLog.uid) };
     }
-    // tslint:disable-next-line: no-any
-    const matchPipe: any = {
-      $and: [
-        filterByUser,
-        filterByProject,
-        filterByType,
-        {
-          date: {
-            $gte: date,
-            $lt: lastDate,
-          },
-        },
-      ],
-    };
+
     let timelogs: Partial<ITimelog>[] = [];
     let vacations: Partial<IVacation>[] = [];
     let holidays: Partial<IHoliday>[] = [];
-    holidays = await this._holidayModel
-      .find({
-        date: {
-          $gte: date.toISOString(),
-          $lt: lastDate.toISOString(),
-        },
-      })
-      .lean()
-      .exec();
+    holidays = await this._getHolidaysByDate(date, lastDate);
     if (!filterLog.type && filterLog.logType === 'timelogs') {
       timelogs = await this._timelogModel.aggregate([
         {
-          $match: matchPipe,
+          $match: this._matchPipe(
+            filterByUser,
+            filterByProject,
+            filterByType,
+            date,
+            lastDate,
+          ),
         },
         {
           $project: {
@@ -76,25 +63,31 @@ export class LogService {
         },
       ]);
     }
-    if (filterLog.logType === 'vacations') {
-      vacations = await this._vacationModel.aggregate([
-        {
-          $match: matchPipe,
+    vacations = await this._vacationModel.aggregate([
+      {
+        $match: this._matchPipe(
+          filterByUser,
+          filterByProject,
+          filterByType,
+          date,
+          lastDate,
+        ),
+      },
+      {
+        $project: {
+          date: 1,
+          status: 1,
         },
-        {
-          $project: {
-            date: 1,
-            status: 1,
-          },
-        },
-      ]);
-    }
+      },
+    ]);
+    // }
 
     let reducedLogs: (
       | Partial<ITimelog>
       | Partial<IVacation>
       | Partial<IHoliday>
     )[] = [...timelogs, ...vacations, ...holidays];
+    let vacationDays = 0;
     // tslint:disable-next-line: no-any
     reducedLogs = reducedLogs.reduce((a: any, b: any) => {
       const { time, status, name } = b;
@@ -102,22 +95,21 @@ export class LogService {
       a[b.date.toISOString()] = a[b.date.toISOString()] || [[], 0, []];
       if (dateType === 2) {
         a[b.date.toISOString()][1] += 1;
+        vacationDays++;
       }
       if (dateType === 3) {
         a[b.date.toISOString()][2] = [...a[b.date.toISOString()][2], name];
       }
-
       if (dateType === 1) {
         a[b.date.toISOString()][0] = [
           ...a[b.date.toISOString()][0],
-          this._sumTimeInMinutes([time]),
+          this._dateService.sumTimeInMinutes([time]),
         ];
       }
       return a;
     }, {});
     const resultObj: Partial<ICalendar> = {};
-    // tslint:disable-next-line: typedef
-    let monthHours = 0;
+    let workedOut = 0;
     for (const key in reducedLogs) {
       let indexes: number[] = [];
       indexes.push(
@@ -127,16 +119,13 @@ export class LogService {
       );
       indexes = indexes.filter((x: number) => x).map((x: number) => x - 1);
       if (indexes.includes(0)) {
-        const time: number =
-          Math.round(
-            (reducedLogs[key][0].reduce(
-              (currTime: number, accTime: number) => currTime + accTime,
-              0,
-            ) /
-              60) *
-              2,
-          ) / 2;
-        monthHours += time;
+        const roundedTime: number =
+          reducedLogs[key][0].reduce(
+            (currTime: number, accTime: number) => currTime + accTime,
+            0,
+          ) / 60;
+        const time: number = Math.round(roundedTime * 2) / 2;
+        workedOut += roundedTime;
         reducedLogs[key][0] = time;
       }
       const indexType: string[] = ['timelogs', 'vacations', 'holidays'];
@@ -149,28 +138,49 @@ export class LogService {
         ];
       });
     }
-    const weekHours = this._getWeekDays(date) * 8;
+    const weekHours: number = this._dateService.getWeekDays(date) * 8;
     let holidaysHours = 0;
     if (holidays.length > 0) {
       holidaysHours =
         holidays.filter((holiday: IHoliday) => {
-          return this._checkIfWeekDays(new Date(holiday.date));
+          return this._dateService.checkIfWeekDays(new Date(holiday.date));
         }).length * 8;
     }
-    console.log(this._hoursInMonth(date));
-    console.log(holidaysHours);
-    console.log(weekHours);
+    const toBeWorkedOut: number = !filterByUser.uid
+      ? null
+      : filterLog.uid
+      ? this._dateService.hoursInMonth(date) -
+        weekHours -
+        holidaysHours -
+        vacationDays * 8
+      : 0;
+    const overtime: number = !filterByUser.uid
+      ? null
+      : workedOut > toBeWorkedOut && filterLog.uid
+      ? (workedOut - toBeWorkedOut) * 1.5
+      : workedOut - toBeWorkedOut;
+
     return {
       logs: resultObj,
-      statistic: {
-        workedOut: monthHours,
-        toBeWorkedOut: this._hoursInMonth(date) - weekHours - holidaysHours,
-      },
+      statistic:
+        filterLog.logType === 'vacations'
+          ? null
+          : {
+              workedOut: this._dateService.timeDobuleToString(workedOut),
+              toBeWorkedOut: this._dateService.timeDobuleToString(
+                toBeWorkedOut,
+              ),
+              overtime: this._dateService.timeDobuleToString(overtime),
+            },
     };
   }
 
   public async findLogByDate(filterLog: FilterLogDto): Promise<any> {
     let filterByUser: Partial<IFilterLog> = {};
+    let filterByType: Partial<IFilterLog> = {};
+    if (filterLog.type) {
+      filterByType = { type: parseInt(filterLog.type) };
+    }
     const date: Date = new Date(filterLog.first);
     const lastDate: Date = new Date(
       new Date(filterLog.first).setDate(
@@ -181,42 +191,47 @@ export class LogService {
       filterByUser = { uid: Types.ObjectId(filterLog.uid) };
     }
     let timelogs: Partial<ITimelog>[] = [];
-    // let vacations: Partial<IVacation>[] = [];
+    let vacations: Partial<IVacation>[] = [];
+    let holidays: Partial<IHoliday>[] = [];
+    holidays = await this._getHolidaysByDate(date, lastDate);
 
     if (filterLog.logType === 'timelogs') {
+      timelogs = await this._getTimelogsByDate(filterByUser, date, lastDate);
     }
     if (filterLog.logType === 'vacations') {
+      vacations = await this._getVacationsByDate(
+        filterByUser,
+        filterByType,
+        date,
+        lastDate,
+      );
     }
     if (filterLog.logType === 'all') {
+      vacations = await this._getVacationsByDate(
+        filterByUser,
+        filterByType,
+        date,
+        lastDate,
+      );
+      timelogs = await this._getTimelogsByDate(filterByUser, date, lastDate);
     }
-    timelogs = await this._getTimelogsByDate(filterByUser, date, lastDate);
-    return timelogs;
-  }
-  private _checkIfWeekDays(date: Date): boolean {
-    console.log(date);
-    console.log(date.getDay());
-    return date.getDay() === 5 || date.getDay() === 6;
-  }
-  private _hoursInMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() * 8;
-  }
-  private _getWeekDays(date: Date) {
-    let day = 1;
-    let counter = 0;
-    let newDate = date;
-    const year = newDate.getFullYear();
-    const month = newDate.getMonth();
 
-    while (newDate.getMonth() === month) {
-      if (newDate.getDay() === 0 || newDate.getDay() === 6) {
-        counter += 1;
-      }
-      day += 1;
-      newDate = new Date(year, month, day);
-    }
-    return counter;
+    return { logs: [...timelogs, ...vacations, ...holidays] };
   }
-
+  private async _getHolidaysByDate(
+    date: Date,
+    lastDate: Date,
+  ): Promise<Partial<IHoliday>[]> {
+    return this._holidayModel
+      .find({
+        date: {
+          $gte: date.toISOString(),
+          $lt: lastDate.toISOString(),
+        },
+      })
+      .lean()
+      .exec();
+  }
   private async _getTimelogsByDate(
     filterByUser: Partial<IFilterLog>,
     date: Date,
@@ -224,18 +239,7 @@ export class LogService {
   ): Promise<Partial<ITimelog>[]> {
     return await this._timelogModel.aggregate([
       {
-        $match: {
-          $and: [
-            filterByUser,
-            // filterByType,
-            {
-              date: {
-                $gte: date,
-                $lt: lastDate,
-              },
-            },
-          ],
-        },
+        $match: this._matchPipe(filterByUser, {}, {}, date, lastDate),
       },
       this._getUserLookUp(),
       {
@@ -254,6 +258,54 @@ export class LogService {
           'project.name': 1,
           time: 1,
           date: 1,
+          desc: 1,
+        },
+      },
+    ]);
+  }
+  private _matchPipe(
+    filterByUser: Partial<IFilterLog>,
+    filterByProject: Partial<IFilterLog>,
+    filterByType: Partial<IFilterLog>,
+    date: Date,
+    lastDate: Date,
+  ): Record<string, unknown> {
+    return {
+      $and: [
+        filterByUser,
+        filterByProject,
+        filterByType,
+        {
+          date: {
+            $gte: date,
+            $lt: lastDate,
+          },
+        },
+      ],
+    };
+  }
+  private async _getVacationsByDate(
+    filterByUser: Partial<IFilterLog>,
+    filterByType: Partial<IFilterLog>,
+    date: Date,
+    lastDate: Date,
+  ): Promise<Partial<IVacation>[]> {
+    return await this._vacationModel.aggregate([
+      {
+        $match: this._matchPipe(filterByUser, {}, filterByType, date, lastDate),
+      },
+      this._getUserLookUp(),
+      {
+        $unwind: '$user',
+      },
+      {
+        $project: {
+          _id: 1,
+          'user._id': 1,
+          // 'user.avatar': 1,
+          type: 1,
+          date: 1,
+          status: 1,
           desc: 1,
         },
       },
@@ -279,186 +331,4 @@ export class LogService {
       },
     };
   }
-  // public async findLogs(filterLog: FilterLogDto): Promise<any> {
-  //   const date: Date = new Date(filterLog.first);
-  //   const lastDate: Date = new Date(
-  //     new Date(filterLog.first).setMonth(
-  //       new Date(filterLog.first).getMonth() + 1,
-  //     ),
-  //   );
-  //   let filterByProject = {};
-  //   let filterByUser = {};
-  //   let filterByType = {};
-  //   if (filterLog.type) {
-  //     filterByType = { type: parseInt(filterLog.type) };
-  //   }
-  //   if (filterLog.project) {
-  //     filterByProject = { project: Types.ObjectId(filterLog.project) };
-  //   }
-  //   if (filterLog.uid) {
-  //     filterByUser = { uid: Types.ObjectId(filterLog.uid) };
-  //   }
-  //   let timelogs: Partial<ITimelog>[] = [];
-  //   let vacations: Partial<IVacation>[] = [];
-  //   const matchPipe = {
-  //     $and: [
-  //       filterByUser,
-  //       filterByProject,
-  //       filterByType,
-  //       {
-  //         date: {
-  //           $gte: date,
-  //           $lt: lastDate,
-  //         },
-  //       },
-  //     ],
-  //   };
-  //   const userLookup = {
-  //     $lookup: {
-  //       as: 'user',
-  //       foreignField: '_id',
-  //       from: 'users',
-  //       localField: 'uid',
-  //     },
-  //   };
-  //   const projectLookup = {
-  //     $lookup: {
-  //       as: 'project',
-  //       foreignField: '_id',
-  //       from: 'projects',
-  //       localField: 'project',
-  //     },
-  //   };
-  //   if (
-  //     !filterLog.type &&
-  //     (filterLog.logType === 'all' || filterLog.logType === 'timelog')
-  //   ) {
-  //     timelogs = await this._timelogModel.aggregate([
-  //       {
-  //         $match: matchPipe,
-  //       },
-  //       userLookup,
-  //       {
-  //         $unwind: '$user',
-  //       },
-  //       projectLookup,
-  //       {
-  //         $unwind: '$project',
-  //       },
-  //       {
-  //         $project: {
-  //           _id: 1,
-  //           'user._id': 1,
-  //           // 'user.avatar': 1,
-  //           'project._id': 1,
-  //           'project.name': 1,
-  //           time: 1,
-  //           date: 1,
-  //           desc: 1,
-  //         },
-  //       },
-  //     ]);
-  //   }
-  //   if (filterLog.logType === 'all' || filterLog.logType === 'vacations') {
-  //     vacations = await this._vacationgModel.aggregate([
-  //       {
-  //         $match: matchPipe,
-  //       },
-  //       userLookup,
-  //       {
-  //         $unwind: '$user',
-  //       },
-  //       {
-  //         $project: {
-  //           _id: 1,
-  //           'user._id': 1,
-  //           // 'user.avatar': 1,
-  //           type: 1,
-  //           date: 1,
-  //           status: 1,
-  //           desc: 1,
-  //         },
-  //       },
-  //     ]);
-  //   }
-
-  //   const logs = [...timelogs, ...vacations];
-  //   return logs.reduce(this._reduceLogs, {});
-  // }
-  private _sumTimeInMinutes(times: any[]): number {
-    let h = 0;
-    let m = 0;
-    const reg1 = /\d+(?=h)/;
-    const reg2 = /\d+(?=m)/;
-    for (const time of times) {
-      h += parseInt(time.match(reg1)) || 0;
-      m += parseInt(time.match(reg2)) || 0;
-    }
-    return h * 60 + m;
-  }
-
-  // private _reduceLogs
-
-  //   public async findUserLogs(
-  //     _id: string,
-  //     first: string,
-  //   ): Promise<Partial<ITimelog | Partial<IVacation>>[]> {
-  //     let timelogs: Partial<ITimelog>[] = [];
-  //     let vacations: Partial<IVacation>[] = [];
-  //     const date: Date = new Date(first);
-  //     const lastDate: Date = new Date(
-  //       new Date(first).setMonth(new Date(first).getMonth() + 1),
-  //     );
-  //     const matchPipe = {
-  //       $and: [
-  //         { uid: Types.ObjectId(_id) },
-  //         {
-  //           date: {
-  //             $gte: date,
-  //             $lt: lastDate,
-  //           },
-  //         },
-  //       ],
-  //     };
-  //     const projectLookup = {
-  //       $lookup: {
-  //         as: 'project',
-  //         foreignField: '_id',
-  //         from: 'projects',
-  //         localField: 'project',
-  //       },
-  //     };
-  //     timelogs = await this._timelogModel.aggregate([
-  //       { $match: matchPipe },
-  //       projectLookup,
-  //       {
-  //         $unwind: '$project',
-  //       },
-  //       {
-  //         $project: {
-  //           _id: 1,
-  //           'project._id': 1,
-  //           'project.name': 1,
-  //           time: 1,
-  //           date: 1,
-  //           desc: 1,
-  //         },
-  //       },
-  //     ]);
-  //     vacations = await this._vacationgModel
-  //       .find({
-  //         $and: [
-  //           { uid: Types.ObjectId(_id) },
-  //           {
-  //             date: {
-  //               $gte: date.toISOString(),
-  //               $lt: lastDate.toISOString(),
-  //             },
-  //           },
-  //         ],
-  //       })
-  //       .lean()
-  //       .exec();
-  //     return [...timelogs, ...vacations];
-  //   }
 }

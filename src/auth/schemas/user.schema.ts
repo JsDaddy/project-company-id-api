@@ -1,4 +1,4 @@
-import { Document, Schema } from 'mongoose';
+import { Document, Schema, Types } from 'mongoose';
 
 export const userSchema: Schema = new Schema({
   name: {
@@ -62,10 +62,11 @@ export const userSchema: Schema = new Schema({
     required: true,
     type: String,
   },
-  projects: { required: false, type: Array },
+  projects: { required: false, type: [Types.ObjectId], default: [] },
   activeProjects: {
     required: false,
-    type: Array,
+    type: [Types.ObjectId],
+    default: [],
   },
 });
 
@@ -84,8 +85,8 @@ export type User = {
   avatar: string;
   phone: string;
   skype: string;
-  activeProjects?: string[];
-  projects?: string[];
+  activeProjects?: Types.ObjectId[];
+  projects?: Types.ObjectId[];
 };
 
 export interface IUser extends Document, User {}

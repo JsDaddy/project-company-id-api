@@ -1,4 +1,3 @@
-// import { ITimelog } from './interfaces/timelog.interface';
 import * as firebase from 'firebase-admin';
 import * as util from 'util';
 import * as fs from 'fs';
@@ -32,13 +31,20 @@ const asyncFileWriter: (
   data: any,
   encode: string,
 ) => Promise<void> = util.promisify(fs.writeFile);
+const fileName = 'holidays.json';
+const asyncFileReader: (filename: string) => Promise<Buffer> = util.promisify(
+  fs.readFile,
+);
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function main(): Promise<any> {
+  const buffer: Buffer = await asyncFileReader(`${__dirname}/${fileName}`);
+  const json: any = JSON.parse(buffer.toString());
   const connection: mongodb.MongoClient = await mongodb.MongoClient.connect(
     dbPath,
     { useNewUrlParser: true },
   );
   const mongoDb: Db = connection.db(dbName);
+
   await mongoDb.dropDatabase();
   const allTimelogs: any[] = [];
   const allUsers = [];
@@ -54,14 +60,11 @@ export async function main(): Promise<any> {
   const stack: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
     .collection('technologies')
     .get();
-  const holidays: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
-    .collection('holidays')
-    .get();
-  for (const holiday of holidays.docs) {
-    const holidayDoc = holiday.data();
-    holidayDoc._id = mongoose.Types.ObjectId();
-    holidayDoc.date = holidayDoc.date.toDate();
-    await mongoDb.collection('holidays').insertOne(holidayDoc);
+
+  for (const holiday of json.holidays) {
+    holiday._id = mongoose.Types.ObjectId();
+    holiday.date = new Date(holiday.date);
+    await mongoDb.collection('holidays').insertOne(holiday);
   }
   for (const stackDocument of stack.docs) {
     const stackDoc = stackDocument.data();
@@ -147,6 +150,7 @@ export async function main(): Promise<any> {
   await writeFile('projects', allProjects);
   await writeFile('timelogs', allTimelogs);
   await writeFile('stack', allStack);
+  await writeFile('json', json.holidays);
   await writeFile('vacations', allVacs);
 }
 

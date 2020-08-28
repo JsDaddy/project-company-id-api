@@ -1,426 +1,482 @@
 [
     {
-        "status": "approved",
-        "uid": "5f3f98088bff64005d84e1fa",
         "type": 1,
         "desc": "vacation",
+        "status": "approved",
+        "uid": "5f46661e91597402ac7290ec",
         "date": "2020-07-20T12:00:00.000Z",
-        "_id": "5f3f98098bff64005d84e1fb"
+        "_id": "5f46661f91597402ac7290ed"
     },
     {
+        "desc": "vacation",
         "date": "2020-07-16T12:00:00.000Z",
         "status": "approved",
-        "desc": "vacation",
-        "uid": "5f3f98088bff64005d84e1fa",
         "type": 1,
-        "_id": "5f3f98098bff64005d84e1fc"
+        "uid": "5f46661e91597402ac7290ec",
+        "_id": "5f46661f91597402ac7290ee"
     },
     {
-        "desc": "vacation",
-        "uid": "5f3f98088bff64005d84e1fa",
+        "status": "approved",
+        "type": 0,
+        "uid": "5f46661e91597402ac7290ec",
         "date": "2020-08-14T12:00:00.000Z",
-        "type": 0,
-        "status": "approved",
-        "_id": "5f3f98098bff64005d84e1fd"
+        "desc": "vacation",
+        "_id": "5f46661f91597402ac7290ef"
     },
     {
-        "status": "approved",
-        "type": 1,
+        "desc": "vacation",
         "date": "2020-07-17T12:00:00.000Z",
-        "desc": "vacation",
-        "uid": "5f3f98088bff64005d84e1fa",
-        "_id": "5f3f98098bff64005d84e1fe"
-    },
-    {
-        "desc": "vacation",
+        "uid": "5f46661e91597402ac7290ec",
+        "type": 1,
         "status": "approved",
-        "type": 0,
-        "date": "2020-08-17T12:00:00.000Z",
-        "uid": "5f3f98088bff64005d84e1fa",
-        "_id": "5f3f98098bff64005d84e1ff"
+        "_id": "5f46661f91597402ac7290f0"
     },
     {
-        "uid": "5f3f98088bff64005d84e1fa",
+        "date": "2020-08-17T12:00:00.000Z",
+        "status": "approved",
+        "desc": "vacation",
+        "uid": "5f46661e91597402ac7290ec",
+        "type": 0,
+        "_id": "5f46661f91597402ac7290f1"
+    },
+    {
         "status": "approved",
         "date": "2020-07-06T12:00:00.000Z",
         "desc": "больничный",
+        "uid": "5f46661e91597402ac7290ec",
         "type": 0,
-        "_id": "5f3f98098bff64005d84e200"
+        "_id": "5f46661f91597402ac7290f2"
     },
     {
-        "desc": "vacation",
-        "uid": "5f3f98088bff64005d84e1fa",
-        "type": 1,
+        "uid": "5f46661e91597402ac7290ec",
         "date": "2020-07-21T12:00:00.000Z",
+        "desc": "vacation",
         "status": "approved",
-        "_id": "5f3f98098bff64005d84e201"
+        "type": 1,
+        "_id": "5f46661f91597402ac7290f3"
     },
     {
+        "uid": "5f46661f91597402ac729141",
+        "desc": "vacation",
         "type": 1,
+        "status": "approved",
         "date": "2020-07-13T12:00:00.000Z",
-        "desc": "vacation",
-        "status": "approved",
-        "uid": "5f3f98098bff64005d84e24d",
-        "_id": "5f3f98098bff64005d84e24e"
+        "_id": "5f46661f91597402ac729142"
     },
     {
         "desc": "vacation",
-        "uid": "5f3f98098bff64005d84e24d",
+        "type": 1,
+        "status": "approved",
+        "uid": "5f46661f91597402ac729141",
         "date": "2020-07-16T12:00:00.000Z",
-        "type": 1,
-        "status": "approved",
-        "_id": "5f3f98098bff64005d84e24f"
+        "_id": "5f46661f91597402ac729143"
     },
     {
         "desc": "fever",
-        "uid": "5f3f98098bff64005d84e24d",
-        "type": 0,
         "status": "approved",
+        "type": 0,
+        "uid": "5f46661f91597402ac729141",
         "date": "2020-08-14T12:00:00.000Z",
-        "_id": "5f3f98098bff64005d84e250"
+        "_id": "5f46661f91597402ac729144"
     },
     {
-        "uid": "5f3f98098bff64005d84e24d",
         "date": "2020-08-11T12:00:00.000Z",
+        "uid": "5f46661f91597402ac729141",
         "status": "approved",
-        "type": 0,
         "desc": "fever",
-        "_id": "5f3f98098bff64005d84e251"
+        "type": 0,
+        "_id": "5f46661f91597402ac729145"
     },
     {
+        "desc": "vacation",
         "type": 1,
-        "uid": "5f3f98098bff64005d84e24d",
         "date": "2020-07-23T12:00:00.000Z",
-        "desc": "vacation",
+        "uid": "5f46661f91597402ac729141",
         "status": "approved",
-        "_id": "5f3f98098bff64005d84e252"
+        "_id": "5f46661f91597402ac729146"
     },
     {
-        "uid": "5f3f98098bff64005d84e24d",
-        "type": 1,
-        "status": "approved",
-        "desc": "vacation",
         "date": "2020-07-15T12:00:00.000Z",
-        "_id": "5f3f98098bff64005d84e253"
-    },
-    {
-        "uid": "5f3f98098bff64005d84e24d",
+        "desc": "vacation",
         "status": "approved",
         "type": 1,
-        "desc": "vacation",
+        "uid": "5f46661f91597402ac729141",
+        "_id": "5f46661f91597402ac729147"
+    },
+    {
         "date": "2020-07-14T12:00:00.000Z",
-        "_id": "5f3f98098bff64005d84e254"
-    },
-    {
-        "uid": "5f3f98098bff64005d84e24d",
         "desc": "vacation",
         "type": 1,
-        "date": "2020-07-24T12:00:00.000Z",
+        "uid": "5f46661f91597402ac729141",
         "status": "approved",
-        "_id": "5f3f98098bff64005d84e255"
+        "_id": "5f46661f91597402ac729148"
+    },
+    {
+        "uid": "5f46661f91597402ac729141",
+        "status": "approved",
+        "desc": "vacation",
+        "date": "2020-07-24T12:00:00.000Z",
+        "type": 1,
+        "_id": "5f46661f91597402ac729149"
     },
     {
         "desc": "eye surgery",
+        "type": 3,
+        "uid": "5f46661f91597402ac729141",
         "status": "approved",
         "date": "2020-05-21T12:00:00.000Z",
-        "uid": "5f3f98098bff64005d84e24d",
-        "type": 3,
-        "_id": "5f3f98098bff64005d84e256"
+        "_id": "5f46661f91597402ac72914a"
     },
     {
-        "uid": "5f3f98098bff64005d84e24d",
+        "desc": "fever",
+        "uid": "5f46661f91597402ac729141",
         "type": 0,
         "status": "approved",
-        "desc": "fever",
         "date": "2020-08-13T12:00:00.000Z",
-        "_id": "5f3f98098bff64005d84e257"
+        "_id": "5f46661f91597402ac72914b"
     },
     {
-        "type": 3,
         "desc": "eye surgery ",
-        "date": "2020-05-22T12:00:00.000Z",
         "status": "approved",
-        "uid": "5f3f98098bff64005d84e24d",
-        "_id": "5f3f98098bff64005d84e258"
-    },
-    {
-        "desc": "poisoning",
+        "uid": "5f46661f91597402ac729141",
         "type": 3,
+        "date": "2020-05-22T12:00:00.000Z",
+        "_id": "5f46661f91597402ac72914c"
+    },
+    {
+        "type": 3,
+        "status": "approved",
+        "desc": "poisoning",
         "date": "2020-06-22T12:00:00.000Z",
-        "status": "approved",
-        "uid": "5f3f98098bff64005d84e24d",
-        "_id": "5f3f98098bff64005d84e259"
+        "uid": "5f46661f91597402ac729141",
+        "_id": "5f46661f91597402ac72914d"
     },
     {
-        "status": "approved",
-        "desc": "fever",
-        "uid": "5f3f98098bff64005d84e24d",
+        "uid": "5f46661f91597402ac729141",
         "type": 0,
+        "status": "approved",
         "date": "2020-08-12T12:00:00.000Z",
-        "_id": "5f3f98098bff64005d84e25a"
+        "desc": "fever",
+        "_id": "5f46661f91597402ac72914e"
     },
     {
-        "date": "2020-07-28T12:00:00.000Z",
-        "desc": "ear inflammation, fever",
+        "uid": "5f46661f91597402ac729141",
         "status": "approved",
+        "desc": "ear inflammation, fever",
         "type": 0,
-        "uid": "5f3f98098bff64005d84e24d",
-        "_id": "5f3f98098bff64005d84e25b"
+        "date": "2020-07-28T12:00:00.000Z",
+        "_id": "5f46661f91597402ac72914f"
     },
     {
-        "uid": "5f3f98098bff64005d84e24d",
-        "type": 1,
         "desc": "vacation",
         "date": "2020-07-17T12:00:00.000Z",
+        "uid": "5f46661f91597402ac729141",
+        "type": 1,
         "status": "approved",
-        "_id": "5f3f98098bff64005d84e25c"
+        "_id": "5f46661f91597402ac729150"
     },
     {
         "status": "approved",
         "desc": "Vacation",
+        "uid": "5f46662091597402ac7291de",
         "date": "2020-07-27T12:00:00.000Z",
-        "uid": "5f3f980a8bff64005d84e2ea",
         "type": 1,
-        "_id": "5f3f980b8bff64005d84e2eb"
+        "_id": "5f46662191597402ac7291df"
     },
     {
-        "date": "2020-07-29T12:00:00.000Z",
-        "uid": "5f3f980a8bff64005d84e2ea",
-        "desc": "Vacation",
-        "type": 1,
+        "type": 0,
         "status": "approved",
-        "_id": "5f3f980b8bff64005d84e2ec"
+        "desc": "vacation ",
+        "uid": "5f46662091597402ac7291de",
+        "date": "2020-09-18T12:00:00.000Z",
+        "_id": "5f46662191597402ac7291e0"
     },
     {
+        "status": "approved",
+        "type": 1,
+        "date": "2020-07-29T12:00:00.000Z",
+        "uid": "5f46662091597402ac7291de",
+        "desc": "Vacation",
+        "_id": "5f46662191597402ac7291e1"
+    },
+    {
+        "date": "2020-09-17T12:00:00.000Z",
+        "desc": "vacation ",
+        "uid": "5f46662091597402ac7291de",
+        "status": "approved",
+        "type": 0,
+        "_id": "5f46662191597402ac7291e2"
+    },
+    {
+        "type": 1,
+        "desc": "Vacation",
         "date": "2020-07-31T12:00:00.000Z",
         "status": "approved",
-        "desc": "Vacation",
-        "type": 1,
-        "uid": "5f3f980a8bff64005d84e2ea",
-        "_id": "5f3f980b8bff64005d84e2ed"
+        "uid": "5f46662091597402ac7291de",
+        "_id": "5f46662191597402ac7291e3"
     },
     {
         "desc": "Vacation",
         "type": 1,
         "date": "2020-07-28T12:00:00.000Z",
-        "uid": "5f3f980a8bff64005d84e2ea",
         "status": "approved",
-        "_id": "5f3f980b8bff64005d84e2ee"
+        "uid": "5f46662091597402ac7291de",
+        "_id": "5f46662191597402ac7291e4"
     },
     {
-        "status": "approved",
+        "type": 1,
         "desc": "Vacation",
-        "uid": "5f3f980a8bff64005d84e2ea",
-        "type": 1,
+        "uid": "5f46662091597402ac7291de",
+        "status": "approved",
         "date": "2020-07-30T12:00:00.000Z",
-        "_id": "5f3f980b8bff64005d84e2ef"
+        "_id": "5f46662191597402ac7291e5"
     },
     {
-        "status": "approved",
-        "date": "2020-05-25T12:00:00.000Z",
         "desc": "university",
-        "type": 1,
-        "uid": "5f3f980b8bff64005d84e35b",
-        "_id": "5f3f980c8bff64005d84e35c"
-    },
-    {
+        "date": "2020-05-25T12:00:00.000Z",
         "status": "approved",
-        "uid": "5f3f980b8bff64005d84e35b",
-        "type": 0,
-        "desc": "vacation",
-        "date": "2020-09-22T12:00:00.000Z",
-        "_id": "5f3f980c8bff64005d84e35d"
+        "uid": "5f46662191597402ac729254",
+        "type": 1,
+        "_id": "5f46662291597402ac729255"
     },
     {
+        "type": 0,
+        "status": "approved",
+        "uid": "5f46662191597402ac729254",
+        "date": "2020-09-22T12:00:00.000Z",
+        "desc": "vacation",
+        "_id": "5f46662291597402ac729256"
+    },
+    {
+        "type": 0,
         "date": "2020-09-21T12:00:00.000Z",
         "desc": "vacation",
-        "uid": "5f3f980b8bff64005d84e35b",
-        "type": 0,
+        "uid": "5f46662191597402ac729254",
         "status": "approved",
-        "_id": "5f3f980c8bff64005d84e35e"
+        "_id": "5f46662291597402ac729257"
     },
     {
+        "status": "approved",
+        "uid": "5f46662191597402ac729254",
+        "type": 0,
         "date": "2020-07-06T12:00:00.000Z",
-        "uid": "5f3f980b8bff64005d84e35b",
-        "status": "approved",
-        "type": 0,
         "desc": "need day-off after weekends because of health",
-        "_id": "5f3f980c8bff64005d84e35f"
+        "_id": "5f46662291597402ac729258"
     },
     {
-        "uid": "5f3f980b8bff64005d84e35b",
-        "type": 0,
+        "uid": "5f46662191597402ac729254",
+        "status": "approved",
         "date": "2020-08-07T12:00:00.000Z",
-        "status": "approved",
         "desc": "unseen circumstances",
-        "_id": "5f3f980c8bff64005d84e360"
+        "type": 0,
+        "_id": "5f46662291597402ac729259"
     },
     {
-        "status": "approved",
+        "uid": "5f46662191597402ac729254",
+        "type": 0,
         "desc": "entry exams",
-        "uid": "5f3f980b8bff64005d84e35b",
         "date": "2020-08-27T12:00:00.000Z",
-        "type": 0,
-        "_id": "5f3f980c8bff64005d84e361"
+        "status": "approved",
+        "_id": "5f46662291597402ac72925a"
     },
     {
+        "uid": "5f46662191597402ac729254",
         "status": "approved",
-        "type": 0,
         "date": "2020-08-28T12:00:00.000Z",
         "desc": "getting documents for uni",
-        "uid": "5f3f980b8bff64005d84e35b",
-        "_id": "5f3f980c8bff64005d84e362"
+        "type": 0,
+        "_id": "5f46662291597402ac72925b"
     },
     {
         "desc": "diploma",
-        "type": 1,
-        "status": "approved",
-        "uid": "5f3f980b8bff64005d84e35b",
         "date": "2020-06-03T12:00:00.000Z",
-        "_id": "5f3f980c8bff64005d84e363"
+        "status": "approved",
+        "uid": "5f46662191597402ac729254",
+        "type": 1,
+        "_id": "5f46662291597402ac72925c"
     },
     {
+        "type": 0,
+        "desc": "vacation",
         "status": "approved",
-        "uid": "5f3f980b8bff64005d84e35b",
         "date": "2020-08-18T12:00:00.000Z",
-        "type": 0,
-        "desc": "vacation",
-        "_id": "5f3f980c8bff64005d84e364"
+        "uid": "5f46662191597402ac729254",
+        "_id": "5f46662291597402ac72925d"
     },
     {
-        "status": "approved",
-        "uid": "5f3f980b8bff64005d84e35b",
         "type": 0,
-        "date": "2020-08-26T12:00:00.000Z",
         "desc": "entry exams",
-        "_id": "5f3f980c8bff64005d84e365"
-    },
-    {
-        "desc": "vacation",
-        "date": "2020-08-17T12:00:00.000Z",
+        "uid": "5f46662191597402ac729254",
+        "date": "2020-08-26T12:00:00.000Z",
         "status": "approved",
-        "uid": "5f3f980b8bff64005d84e35b",
-        "type": 0,
-        "_id": "5f3f980c8bff64005d84e366"
+        "_id": "5f46662291597402ac72925e"
     },
     {
+        "status": "approved",
+        "type": 0,
+        "desc": "vacation",
+        "uid": "5f46662191597402ac729254",
+        "date": "2020-08-17T12:00:00.000Z",
+        "_id": "5f46662291597402ac72925f"
+    },
+    {
+        "uid": "5f46662191597402ac729254",
+        "desc": "vacation changes",
+        "status": "approved",
         "type": 0,
         "date": "2020-08-25T12:00:00.000Z",
-        "uid": "5f3f980b8bff64005d84e35b",
-        "status": "approved",
-        "desc": "vacation changes",
-        "_id": "5f3f980c8bff64005d84e367"
+        "_id": "5f46662291597402ac729260"
     },
     {
-        "type": 1,
-        "desc": "presentation diploma papers",
-        "uid": "5f3f980b8bff64005d84e35b",
         "status": "approved",
         "date": "2020-06-18T12:00:00.000Z",
-        "_id": "5f3f980c8bff64005d84e368"
+        "desc": "presentation diploma papers",
+        "uid": "5f46662191597402ac729254",
+        "type": 1,
+        "_id": "5f46662291597402ac729261"
     },
     {
         "desc": "headache and runny nose",
-        "status": "approved",
-        "uid": "5f3f980b8bff64005d84e35b",
-        "date": "2020-07-21T12:00:00.000Z",
         "type": 0,
-        "_id": "5f3f980c8bff64005d84e369"
+        "uid": "5f46662191597402ac729254",
+        "status": "approved",
+        "date": "2020-07-21T12:00:00.000Z",
+        "_id": "5f46662291597402ac729262"
     },
     {
         "desc": "прихватило шею, ушел на массаж",
+        "type": 3,
+        "status": "approved",
+        "uid": "5f46662291597402ac7292b4",
         "date": "2020-07-22T12:00:00.000Z",
-        "uid": "5f3f980c8bff64005d84e3ba",
-        "status": "approved",
-        "type": 3,
-        "_id": "5f3f980d8bff64005d84e3bb"
+        "_id": "5f46662391597402ac7292b5"
     },
     {
         "status": "approved",
-        "desc": "отпуск",
-        "type": 0,
         "date": "2020-08-27T12:00:00.000Z",
-        "uid": "5f3f980c8bff64005d84e3ba",
-        "_id": "5f3f980d8bff64005d84e3bc"
+        "desc": "отпуск",
+        "uid": "5f46662291597402ac7292b4",
+        "type": 0,
+        "_id": "5f46662391597402ac7292b6"
     },
     {
+        "type": 0,
         "date": "2020-08-28T12:00:00.000Z",
-        "uid": "5f3f980c8bff64005d84e3ba",
-        "status": "approved",
-        "type": 0,
         "desc": "отпуск",
-        "_id": "5f3f980d8bff64005d84e3bd"
+        "status": "approved",
+        "uid": "5f46662291597402ac7292b4",
+        "_id": "5f46662391597402ac7292b7"
     },
     {
-        "desc": "dantist",
-        "status": "approved",
         "date": "2020-05-28T12:00:00.000Z",
-        "uid": "5f3f980c8bff64005d84e3ba",
+        "status": "approved",
+        "desc": "dantist",
+        "uid": "5f46662291597402ac7292b4",
         "type": 3,
-        "_id": "5f3f980d8bff64005d84e3be"
+        "_id": "5f46662391597402ac7292b8"
     },
     {
-        "uid": "5f3f980c8bff64005d84e3ba",
-        "type": 0,
-        "status": "approved",
-        "desc": "отпуск",
         "date": "2020-08-25T12:00:00.000Z",
-        "_id": "5f3f980d8bff64005d84e3bf"
-    },
-    {
+        "uid": "5f46662291597402ac7292b4",
         "desc": "отпуск",
         "status": "approved",
-        "uid": "5f3f980c8bff64005d84e3ba",
         "type": 0,
+        "_id": "5f46662391597402ac7292b9"
+    },
+    {
         "date": "2020-08-26T12:00:00.000Z",
-        "_id": "5f3f980d8bff64005d84e3c0"
+        "status": "approved",
+        "type": 0,
+        "uid": "5f46662291597402ac7292b4",
+        "desc": "отпуск",
+        "_id": "5f46662391597402ac7292ba"
     },
     {
-        "date": "2020-05-20T12:00:00.000Z",
-        "uid": "5f3f980c8bff64005d84e3ba",
-        "status": "approved",
-        "desc": "поход к стоматологу",
         "type": 3,
-        "_id": "5f3f980d8bff64005d84e3c1"
+        "date": "2020-05-20T12:00:00.000Z",
+        "status": "approved",
+        "uid": "5f46662291597402ac7292b4",
+        "desc": "поход к стоматологу",
+        "_id": "5f46662391597402ac7292bb"
     },
     {
+        "date": "2020-10-01T12:00:00.000Z",
+        "type": 0,
+        "status": "approved",
+        "uid": "5f46662391597402ac729303",
+        "desc": "vacation",
+        "_id": "5f46662391597402ac729304"
+    },
+    {
+        "type": 0,
+        "date": "2020-10-02T12:00:00.000Z",
+        "status": "approved",
+        "desc": "vacation",
+        "uid": "5f46662391597402ac729303",
+        "_id": "5f46662391597402ac729305"
+    },
+    {
+        "uid": "5f46662391597402ac729303",
+        "status": "approved",
         "desc": "еду на море)",
-        "type": 1,
         "date": "2020-06-25T12:00:00.000Z",
-        "status": "approved",
-        "uid": "5f3f980d8bff64005d84e409",
-        "_id": "5f3f980e8bff64005d84e40a"
+        "type": 1,
+        "_id": "5f46662391597402ac729306"
     },
     {
-        "date": "2020-06-26T12:00:00.000Z",
+        "status": "approved",
         "desc": "vacation",
         "type": 1,
-        "status": "approved",
-        "uid": "5f3f980d8bff64005d84e409",
-        "_id": "5f3f980e8bff64005d84e40b"
+        "uid": "5f46662391597402ac729303",
+        "date": "2020-06-26T12:00:00.000Z",
+        "_id": "5f46662391597402ac729307"
     },
     {
         "desc": "vacation",
-        "uid": "5f3f980d8bff64005d84e409",
+        "type": 0,
+        "status": "approved",
+        "date": "2020-09-30T12:00:00.000Z",
+        "uid": "5f46662391597402ac729303",
+        "_id": "5f46662391597402ac729308"
+    },
+    {
+        "desc": "vacation",
         "date": "2020-08-10T12:00:00.000Z",
-        "status": "approved",
         "type": 0,
-        "_id": "5f3f980e8bff64005d84e40c"
+        "uid": "5f46662391597402ac729303",
+        "status": "approved",
+        "_id": "5f46662391597402ac729309"
     },
     {
-        "uid": "5f3f980d8bff64005d84e409",
+        "status": "approved",
+        "desc": "vacation",
+        "type": 0,
         "date": "2020-08-06T12:00:00.000Z",
-        "desc": "vacation",
+        "uid": "5f46662391597402ac729303",
+        "_id": "5f46662391597402ac72930a"
+    },
+    {
         "status": "approved",
         "type": 0,
-        "_id": "5f3f980e8bff64005d84e40d"
+        "uid": "5f46662391597402ac729303",
+        "date": "2020-09-28T12:00:00.000Z",
+        "desc": "vacation",
+        "_id": "5f46662391597402ac72930b"
+    },
+    {
+        "desc": "vacation",
+        "type": 0,
+        "status": "approved",
+        "uid": "5f46662391597402ac729303",
+        "date": "2020-09-29T12:00:00.000Z",
+        "_id": "5f46662391597402ac72930c"
     },
     {
         "type": 0,
-        "date": "2020-08-07T12:00:00.000Z",
+        "uid": "5f46662391597402ac729303",
         "status": "approved",
-        "uid": "5f3f980d8bff64005d84e409",
+        "date": "2020-08-07T12:00:00.000Z",
         "desc": "vacation",
-        "_id": "5f3f980e8bff64005d84e40e"
+        "_id": "5f46662391597402ac72930d"
     }
 ]
