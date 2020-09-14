@@ -30,12 +30,6 @@ export class AuthService {
     } as User;
   }
 
-  public async validateUser(email: string): Promise<User | null> {
-    return this._userModel
-      .findOne({ email })
-      .lean()
-      .exec();
-  }
   public async setPassword(
     email: string,
     password: string,
@@ -50,10 +44,43 @@ export class AuthService {
     return await this._userModel.create(createUserDto);
   }
 
-  public async getUser(query: Partial<User>): Promise<User | null> {
-    return this._userModel
-      .findOne(query)
-      .lean()
-      .exec();
+  public async getUser(email: string): Promise<Partial<IUser> | null> {
+    const users: Partial<IUser>[] = await this._userModel.aggregate([
+      { $match: { email } },
+      {
+        $lookup: {
+          as: 'projects',
+          foreignField: '_id',
+          from: 'projects',
+          localField: 'projects',
+        },
+      },
+      { $unwind: { path: '$projects', preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          as: 'activeProjects',
+          foreignField: '_id',
+          from: 'projects',
+          localField: 'activeProjects',
+        },
+      },
+      {
+        $unwind: { path: '$activeProjects', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          avatar: { $first: '$avatar' },
+          lastName: { $first: '$lastName' },
+          name: { $first: '$name' },
+          projects: { $push: '$projects' },
+          initialLogin: { $first: '$initialLogin' },
+          role: { $first: '$role' },
+          activeProjects: { $push: '$activeProjects' },
+          password: { $first: '$password' },
+        },
+      },
+    ]);
+    return users[0];
   }
 }

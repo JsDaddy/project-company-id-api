@@ -13,7 +13,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserService } from '../services/user.service';
-import { User } from '../schemas/user.schema';
+import { IUser, User } from '../schemas/user.schema';
 import { AuthGuard } from '@nestjs/passport';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
 
@@ -38,7 +38,7 @@ export class UserController {
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
-  ): Promise<any> {
+  ): Promise<Response> {
     try {
       await this.userService.addUserToTheProject(uid, projectId);
       return res
@@ -98,7 +98,7 @@ export class UserController {
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
-  ): Promise<any> {
+  ): Promise<Response> {
     try {
       await this.userService.removeUserFromActiveProject(uid, projectId);
       return res
@@ -111,8 +111,8 @@ export class UserController {
     }
   }
 
-  // @UseGuards(AuthGuard('jwt'))
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
     summary: 'Find all users.',
   })
@@ -124,13 +124,12 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Record not found',
   })
-  @Get()
-  public async findUsers(@Res() res: Response) {
+  @Get('all')
+  public async findUsers(@Res() res: Response): Promise<Response> {
     try {
-      const users = await this.userService.findUsers();
+      const users: Partial<IUser>[] = await this.userService.findUsers();
       return res.status(HttpStatus.OK).json({ data: users, error: null });
     } catch (e) {
-      console.log(e);
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ data: null, e });

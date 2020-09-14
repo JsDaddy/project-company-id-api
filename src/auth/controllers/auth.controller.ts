@@ -14,7 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
 
-import { User } from '../schemas/user.schema';
+import { IUser, User } from '../schemas/user.schema';
 import { SignUpDto } from '../dto/signup.dto';
 
 @ApiTags('auth')
@@ -37,7 +37,9 @@ export class AuthController {
   ): Promise<Response> {
     try {
       const { email, password } = createUserDto;
-      const user: User | null = await this._authService.getUser({ email });
+      const user: Partial<IUser> | null = await this._authService.getUser(
+        email,
+      );
       if (user) {
         return res.status(HttpStatus.CONFLICT).json({
           data: null,
@@ -50,7 +52,9 @@ export class AuthController {
         password: hash,
       };
       userForCreate = await this._authService.createToken(userForCreate);
-      const newUser: User = await this._authService.createUser(userForCreate);
+      const newUser: Partial<IUser> = await this._authService.createUser(
+        userForCreate,
+      );
       delete newUser.password;
       return res.status(HttpStatus.OK).json({ data: newUser, error: null });
     } catch (error) {
@@ -72,15 +76,14 @@ export class AuthController {
   ): Promise<Response> {
     try {
       const { email, password: lpassword } = loginUserDto;
-      const { password, ...user }: any = await this._authService.getUser({
-        email,
-      });
+      const { password, ...user }: any = await this._authService.getUser(email);
       if (!user || (user && !(await bcrypt.compare(lpassword, password)))) {
         return res.status(HttpStatus.UNAUTHORIZED).json({
           data: null,
           error: 'Invalid email and/or password',
         });
       }
+      delete user.password;
       return res.status(HttpStatus.OK).json({ data: user, error: null });
     } catch (error) {
       return res

@@ -16,11 +16,39 @@ export class UserService {
     return createdUser.save();
   }
 
-  public async findUsers() {
-    return this.userModel
-      .find()
-      .lean()
-      .exec();
+  public async findUsers(): Promise<Partial<IUser>[]> {
+    return this.userModel.aggregate([
+      {
+        $lookup: {
+          as: 'projects',
+          foreignField: '_id',
+          from: 'projects',
+          localField: 'projects',
+        },
+      },
+      { $unwind: { path: '$projects', preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          as: 'activeProjects',
+          foreignField: '_id',
+          from: 'projects',
+          localField: 'activeProjects',
+        },
+      },
+      {
+        $unwind: { path: '$activeProjects', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          avatar: { $first: '$avatar' },
+          lastName: { $first: '$lastName' },
+          name: { $first: '$name' },
+          projects: { $push: '$projects' },
+          activeProjects: { $push: '$activeProjects' },
+        },
+      },
+    ]);
   }
   public async addUserToTheProject(
     _id: Types.ObjectId,

@@ -44,7 +44,10 @@ export class LogService {
     let vacations: Partial<IVacation>[] = [];
     let holidays: Partial<IHoliday>[] = [];
     holidays = await this._getHolidaysByDate(date, lastDate);
-    if (!filterLog.type && filterLog.logType === 'timelogs') {
+    if (
+      !filterLog.type &&
+      (filterLog.logType === 'timelogs' || filterLog.logType === 'all')
+    ) {
       timelogs = await this._timelogModel.aggregate([
         {
           $match: this._matchPipe(
@@ -198,15 +201,8 @@ export class LogService {
     if (filterLog.logType === 'timelogs') {
       timelogs = await this._getTimelogsByDate(filterByUser, date, lastDate);
     }
-    if (filterLog.logType === 'vacations') {
-      vacations = await this._getVacationsByDate(
-        filterByUser,
-        filterByType,
-        date,
-        lastDate,
-      );
-    }
-    if (filterLog.logType === 'all') {
+
+    if (filterLog.logType === 'all' || filterLog.logType === 'vacations') {
       vacations = await this._getVacationsByDate(
         filterByUser,
         filterByType,
@@ -253,7 +249,7 @@ export class LogService {
         $project: {
           _id: 1,
           'user._id': 1,
-          // 'user.avatar': 1,
+          'user.avatar': 1,
           'project._id': 1,
           'project.name': 1,
           time: 1,
@@ -302,7 +298,7 @@ export class LogService {
         $project: {
           _id: 1,
           'user._id': 1,
-          // 'user.avatar': 1,
+          'user.avatar': 1,
           type: 1,
           date: 1,
           status: 1,

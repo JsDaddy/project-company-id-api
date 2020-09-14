@@ -2,15 +2,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IProject } from '../schemas/project.schema';
 // import { ProjectDto } from 'src/rule/dto/rule.dto';
 
 @Injectable()
 export class ProjectService {
   public constructor(
-    @InjectModel('project') private readonly projectModel: Model<any>,
+    @InjectModel('project') private readonly projectModel: Model<IProject>,
   ) {}
 
-  public async findProjects() {
+  public async findProjects(): Promise<Partial<IProject>[]> {
     return this.projectModel
       .find({})
       .lean()
