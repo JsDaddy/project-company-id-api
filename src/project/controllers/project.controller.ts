@@ -7,12 +7,17 @@ import {
   Body,
   Param,
   Post,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProjectService } from '../services/project.service';
 import { CreateProjectDto } from 'src/rule/dto/rule.dto';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { IProject } from '../interfaces/project.interface';
+import { ProjectFilterDto } from '../dto/filter-projects.dto';
+import { IUser } from 'scripts/interfaces/user.interface';
+import { Roles } from 'src/auth/enums/role.enum';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -31,14 +36,22 @@ export class ProjectController {
     description: 'Record not found',
   })
   @Get()
-  public async findProjects(@Res() res: Response): Promise<Response> {
+  public async findProjects(
+    @Res() res: Response,
+    @Req() req: Request,
+    @Query() query: ProjectFilterDto,
+  ): Promise<Response> {
     try {
-      const projects: IProject[] = await this.projectService.findProjects();
+      const { role } = req.user as IUser;
+      const projects: IProject[] = await this.projectService.findProjects(
+        query,
+        role === 'admin' ? Roles.ADMIN : Roles.USER,
+      );
       return res.status(HttpStatus.OK).json({ data: projects, error: null });
-    } catch (e) {
+    } catch (error) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ data: null, e });
+        .json({ data: null, error });
     }
   }
 

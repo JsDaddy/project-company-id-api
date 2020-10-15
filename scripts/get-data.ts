@@ -2,11 +2,11 @@ import * as firebase from 'firebase-admin';
 import * as util from 'util';
 import * as fs from 'fs';
 import { IUser } from './interfaces/user.interface';
-import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import * as mongodb from 'mongodb';
 import * as jwt from 'jsonwebtoken';
 import { Db } from 'mongodb';
+import { Types } from 'mongoose';
 
 export const GOOGLE_APPLICATION_CREDENTIALS =
   'scripts/companyid-74562-firebase-adminsdk-85397-1dbc868ab2.json';
@@ -62,13 +62,13 @@ export async function main(): Promise<any> {
     .get();
 
   for (const holiday of json.holidays) {
-    holiday._id = mongoose.Types.ObjectId();
+    holiday._id = Types.ObjectId();
     holiday.date = new Date(holiday.date);
     await mongoDb.collection('holidays').insertOne(holiday);
   }
   for (const stackDocument of stack.docs) {
     const stackDoc = stackDocument.data();
-    stackDoc._id = mongoose.Types.ObjectId();
+    stackDoc._id = Types.ObjectId();
     delete stackDoc.id;
     allStack.push({ ...stackDoc, id: stackDocument.id });
   }
@@ -83,13 +83,13 @@ export async function main(): Promise<any> {
     if (project.endDate) {
       project.endDate = project.endDate.toDate();
     }
-    project._id = mongoose.Types.ObjectId();
+    project._id = Types.ObjectId();
     project = { ...project, fbId: projectDoc.id };
     allProjects.push(project);
   }
   for (const user of users.docs) {
     const userData = user.data() as IUser;
-    userData._id = mongoose.Types.ObjectId();
+    userData._id = Types.ObjectId();
     userData.password = await bcrypt.hash('jsdaddy2020', 10);
     const { email } = userData;
     const payload: { email: string } = {
@@ -109,7 +109,7 @@ export async function main(): Promise<any> {
 
     for (const vacationDocument of vacation.docs) {
       const vacDoc = vacationDocument.data();
-      vacDoc._id = mongoose.Types.ObjectId();
+      vacDoc._id = Types.ObjectId();
       vacDoc.uid = userData._id;
       vacDoc.date = vacDoc.date.toDate();
       await mongoDb.collection('vacations').insertOne(vacDoc);
@@ -122,7 +122,7 @@ export async function main(): Promise<any> {
       timelog.project = allProjects.find(
         item => item.fbId === timelog.project,
       )._id;
-      timelog._id = mongoose.Types.ObjectId();
+      timelog._id = Types.ObjectId();
       timelog.date = timelog.date.toDate();
       timelog.uid = userData._id;
       await mongoDb.collection('timelogs').insertOne(timelog);
