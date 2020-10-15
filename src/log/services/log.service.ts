@@ -58,6 +58,15 @@ export class LogService {
     let timelogs: ITimelog[] = [];
     let vacations: IVacation[] = [];
     let holidays: IHoliday[] = [];
+
+    const aggregationMatch: Record<string, unknown> = this._matchPipe(
+      filterByUser,
+      filterByProject,
+      filterByType,
+      date,
+      lastDate,
+    );
+
     holidays = await this._getHolidaysByDate(date, lastDate);
     if (
       !filterLog.type &&
@@ -66,13 +75,7 @@ export class LogService {
     ) {
       timelogs = await this._timelogModel.aggregate([
         {
-          $match: this._matchPipe(
-            filterByUser,
-            filterByProject,
-            filterByType,
-            date,
-            lastDate,
-          ),
+          $match: aggregationMatch,
         },
         {
           $project: {
@@ -82,15 +85,10 @@ export class LogService {
         },
       ]);
     }
+
     vacations = await this._vacationModel.aggregate([
       {
-        $match: this._matchPipe(
-          filterByUser,
-          filterByProject,
-          filterByType,
-          date,
-          lastDate,
-        ),
+        $match: aggregationMatch,
       },
       {
         $project: {
@@ -249,8 +247,9 @@ export class LogService {
       .lean()
       .exec();
   }
+
   private async _getTimelogsByDate(
-    filterByUser: Partial<IFilterLog>,
+    filterByUser: IFilterLog,
     date: Date,
     lastDate: Date,
   ): Promise<ITimelog[]> {
@@ -266,20 +265,50 @@ export class LogService {
       {
         $unwind: '$project',
       },
-      {
-        $project: {
-          _id: 1,
-          'user._id': 1,
-          'user.avatar': 1,
-          'project._id': 1,
-          'project.name': 1,
-          time: 1,
-          date: 1,
-          desc: 1,
-        },
-      },
+      this._getAttregationProject(),
     ]);
   }
+
+  private async _getVacationsByDate(
+    filterByUser: Partial<IFilterLog>,
+    filterByType: Partial<IFilterLog>,
+    date: Date,
+    lastDate: Date,
+  ): Promise<IVacation[]> {
+    return await this._vacationModel.aggregate([
+      {
+        $match: this._matchPipe(filterByUser, {}, filterByType, date, lastDate),
+      },
+      this._getUserLookUp,
+      {
+        $unwind: '$user',
+      },
+      this._getAttregationProject('vacations'),
+    ]);
+  }
+
+  private _getAttregationProject(type?: string): Record<string, unknown> {
+    let $project: Record<string, unknown> = {
+      _id: 1,
+      'user._id': 1,
+      'user.avatar': 1,
+      date: 1,
+      desc: 1,
+    };
+    const forVacations: Record<string, unknown> = { status: 1, type: 1 };
+    const forOther: Record<string, unknown> = {
+      time: 1,
+      'project._id': 1,
+      'project.name': 1,
+    };
+    if (type === 'vacations') {
+      $project = { ...$project, ...forVacations };
+    } else {
+      $project = { ...$project, ...forOther };
+    }
+    return { $project };
+  }
+
   private _matchPipe(
     filterByUser: Partial<IFilterLog>,
     filterByProject: Partial<IFilterLog>,
@@ -300,32 +329,5 @@ export class LogService {
         },
       ],
     };
-  }
-  private async _getVacationsByDate(
-    filterByUser: Partial<IFilterLog>,
-    filterByType: Partial<IFilterLog>,
-    date: Date,
-    lastDate: Date,
-  ): Promise<IVacation[]> {
-    return await this._vacationModel.aggregate([
-      {
-        $match: this._matchPipe(filterByUser, {}, filterByType, date, lastDate),
-      },
-      this._getUserLookUp,
-      {
-        $unwind: '$user',
-      },
-      {
-        $project: {
-          _id: 1,
-          'user._id': 1,
-          'user.avatar': 1,
-          type: 1,
-          date: 1,
-          status: 1,
-          desc: 1,
-        },
-      },
-    ]);
   }
 }
