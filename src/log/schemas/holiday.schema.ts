@@ -16,10 +16,3 @@ export const holidaySchema: mongoose.Schema = new mongoose.Schema(
     versionKey: false,
   },
 );
-
-type Holiday = {
-  name: string;
-  date: string;
-};
-
-export interface IHoliday extends mongoose.Document, Holiday {}

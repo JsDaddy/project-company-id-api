@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HolidayModule } from './holiday/holiday.module';
 import { TechnologyModule } from './technology/technology.module';
 import { RuleModule } from './rule/rule.module';
 import { ProjectModule } from './project/project.module';
@@ -24,7 +23,6 @@ import { TimelogsModule } from './timelogs/timelogs.module';
       }),
     }),
     AuthModule,
-    HolidayModule,
     VacationsModule,
     TimelogsModule,
     LogModule,

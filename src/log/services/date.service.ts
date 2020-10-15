@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class DateService {
   public getWeekDays(date: Date): number {
-    let day = 1;
-    let counter = 0;
-    let newDate = date;
-    const year = newDate.getFullYear();
-    const month = newDate.getMonth();
+    let day: number = 1;
+    let counter: number = 0;
+    let newDate: Date = date;
+    const year: number = newDate.getFullYear();
+    const month: number = newDate.getMonth();
 
     while (newDate.getMonth() === month) {
       if (newDate.getDay() === 0 || newDate.getDay() === 6) {
@@ -18,7 +18,7 @@ export class DateService {
     }
     return counter;
   }
-  public timeDobuleToString(time: number): string {
+  public timeToString(time: number): string {
     return `${Math.floor(time)}h ${Math.floor(
       (time - Math.floor(time)) * 60,
     )}m`;
@@ -29,11 +29,15 @@ export class DateService {
   public hoursInMonth(date: Date): number {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() * 8;
   }
+
+  public getLastDate(date: string): Date {
+    return new Date(new Date(date).setDate(new Date(date).getDate() + 1));
+  }
   public sumTimeInMinutes(times: any[]): number {
-    let h = 0;
-    let m = 0;
-    const reg1 = /\d+(?=h)/;
-    const reg2 = /\d+(?=m)/;
+    let h: number = 0;
+    let m: number = 0;
+    const reg1: RegExp = /\d+(?=h)/;
+    const reg2: RegExp = /\d+(?=m)/;
     for (const time of times) {
       h += parseInt(time.match(reg1)) || 0;
       m += parseInt(time.match(reg2)) || 0;

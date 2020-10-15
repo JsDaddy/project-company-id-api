@@ -10,7 +10,7 @@ import { controllers } from './controllers';
 import { userSchema } from './schemas/user.schema';
 
 @Module({
-  controllers: controllers,
+  controllers,
   exports: [AuthService],
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),

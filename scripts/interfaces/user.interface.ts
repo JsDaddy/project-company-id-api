@@ -6,8 +6,8 @@ export interface IUser {
   initialLogin: boolean;
   lastName: string;
   englishLevel: string;
-  activeProjects: string[];
-  projects: string[];
+  activeProjects: mongoose.Types.ObjectId[];
+  projects: mongoose.Types.ObjectId[];
   role: string;
   skype: string;
   uid: string;

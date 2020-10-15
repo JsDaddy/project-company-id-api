@@ -2,11 +2,11 @@ import * as firebase from 'firebase-admin';
 import * as util from 'util';
 import * as fs from 'fs';
 import { IUser } from './interfaces/user.interface';
-import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import * as mongodb from 'mongodb';
 import * as jwt from 'jsonwebtoken';
 import { Db } from 'mongodb';
+import { Types } from 'mongoose';
 
 export const GOOGLE_APPLICATION_CREDENTIALS =
   'scripts/companyid-74562-firebase-adminsdk-85397-1dbc868ab2.json';
@@ -25,7 +25,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const dbName = 'company-id';
-const dbPath = 'mongodb://mongodb/company-id';
+const dbPath = 'mongodb://127.0.0.1:27017/company-id';
 const asyncFileWriter: (
   filename: string,
   data: any,
@@ -62,13 +62,13 @@ export async function main(): Promise<any> {
     .get();
 
   for (const holiday of json.holidays) {
-    holiday._id = mongoose.Types.ObjectId();
+    holiday._id = Types.ObjectId();
     holiday.date = new Date(holiday.date);
     await mongoDb.collection('holidays').insertOne(holiday);
   }
   for (const stackDocument of stack.docs) {
     const stackDoc = stackDocument.data();
-    stackDoc._id = mongoose.Types.ObjectId();
+    stackDoc._id = Types.ObjectId();
     delete stackDoc.id;
     allStack.push({ ...stackDoc, id: stackDocument.id });
   }
@@ -83,13 +83,17 @@ export async function main(): Promise<any> {
     if (project.endDate) {
       project.endDate = project.endDate.toDate();
     }
-    project._id = mongoose.Types.ObjectId();
+    project._id = Types.ObjectId();
     project = { ...project, fbId: projectDoc.id };
     allProjects.push(project);
   }
+
+  let oldId: Types.ObjectId = new Types.ObjectId();
+  let newId: Types.ObjectId = new Types.ObjectId();
+
   for (const user of users.docs) {
     const userData = user.data() as IUser;
-    userData._id = mongoose.Types.ObjectId();
+    userData._id = Types.ObjectId();
     userData.password = await bcrypt.hash('jsdaddy2020', 10);
     const { email } = userData;
     const payload: { email: string } = {
@@ -109,7 +113,7 @@ export async function main(): Promise<any> {
 
     for (const vacationDocument of vacation.docs) {
       const vacDoc = vacationDocument.data();
-      vacDoc._id = mongoose.Types.ObjectId();
+      vacDoc._id = Types.ObjectId();
       vacDoc.uid = userData._id;
       vacDoc.date = vacDoc.date.toDate();
       await mongoDb.collection('vacations').insertOne(vacDoc);
@@ -122,19 +126,63 @@ export async function main(): Promise<any> {
       timelog.project = allProjects.find(
         item => item.fbId === timelog.project,
       )._id;
-      timelog._id = mongoose.Types.ObjectId();
+      timelog._id = Types.ObjectId();
       timelog.date = timelog.date.toDate();
       timelog.uid = userData._id;
       await mongoDb.collection('timelogs').insertOne(timelog);
       allTimelogs.push(timelog);
     }
-    delete userData.uid;
-    delete userData.activeProjects;
-    delete userData.projects;
-    await mongoDb.collection('users').insertOne(userData);
 
+    let projects = [];
+    let activeProjects = [];
+
+    if (userData.projects && userData.projects.length > 0) {
+      for (let project of userData.projects) {
+        const newProject = allProjects.find(
+          // tslint:disable-next-line:no-any
+          (fullProject: any) => fullProject.fbId === project,
+        )._id;
+        projects.push(newProject);
+      }
+    } else {
+      // tslint:disable-next-line:no-any
+      projects = [...allProjects.map((project: any) => project._id)];
+    }
+
+    if (userData.activeProjects && userData.activeProjects.length > 0) {
+      for (let project of userData.activeProjects) {
+        const newActiveProject = allProjects.find(
+          // tslint:disable-next-line:no-any
+          (fullProject: any) => fullProject.fbId === project,
+        )._id;
+        activeProjects.push(newActiveProject);
+      }
+    } else {
+      // tslint:disable-next-line:no-any
+      activeProjects = [...allProjects.map((project: any) => project._id)];
+    }
+
+    userData.projects = [...projects];
+    userData.activeProjects = [...activeProjects];
+    delete userData.uid;
+
+    if (userData.email === 'vloban@jsdaddy.com') {
+      oldId = userData._id;
+    }
+
+    if (userData.email === 'juncker8888@gmail.com') {
+      newId = userData._id;
+    }
+
+    await mongoDb.collection('users').insertOne(userData);
     allUsers.push(userData);
   }
+
+  await mongoDb
+    .collection('timelogs')
+    .updateMany({ uid: oldId }, { $set: { uid: newId } });
+  await mongoDb.collection('users').deleteOne({ _id: oldId });
+
   for (const proj of allProjects) {
     proj.stack = proj.stack.map(
       (project: any) => allStack.find(stack => stack.id === project)._id,
