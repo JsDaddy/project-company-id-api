@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose';
+import { Types, Schema } from 'mongoose';
 
-export const timelogSchema: mongoose.Schema = new mongoose.Schema({
+export const timelogSchema: Schema = new Schema({
   desc: {
     required: true,
     type: String,
@@ -11,7 +11,7 @@ export const timelogSchema: mongoose.Schema = new mongoose.Schema({
   },
   project: {
     required: true,
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
   },
   time: {
     required: true,
@@ -19,15 +19,6 @@ export const timelogSchema: mongoose.Schema = new mongoose.Schema({
   },
   uid: {
     required: true,
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
   },
 });
-type Timelog = {
-  desc: string;
-  date: string;
-  project: mongoose.Types.ObjectId;
-  time: string;
-  uid: mongoose.Types.ObjectId;
-};
-
-export interface ITimelog extends mongoose.Document, Timelog {}

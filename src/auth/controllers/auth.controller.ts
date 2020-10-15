@@ -14,8 +14,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
 
-import { IUser, User } from '../schemas/user.schema';
 import { SignUpDto } from '../dto/signup.dto';
+import { IUser } from '../interfaces/user.interface';
+import { IProject } from 'src/project/interfaces/project.interface';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -37,7 +38,7 @@ export class AuthController {
   ): Promise<Response> {
     try {
       const { email, password } = createUserDto;
-      const user: Partial<IUser> | null = await this._authService.getUser(
+      const user: IUser<IProject[]> | null = await this._authService.getUser(
         email,
       );
       if (user) {
@@ -47,16 +48,19 @@ export class AuthController {
         });
       }
       const hash: string = await bcrypt.hash(password, 10);
-      let userForCreate: User = {
+      const userForCreate: SignUpDto = {
         ...createUserDto,
         password: hash,
       };
-      userForCreate = await this._authService.createToken(userForCreate);
-      const newUser: Partial<IUser> = await this._authService.createUser(
+      const accessToken: string = await this._authService.createToken(
         userForCreate,
       );
-      delete newUser.password;
-      return res.status(HttpStatus.OK).json({ data: newUser, error: null });
+      const createdUser: IUser = await this._authService.createUser({
+        accessToken,
+        ...userForCreate,
+      });
+      delete createdUser.password;
+      return res.status(HttpStatus.OK).json({ data: createdUser, error: null });
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
     }
@@ -75,9 +79,14 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      const { email, password: lpassword } = loginUserDto;
-      const { password, ...user }: any = await this._authService.getUser(email);
-      if (!user || (user && !(await bcrypt.compare(lpassword, password)))) {
+      const { email, password } = loginUserDto;
+      const user: IUser<IProject[]> | null = await this._authService.getUser(
+        email,
+      );
+      if (
+        !user ||
+        (user && !(await bcrypt.compare(password, user.password ?? '')))
+      ) {
         return res.status(HttpStatus.UNAUTHORIZED).json({
           data: null,
           error: 'Invalid email and/or password',
@@ -101,23 +110,21 @@ export class AuthController {
     description: 'Wrong email or password',
   })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST })
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public async setPassword(
     @Body() loginUserDto: { password: string },
+    // tslint:disable-next-line:no-any
     @Req() req: any,
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      const email: string = req.user.email;
+      const { email } = req.user;
       const { password } = loginUserDto;
       const hash: string = await bcrypt.hash(password, 10);
       await this._authService.setPassword(email, hash);
-
       return res
         .status(HttpStatus.OK)
         .json({ data: 'Your password has been changed', error: null });
     } catch (error) {
-      console.log(error);
       return res
         .status(HttpStatus.UNAUTHORIZED)
         .json({ data: null, error: 'Someting went wrong' });

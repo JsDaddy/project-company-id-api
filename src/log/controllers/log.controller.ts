@@ -1,4 +1,3 @@
-// import { ITimelog } from './../../timelogs/schemas/timelog.schema';
 import { FilterLogDto } from './../dto/filter-log.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
@@ -40,7 +39,6 @@ export class LogController {
       const logs = await this._logService.findLogs(query);
       return res.status(HttpStatus.OK).json({ data: logs, error: null });
     } catch (error) {
-      console.log(error);
       return res.status(HttpStatus.NOT_FOUND).json({ data: null, error });
     }
   }

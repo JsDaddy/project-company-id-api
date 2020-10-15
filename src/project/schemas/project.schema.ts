@@ -1,4 +1,4 @@
-import { Schema, Document, Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 export const projectSchema: Schema = new Schema(
   {
@@ -40,16 +40,3 @@ export const projectSchema: Schema = new Schema(
     versionKey: false,
   },
 );
-
-export type Project = {
-  name: string;
-  industry: string;
-  customer: string;
-  startDate: Date;
-  isActivity: boolean;
-  stack: Types.ObjectId[];
-  isInternal: boolean;
-  isRejected: boolean;
-};
-
-export interface IProject extends Document, Project {}

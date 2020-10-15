@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose';
+import { Types, Schema } from 'mongoose';
 
-export const vacationSchema: mongoose.Schema = new mongoose.Schema(
+export const vacationSchema: Schema = new Schema(
   {
     desc: {
       required: true,
@@ -17,19 +17,10 @@ export const vacationSchema: mongoose.Schema = new mongoose.Schema(
     },
     uid: {
       required: true,
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
     },
   },
   {
     versionKey: false,
   },
 );
-type Vacation = {
-  desc: string;
-  date: string;
-  type: number;
-  time: string;
-  user: mongoose.Schema.Types.ObjectId;
-};
-
-export interface IVacation extends mongoose.Document, Vacation {}

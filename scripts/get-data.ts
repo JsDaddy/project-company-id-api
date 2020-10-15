@@ -25,7 +25,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const dbName = 'company-id';
-const dbPath = 'mongodb://mongodb/company-id';
+const dbPath = 'mongodb://127.0.0.1:27017/company-id';
 const asyncFileWriter: (
   filename: string,
   data: any,

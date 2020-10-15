@@ -1,5 +1,4 @@
-import { Document, Schema, Types } from 'mongoose';
-import { IProject } from 'src/project/schemas/project.schema';
+import { Schema, Types } from 'mongoose';
 
 export const userSchema: Schema = new Schema({
   name: {
@@ -70,24 +69,3 @@ export const userSchema: Schema = new Schema({
     default: [],
   },
 });
-
-export type User = {
-  email: string;
-  name: string;
-  lastName: string;
-  role: string;
-  dob: Date;
-  englishLevel: string;
-  password: string;
-  github: string;
-  initialLogin?: boolean;
-  accessToken?: string;
-  position: string;
-  avatar: string;
-  phone: string;
-  skype: string;
-  activeProjects?: Types.ObjectId[];
-  projects?: Types.ObjectId[] | Partial<IProject>[];
-};
-
-export interface IUser extends Document, User {}

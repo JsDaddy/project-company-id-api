@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { IProject } from '../schemas/project.schema';
-// import { ProjectDto } from 'src/rule/dto/rule.dto';
+import { Model, Document } from 'mongoose';
+import { IProject } from '../interfaces/project.interface';
 
 @Injectable()
 export class ProjectService {
   public constructor(
-    @InjectModel('project') private readonly projectModel: Model<IProject>,
+    @InjectModel('project')
+    private readonly projectModel: Model<IProject & Document>,
   ) {}
 
-  public async findProjects(): Promise<Partial<IProject>[]> {
+  public async findProjects(): Promise<IProject[]> {
     return this.projectModel
       .find({})
       .lean()
