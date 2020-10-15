@@ -2,7 +2,7 @@ import { CreateTimelogDto } from './../dto/create-timelog.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model, Document } from 'mongoose';
-import { ITimelog } from '../interfaces/timelog.interface';
+import { ITimelog } from './../interfaces/timelog.interface';
 
 @Injectable()
 export class TimelogsService {
