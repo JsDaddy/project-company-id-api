@@ -67,18 +67,13 @@ export class ProjectService {
         {
           $match: filterByUser,
         },
-        // { endDate: { $exists: true } },
-        // {
-        //   $set: {
-        //     isGreyOut: {
-        //       $cond: {
-        //         if: { endDate:  },
-        //         then: false,
-        //         else: true,
-        //       },
-        //     },
-        //   },
-        // },
+        {
+          $set: {
+            isGreyOut: {
+              $cond: [{ $ifNull: ['$endDate', false] }, false, true],
+            },
+          },
+        },
         {
           $sort: { endDate: 1, isInternal: 1, isActivity: 1 },
         },
