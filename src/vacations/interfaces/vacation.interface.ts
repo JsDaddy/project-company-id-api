@@ -5,6 +5,6 @@ export interface IVacation {
   desc: string;
   date: string;
   type: number;
-  time: string;
-  user: Types.ObjectId;
+  uid: Types.ObjectId;
+  status: string;
 }

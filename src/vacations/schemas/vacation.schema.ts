@@ -15,6 +15,10 @@ export const vacationSchema: Schema = new Schema(
       required: true,
       type: Number,
     },
+    status: {
+      required: true,
+      type: String,
+    },
     uid: {
       required: true,
       type: Types.ObjectId,
