@@ -19,6 +19,7 @@ import { IUser } from 'scripts/interfaces/user.interface';
 import { Request, Response } from 'express';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
 import { Types } from 'mongoose';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
 
 @Controller('vacations')
 @ApiTags('vacations')
@@ -61,16 +62,16 @@ export class VacationsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(['admin']))
   @Put(':vacationId')
-  @ApiOperation({ description: 'Create vacation' })
+  @ApiOperation({ description: 'Change status of vacation' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'The status has been successfully changed.',
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'The vacation has not been changed.',
+    description: 'The status has not been changed.',
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -81,18 +82,11 @@ export class VacationsController {
     description: 'Vacation not found.',
   })
   public async changeStatus(
-    @Req() req: Request,
     @Body() changeStatusDto: ChangeStatusDto,
     @Res() res: Response,
     @Param('vacationId', ParseObjectIdPipe) vacationId: Types.ObjectId,
   ): Promise<Response> {
     try {
-      const { role } = req.user as IUser;
-      if (role !== 'admin') {
-        return res
-          .status(HttpStatus.BAD_REQUEST)
-          .json({ data: null, error: 'You dont have permissions.' });
-      }
       const vacation: IVacation | null = await this._vacationsService.statusChange(
         vacationId,
         changeStatusDto,
