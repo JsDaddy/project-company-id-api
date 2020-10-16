@@ -35,10 +35,6 @@ export const projectSchema: Schema = new Schema(
       required: true,
       type: Boolean,
     },
-    isGreyOut: {
-      required: false,
-      type: Boolean,
-    },
   },
   {
     versionKey: false,
