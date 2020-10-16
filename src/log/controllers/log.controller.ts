@@ -61,7 +61,7 @@ export class LogController {
     @Query() query: FilterLogDto,
   ): Promise<Response> {
     try {
-      const logs = await this._logService.findLogByDate(query);
+      const logs: any = await this._logService.findLogByDate(query);
       return res.status(HttpStatus.OK).json({ data: logs, error: null });
     } catch (error) {
       console.log(error);

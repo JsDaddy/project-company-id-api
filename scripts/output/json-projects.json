@@ -1,315 +1,315 @@
 [
     {
-        "isInternal": true,
-        "customer": "JSDaddy",
-        "industry": "JSDaddy",
         "isActivity": true,
-        "stack": [
-            "5f88307cca6cf0594d626d06"
-        ],
+        "isInternal": true,
         "startDate": "2018-03-31T21:00:00.000Z",
-        "isRejected": false,
+        "industry": "JSDaddy",
+        "stack": [
+            "5f89612a9a5bd4094ca147b9"
+        ],
+        "customer": "JSDaddy",
         "name": "HR-activity",
-        "_id": "5f88307cca6cf0594d626d14"
+        "isRejected": false,
+        "_id": "5f89612a9a5bd4094ca147c7"
     },
     {
+        "isActivity": false,
+        "stack": [
+            "5f89612a9a5bd4094ca147ba",
+            "5f89612a9a5bd4094ca147bc",
+            "5f89612a9a5bd4094ca147bd",
+            "5f89612a9a5bd4094ca147be"
+        ],
+        "name": "Moscow’s-dictors",
+        "customer": "ivan",
         "isInternal": false,
         "industry": "business ",
-        "name": "Moscow’s-dictors",
+        "isRejected": false,
         "startDate": "2020-06-21T21:00:00.000Z",
-        "stack": [
-            "5f88307cca6cf0594d626d07",
-            "5f88307cca6cf0594d626d09",
-            "5f88307cca6cf0594d626d0a",
-            "5f88307cca6cf0594d626d0b"
-        ],
-        "customer": "ivan",
-        "isActivity": false,
-        "isRejected": false,
-        "_id": "5f88307cca6cf0594d626d15"
+        "_id": "5f89612a9a5bd4094ca147c8"
     },
     {
-        "isActivity": false,
         "startDate": "2020-05-11T21:00:00.000Z",
-        "isRejected": false,
-        "customer": "Alicia",
         "name": "Be.-project",
-        "isInternal": false,
         "industry": "Business ",
+        "isInternal": false,
+        "isActivity": false,
         "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d10",
-            "5f88307cca6cf0594d626d08"
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c3",
+            "5f89612a9a5bd4094ca147bb"
         ],
-        "_id": "5f88307cca6cf0594d626d16"
+        "customer": "Alicia",
+        "isRejected": false,
+        "_id": "5f89612a9a5bd4094ca147c9"
     },
     {
+        "stack": [
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c1"
+        ],
         "industry": "IoT",
-        "isRejected": false,
-        "isActivity": false,
         "customer": "WooFi",
-        "name": "WooFi",
-        "startDate": "2020-06-23T21:00:00.000Z",
-        "isInternal": false,
-        "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d0e"
-        ],
-        "_id": "5f88307cca6cf0594d626d17"
-    },
-    {
         "isActivity": false,
-        "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d10",
-            "5f88307cca6cf0594d626d08",
-            "5f88307cca6cf0594d626d11"
-        ],
-        "industry": "Business ",
         "isRejected": false,
-        "customer": "JSDaddy",
-        "startDate": "2020-03-31T21:00:00.000Z",
-        "isInternal": true,
-        "name": "CompanyID",
-        "_id": "5f88307cca6cf0594d626d18"
+        "startDate": "2020-06-23T21:00:00.000Z",
+        "name": "WooFi",
+        "isInternal": false,
+        "_id": "5f89612a9a5bd4094ca147ca"
     },
     {
+        "industry": "Business ",
+        "isActivity": false,
+        "isInternal": true,
+        "customer": "JSDaddy",
+        "stack": [
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c3",
+            "5f89612a9a5bd4094ca147bb",
+            "5f89612a9a5bd4094ca147c4"
+        ],
+        "name": "CompanyID",
+        "startDate": "2020-03-31T21:00:00.000Z",
+        "isRejected": false,
+        "_id": "5f89612a9a5bd4094ca147cb"
+    },
+    {
+        "customer": "Phillip (Kloodle)",
+        "stack": [
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c3",
+            "5f89612a9a5bd4094ca147bb"
+        ],
+        "isActivity": false,
         "isInternal": false,
         "name": "Kloodle",
-        "startDate": "2020-04-01T21:00:00.000Z",
-        "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d10",
-            "5f88307cca6cf0594d626d08"
-        ],
-        "industry": "Education",
-        "isActivity": false,
-        "isRejected": false,
         "endDate": "2020-05-31T21:00:00.000Z",
-        "customer": "Phillip (Kloodle)",
-        "_id": "5f88307cca6cf0594d626d19"
+        "industry": "Education",
+        "isRejected": false,
+        "startDate": "2020-04-01T21:00:00.000Z",
+        "_id": "5f89612a9a5bd4094ca147cc"
     },
     {
-        "isRejected": false,
-        "isInternal": true,
-        "customer": "JSDaddy",
-        "name": "Sales-activity",
         "startDate": "2018-03-31T21:00:00.000Z",
+        "name": "Sales-activity",
+        "customer": "JSDaddy",
+        "isRejected": false,
         "isActivity": true,
         "stack": [
-            "5f88307cca6cf0594d626d13"
+            "5f89612a9a5bd4094ca147c6"
         ],
+        "isInternal": true,
         "industry": "JSDaddy",
-        "_id": "5f88307cca6cf0594d626d1a"
+        "_id": "5f89612a9a5bd4094ca147cd"
     },
     {
-        "isInternal": false,
         "customer": "N/A",
         "endDate": "2020-05-28T21:00:00.000Z",
-        "industry": "events",
-        "startDate": "2020-05-27T21:00:00.000Z",
-        "isActivity": false,
-        "stack": [
-            "5f88307cca6cf0594d626d05"
-        ],
-        "name": "FrenchFry",
         "isRejected": false,
-        "_id": "5f88307cca6cf0594d626d1b"
+        "name": "FrenchFry",
+        "isInternal": false,
+        "startDate": "2020-05-27T21:00:00.000Z",
+        "stack": [
+            "5f89612a9a5bd4094ca147b8"
+        ],
+        "isActivity": false,
+        "industry": "events",
+        "_id": "5f89612a9a5bd4094ca147ce"
     },
     {
+        "customer": "Igal",
         "isRejected": false,
-        "stack": [
-            "5f88307cca6cf0594d626d0c",
-            "5f88307cca6cf0594d626d10",
-            "5f88307cca6cf0594d626d0f"
-        ],
+        "name": "Vortic",
         "industry": "Art",
         "startDate": "2019-12-31T22:00:00.000Z",
-        "customer": "Igal",
-        "isInternal": false,
         "isActivity": false,
-        "name": "Vortic",
-        "_id": "5f88307cca6cf0594d626d1c"
+        "stack": [
+            "5f89612a9a5bd4094ca147bf",
+            "5f89612a9a5bd4094ca147c3",
+            "5f89612a9a5bd4094ca147c2"
+        ],
+        "isInternal": false,
+        "_id": "5f89612a9a5bd4094ca147cf"
     },
     {
-        "customer": "JsDaddy",
         "isInternal": true,
-        "name": "Ngx-Shop-client",
         "startDate": "2020-03-31T21:00:00.000Z",
-        "stack": [
-            "5f88307cca6cf0594d626d07",
-            "5f88307cca6cf0594d626d0a",
-            "5f88307cca6cf0594d626d12",
-            "5f88307cca6cf0594d626d0d",
-            "5f88307cca6cf0594d626d10",
-            "5f88307cca6cf0594d626d0f"
-        ],
+        "customer": "JsDaddy",
         "industry": "Shop",
+        "stack": [
+            "5f89612a9a5bd4094ca147ba",
+            "5f89612a9a5bd4094ca147bd",
+            "5f89612a9a5bd4094ca147c5",
+            "5f89612a9a5bd4094ca147c0",
+            "5f89612a9a5bd4094ca147c3",
+            "5f89612a9a5bd4094ca147c2"
+        ],
+        "name": "Ngx-Shop-client",
         "isRejected": false,
         "isActivity": false,
-        "_id": "5f88307cca6cf0594d626d1d"
+        "_id": "5f89612a9a5bd4094ca147d0"
     },
     {
-        "isInternal": false,
-        "isActivity": false,
-        "name": "sportszap",
+        "startDate": "2020-08-02T21:00:00.000Z",
         "industry": "couch",
         "customer": "Kalim",
-        "startDate": "2020-08-02T21:00:00.000Z",
+        "isInternal": false,
+        "name": "sportszap",
         "isRejected": false,
+        "isActivity": false,
         "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d09",
-            "5f88307cca6cf0594d626d08",
-            "5f88307cca6cf0594d626d0a",
-            "5f88307cca6cf0594d626d0b",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d10"
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147bc",
+            "5f89612a9a5bd4094ca147bb",
+            "5f89612a9a5bd4094ca147bd",
+            "5f89612a9a5bd4094ca147be",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c3"
         ],
-        "_id": "5f88307cca6cf0594d626d1e"
+        "_id": "5f89612a9a5bd4094ca147d1"
     },
     {
-        "startDate": "2020-05-30T21:00:00.000Z",
-        "isInternal": true,
-        "isActivity": false,
         "isRejected": false,
-        "customer": "JSDaddy",
-        "stack": [
-            "5f88307cca6cf0594d626d06"
-        ],
-        "name": "Estimation",
         "industry": "estimation",
-        "_id": "5f88307cca6cf0594d626d1f"
+        "name": "Estimation",
+        "customer": "JSDaddy",
+        "isActivity": false,
+        "isInternal": true,
+        "startDate": "2020-05-30T21:00:00.000Z",
+        "stack": [
+            "5f89612a9a5bd4094ca147b9"
+        ],
+        "_id": "5f89612a9a5bd4094ca147d2"
     },
     {
-        "industry": "Education",
-        "isInternal": false,
         "endDate": "2020-05-06T21:00:00.000Z",
-        "isActivity": false,
+        "isInternal": false,
         "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d10"
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c3"
         ],
+        "industry": "Education",
+        "isActivity": false,
         "name": "SmartWords",
-        "isRejected": false,
         "startDate": "2020-04-28T21:00:00.000Z",
+        "isRejected": false,
         "customer": "Ankur",
-        "_id": "5f88307cca6cf0594d626d20"
+        "_id": "5f89612a9a5bd4094ca147d3"
     },
     {
-        "name": "Ima-kiosk",
-        "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d10",
-            "5f88307cca6cf0594d626d08"
-        ],
-        "isActivity": false,
-        "startDate": "2019-06-30T21:00:00.000Z",
+        "isInternal": false,
+        "isRejected": false,
         "industry": "Health",
-        "isInternal": false,
-        "isRejected": false,
+        "name": "Ima-kiosk",
         "customer": "Leo",
-        "_id": "5f88307cca6cf0594d626d21"
+        "startDate": "2019-06-30T21:00:00.000Z",
+        "stack": [
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c3",
+            "5f89612a9a5bd4094ca147bb"
+        ],
+        "isActivity": false,
+        "_id": "5f89612a9a5bd4094ca147d4"
     },
     {
-        "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d08",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d10"
-        ],
-        "isInternal": false,
-        "isActivity": false,
-        "industry": "healscare",
         "isRejected": false,
-        "name": "Imaserve EVV",
         "startDate": "2020-08-25T21:00:00.000Z",
+        "industry": "healscare",
+        "name": "Imaserve EVV",
+        "stack": [
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147bb",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c3"
+        ],
+        "isActivity": false,
         "customer": "Ricki",
-        "_id": "5f88307cca6cf0594d626d22"
+        "isInternal": false,
+        "_id": "5f89612a9a5bd4094ca147d5"
     },
     {
         "name": "Management-activity",
         "customer": "JSDaddy",
         "isActivity": true,
+        "startDate": "2018-03-31T21:00:00.000Z",
         "industry": "JSDaddy",
         "stack": [
-            "5f88307cca6cf0594d626d06"
+            "5f89612a9a5bd4094ca147b9"
         ],
         "isRejected": false,
         "isInternal": true,
-        "startDate": "2018-03-31T21:00:00.000Z",
-        "_id": "5f88307cca6cf0594d626d23"
+        "_id": "5f89612a9a5bd4094ca147d6"
     },
     {
-        "isActivity": false,
-        "startDate": "2016-09-22T21:00:00.000Z",
-        "industry": "Development",
-        "isInternal": true,
         "name": "NgxMask",
+        "stack": [
+            "5f89612a9a5bd4094ca147ba",
+            "5f89612a9a5bd4094ca147bd",
+            "5f89612a9a5bd4094ca147c2"
+        ],
+        "isActivity": false,
         "customer": "JsDaddy",
         "isRejected": false,
-        "stack": [
-            "5f88307cca6cf0594d626d07",
-            "5f88307cca6cf0594d626d0a",
-            "5f88307cca6cf0594d626d0f"
-        ],
-        "_id": "5f88307cca6cf0594d626d24"
+        "isInternal": true,
+        "startDate": "2016-09-22T21:00:00.000Z",
+        "industry": "Development",
+        "_id": "5f89612a9a5bd4094ca147d7"
     },
     {
-        "customer": "Ankur",
-        "isRejected": false,
-        "isInternal": false,
-        "startDate": "2020-05-17T21:00:00.000Z",
-        "name": "Sport Signal",
-        "stack": [
-            "5f88307cca6cf0594d626d08",
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d11"
-        ],
         "endDate": "2020-06-11T21:00:00.000Z",
+        "stack": [
+            "5f89612a9a5bd4094ca147bb",
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c4"
+        ],
+        "isInternal": false,
+        "isRejected": false,
+        "name": "Sport Signal",
+        "startDate": "2020-05-17T21:00:00.000Z",
         "isActivity": false,
         "industry": "Sport",
-        "_id": "5f88307cca6cf0594d626d25"
+        "customer": "Ankur",
+        "_id": "5f89612a9a5bd4094ca147d8"
     },
     {
-        "isActivity": false,
-        "stack": [
-            "5f88307cca6cf0594d626d07",
-            "5f88307cca6cf0594d626d0a",
-            "5f88307cca6cf0594d626d12",
-            "5f88307cca6cf0594d626d09",
-            "5f88307cca6cf0594d626d12",
-            "5f88307cca6cf0594d626d04",
-            "5f88307cca6cf0594d626d0b",
-            "5f88307cca6cf0594d626d0f"
-        ],
-        "isInternal": false,
-        "isRejected": false,
-        "startDate": "2020-03-31T21:00:00.000Z",
         "industry": "Business",
+        "stack": [
+            "5f89612a9a5bd4094ca147ba",
+            "5f89612a9a5bd4094ca147bd",
+            "5f89612a9a5bd4094ca147c5",
+            "5f89612a9a5bd4094ca147bc",
+            "5f89612a9a5bd4094ca147c5",
+            "5f89612a9a5bd4094ca147b7",
+            "5f89612a9a5bd4094ca147be",
+            "5f89612a9a5bd4094ca147c2"
+        ],
         "name": "Gauzy",
+        "isInternal": false,
         "customer": "Ever Co. LTD",
-        "_id": "5f88307cca6cf0594d626d26"
+        "startDate": "2020-03-31T21:00:00.000Z",
+        "isActivity": false,
+        "isRejected": false,
+        "_id": "5f89612a9a5bd4094ca147d9"
     },
     {
-        "startDate": "2019-03-31T21:00:00.000Z",
         "isRejected": false,
-        "industry": "Health",
+        "name": "Ima-methadone",
         "customer": "Leo",
+        "industry": "Health",
         "isActivity": false,
         "isInternal": false,
         "stack": [
-            "5f88307cca6cf0594d626d05",
-            "5f88307cca6cf0594d626d0e",
-            "5f88307cca6cf0594d626d10",
-            "5f88307cca6cf0594d626d08"
+            "5f89612a9a5bd4094ca147b8",
+            "5f89612a9a5bd4094ca147c1",
+            "5f89612a9a5bd4094ca147c3",
+            "5f89612a9a5bd4094ca147bb"
         ],
-        "name": "Ima-methadone",
-        "_id": "5f88307cca6cf0594d626d27"
+        "startDate": "2019-03-31T21:00:00.000Z",
+        "_id": "5f89612a9a5bd4094ca147da"
     }
 ]

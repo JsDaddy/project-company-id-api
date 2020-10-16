@@ -87,6 +87,10 @@ export async function main(): Promise<any> {
     project = { ...project, fbId: projectDoc.id };
     allProjects.push(project);
   }
+
+  let oldId: Types.ObjectId = new Types.ObjectId();
+  let newId: Types.ObjectId = new Types.ObjectId();
+
   for (const user of users.docs) {
     const userData = user.data() as IUser;
     userData._id = Types.ObjectId();
@@ -128,13 +132,57 @@ export async function main(): Promise<any> {
       await mongoDb.collection('timelogs').insertOne(timelog);
       allTimelogs.push(timelog);
     }
-    delete userData.uid;
-    delete userData.activeProjects;
-    delete userData.projects;
-    await mongoDb.collection('users').insertOne(userData);
 
+    let projects = [];
+    let activeProjects = [];
+
+    if (userData.projects && userData.projects.length > 0) {
+      for (let project of userData.projects) {
+        const newProject = allProjects.find(
+          // tslint:disable-next-line:no-any
+          (fullProject: any) => fullProject.fbId === project,
+        )._id;
+        projects.push(newProject);
+      }
+    } else {
+      // tslint:disable-next-line:no-any
+      projects = [...allProjects.map((project: any) => project._id)];
+    }
+
+    if (userData.activeProjects && userData.activeProjects.length > 0) {
+      for (let project of userData.activeProjects) {
+        const newActiveProject = allProjects.find(
+          // tslint:disable-next-line:no-any
+          (fullProject: any) => fullProject.fbId === project,
+        )._id;
+        activeProjects.push(newActiveProject);
+      }
+    } else {
+      // tslint:disable-next-line:no-any
+      activeProjects = [...allProjects.map((project: any) => project._id)];
+    }
+
+    userData.projects = [...projects];
+    userData.activeProjects = [...activeProjects];
+    delete userData.uid;
+
+    if (userData.email === 'vloban@jsdaddy.com') {
+      oldId = userData._id;
+    }
+
+    if (userData.email === 'juncker8888@gmail.com') {
+      newId = userData._id;
+    }
+
+    await mongoDb.collection('users').insertOne(userData);
     allUsers.push(userData);
   }
+
+  await mongoDb
+    .collection('timelogs')
+    .updateMany({ uid: oldId }, { $set: { uid: newId } });
+  await mongoDb.collection('users').deleteOne({ _id: oldId });
+
   for (const proj of allProjects) {
     proj.stack = proj.stack.map(
       (project: any) => allStack.find(stack => stack.id === project)._id,
