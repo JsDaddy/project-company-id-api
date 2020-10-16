@@ -1,9 +1,9 @@
-import { ChangeStatusDto, StatusType } from './../dto/change-status.dto';
 import { CreateVacationDto, VacationType } from './../dto/create-vacation.dto';
 import { IVacation } from 'src/vacations/interfaces/vacation.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { ChangeStatusDto, StatusType } from '../dto/change-status.dto';
 
 @Injectable()
 export class VacationsService {
