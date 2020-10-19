@@ -1,9 +1,9 @@
-import * as jwt from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { ConfigService } from '@nestjs/config';
+// import * as jwt from 'jsonwebtoken';
+// import { ConfigService } from '@nestjs/config';
+// import { SignUpDto } from '../dto/signup.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { SignUpDto } from '../dto/signup.dto';
 import { IUser } from '../interfaces/user.interface';
 import { Document } from 'mongoose';
 import { IProject } from 'src/project/interfaces/project.interface';
@@ -12,23 +12,22 @@ import { IProject } from 'src/project/interfaces/project.interface';
 export class AuthService {
   public constructor(
     @InjectModel('users')
-    private readonly _userModel: Model<IUser & Document>,
-    private readonly _config: ConfigService,
+    private readonly _userModel: Model<IUser & Document>, //  private readonly _config: ConfigService,
   ) {}
 
-  public async createToken(user: SignUpDto): Promise<string> {
-    const secret: string = this._config.get('SECRET') as string;
-    const { email } = user;
+  // public async createToken(user: SignUpDto): Promise<string> {
+  //   const secret: string = this._config.get('SECRET') as string;
+  //   const { email } = user;
 
-    const payload: { email: string } = {
-      email,
-    };
+  //   const payload: { email: string } = {
+  //     email,
+  //   };
 
-    let accessToken: string = '';
-    accessToken = jwt.sign(payload, secret);
+  //   let accessToken: string = '';
+  //   accessToken = jwt.sign(payload, secret);
 
-    return accessToken;
-  }
+  //   return accessToken;
+  // }
 
   public async setPassword(email: string, password: string): Promise<void> {
     await this._userModel.findOneAndUpdate(
@@ -36,11 +35,11 @@ export class AuthService {
       { password, initialLogin: false },
     );
   }
-  public async createUser(
-    createUserDto: SignUpDto & { accessToken: string },
-  ): Promise<IUser> {
-    return await this._userModel.create(createUserDto);
-  }
+  // public async createUser(
+  //   createUserDto: SignUpDto & { accessToken: string },
+  // ): Promise<IUser> {
+  //   return await this._userModel.create(createUserDto);
+  // }
 
   public async getUser(email: string): Promise<IUser<IProject[]> | null> {
     return (

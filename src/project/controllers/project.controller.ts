@@ -98,7 +98,7 @@ export class ProjectController {
     status: HttpStatus.CREATED,
     description: 'Success add project',
   })
-  @UseGuards(AuthGuard('jwt'), new RolesGuard('developer'))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
   @Post()
   public async createProject(
     @Res() res: Response,
@@ -110,7 +110,6 @@ export class ProjectController {
       );
       return res.status(HttpStatus.OK).json({ data: project, error: null });
     } catch (error) {
-      console.log(error);
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ data: null, error });
