@@ -1,3 +1,4 @@
+import { ProjectStatus } from './../enums/project-status.enum';
 import { Positions } from 'src/auth/enums/positions.enum';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,6 +9,8 @@ import {
   IFilterProjects,
 } from '../interfaces/filters.interface';
 import { IProject } from '../interfaces/project.interface';
+import { CreateProjectDto } from '../dto/project.dto';
+import { IUser } from 'src/auth/interfaces/user.interface';
 
 @Injectable()
 export class ProjectService {
@@ -22,6 +25,7 @@ export class ProjectService {
   public constructor(
     @InjectModel('project')
     private readonly projectModel: Model<IProject & Document>,
+    @InjectModel('users') private readonly _userModel: Model<IUser & Document>,
   ) {}
 
   public async findProjects(
@@ -96,11 +100,33 @@ export class ProjectService {
       .exec();
   }
 
-  public async createProject(project: any): Promise<IProject> {
-    const createdProject = new this.projectModel(project);
+  public async createProject(project: CreateProjectDto): Promise<IProject> {
+    const { users, ...projectDtoWithoutUsers } = project;
+
+    const createdProject: IProject & Document = new this.projectModel({
+      ...projectDtoWithoutUsers,
+      status: ProjectStatus.ONGOING,
+    });
+    if (users) {
+      await this.addUsersToTheProject(users, createdProject._id);
+    }
     return createdProject.save();
   }
-
+  public async addUsersToTheProject(
+    ids: string[],
+    projectId: Types.ObjectId,
+  ): Promise<void> {
+    for (const _id of ids) {
+      await this._userModel.updateOne(
+        {
+          _id: Types.ObjectId(_id),
+          activeProjects: { $ne: projectId },
+          projects: { $ne: projectId },
+        },
+        { $push: { activeProjects: projectId, projects: projectId } },
+      );
+    }
+  }
   public async findById(id: string): Promise<IProject> {
     let filterById: Partial<IFilterProject> = {};
     if (id) {
