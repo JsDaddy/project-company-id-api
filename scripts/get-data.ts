@@ -1,7 +1,7 @@
 import * as firebase from 'firebase-admin';
 import * as util from 'util';
 import * as fs from 'fs';
-import { IUser } from './interfaces/user.interface';
+import { IUserFb } from './interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
 import * as mongodb from 'mongodb';
 import * as jwt from 'jsonwebtoken';
@@ -92,7 +92,7 @@ export async function main(): Promise<any> {
   let newId: Types.ObjectId = new Types.ObjectId();
 
   for (const user of users.docs) {
-    const userData = user.data() as IUser;
+    const userData = user.data() as IUserFb;
     userData._id = Types.ObjectId();
     userData.password = await bcrypt.hash('jsdaddy2020', 10);
     const { email } = userData;
@@ -173,7 +173,11 @@ export async function main(): Promise<any> {
     if (userData.email === 'juncker8888@gmail.com') {
       newId = userData._id;
     }
-
+    userData.position = userData.position.toLowerCase();
+    if (userData.position === 'manager') {
+      userData.position = 'owner';
+    }
+    delete userData.role;
     await mongoDb.collection('users').insertOne(userData);
     allUsers.push(userData);
   }

@@ -14,9 +14,9 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TimelogsService } from '../services/timelogs.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { IUser } from 'scripts/interfaces/user.interface';
 import { Types } from 'mongoose';
 import { ITimelog } from '../interfaces/timelog.interface';
+import { IUser } from 'src/auth/interfaces/user.interface';
 
 @Controller('timelogs')
 @ApiTags('timelogs')

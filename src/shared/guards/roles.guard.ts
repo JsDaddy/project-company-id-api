@@ -20,7 +20,7 @@ export class RolesGuard implements CanActivate {
     // tslint:disable-next-line:no-any
     const req: any = context.switchToHttp().getRequest();
     const { user, query } = req;
-    const role: string = user.role;
+    const role: string = user.position;
 
     let hasPermission: boolean = false;
 

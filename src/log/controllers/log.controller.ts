@@ -1,4 +1,4 @@
-import { FilterLogDto } from './../dto/filter-log.dto';
+import { FilterLogDto, LogType } from './../dto/filter-log.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   Controller,
@@ -8,10 +8,13 @@ import {
   // Param,
   UseGuards,
   Query,
+  Param,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { LogService } from '../services/log.service';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { Positions } from 'src/auth/enums/positions.enum';
 
 @ApiTags('logs')
 @Controller('logs')
@@ -29,14 +32,20 @@ export class LogController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Logs not found',
   })
-  @UseGuards(AuthGuard('jwt'))
-  @Get()
+  @UseGuards(
+    AuthGuard('jwt'),
+    new RolesGuard({ [Positions.OWNER]: [], [Positions.DEVELOPER]: ['uid'] }),
+  )
+  @Get(':first/:logType')
   public async findLogs(
     @Res() res: Response,
+    @Param('first') first: string,
+    @Param('logType') logType: LogType,
     @Query() query: FilterLogDto,
   ): Promise<Response> {
     try {
-      const logs = await this._logService.findLogs(query);
+      const params: FilterLogDto = { ...query, logType, first };
+      const logs = await this._logService.findLogs(params);
       return res.status(HttpStatus.OK).json({ data: logs, error: null });
     } catch (error) {
       return res.status(HttpStatus.NOT_FOUND).json({ data: null, error });
@@ -54,17 +63,21 @@ export class LogController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Logs not found',
   })
-  @UseGuards(AuthGuard('jwt'))
-  @Get('date')
+  @UseGuards(
+    AuthGuard('jwt'),
+    new RolesGuard({ [Positions.OWNER]: [], [Positions.DEVELOPER]: ['uid'] }),
+  )
+  @Get(':first')
   public async findLogsByDate(
     @Res() res: Response,
+    @Param('first') first: string,
     @Query() query: FilterLogDto,
   ): Promise<Response> {
     try {
-      const logs: any = await this._logService.findLogByDate(query);
+      const params: FilterLogDto = { ...query, first };
+      const logs: any = await this._logService.findLogByDate(params);
       return res.status(HttpStatus.OK).json({ data: logs, error: null });
     } catch (error) {
-      console.log(error);
       return res.status(HttpStatus.NOT_FOUND).json({ data: null, error });
     }
   }

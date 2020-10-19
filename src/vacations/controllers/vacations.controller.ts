@@ -1,3 +1,4 @@
+import { Positions } from 'src/auth/enums/positions.enum';
 import { ChangeStatusDto } from './../dto/change-status.dto';
 import { IVacation } from 'src/vacations/interfaces/vacation.interface';
 import { VacationsService } from './../services/vacations.service';
@@ -11,15 +12,16 @@ import {
   Res,
   Put,
   Param,
+  Get,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateVacationDto } from '../dto/create-vacation.dto';
-import { IUser } from 'scripts/interfaces/user.interface';
 import { Request, Response } from 'express';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
 import { Types } from 'mongoose';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { IUser } from 'src/auth/interfaces/user.interface';
 
 @Controller('vacations')
 @ApiTags('vacations')
@@ -62,7 +64,7 @@ export class VacationsController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'), new RolesGuard(['admin']))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
   @Put(':vacationId')
   @ApiOperation({ description: 'Change status of vacation' })
   @ApiResponse({
@@ -97,6 +99,25 @@ export class VacationsController {
           .json({ data: null, error: 'Vacation not found.' });
       }
       return res.status(HttpStatus.OK).json({ data: vacation, error: null });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
+  @Get('requests')
+  @ApiOperation({ description: 'Find all vacations (in pending).' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found vacations (in pending).',
+  })
+  public async getVacations(@Res() res: Response): Promise<Response> {
+    try {
+      // tslint:disable-next-line:no-any
+      const vacations: any[] = await this._vacationsService.getVacations();
+      return res
+        .status(HttpStatus.OK)
+        .json({ data: [...vacations], error: null });
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
     }

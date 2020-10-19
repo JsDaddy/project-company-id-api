@@ -77,7 +77,7 @@ export class AuthService {
             name: { $first: '$name' },
             projects: { $push: '$projects' },
             initialLogin: { $first: '$initialLogin' },
-            role: { $first: '$role' },
+            position: { $first: '$position' },
             activeProjects: { $push: '$activeProjects' },
             password: { $first: '$password' },
             accessToken: { $first: '$accessToken' },

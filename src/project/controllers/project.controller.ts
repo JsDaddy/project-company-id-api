@@ -1,3 +1,4 @@
+import { Positions } from 'src/auth/enums/positions.enum';
 import {
   Controller,
   HttpStatus,
@@ -7,18 +8,18 @@ import {
   Param,
   Post,
   Query,
-  Req,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProjectService } from '../services/project.service';
 import { CreateProjectDto } from 'src/rule/dto/rule.dto';
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import { IProject } from '../interfaces/project.interface';
 import { ProjectFilterDto } from '../dto/filter-projects.dto';
-import { IUser } from 'scripts/interfaces/user.interface';
-import { Roles } from 'src/auth/enums/role.enum';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { IUser } from 'src/auth/interfaces/user.interface';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -36,18 +37,24 @@ export class ProjectController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Record not found',
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(
+    AuthGuard('jwt'),
+    new RolesGuard({
+      [Positions.OWNER]: [],
+      [Positions.DEVELOPER]: ['uid', 'stack', 'onGoing', 'isInternal'],
+    }),
+  )
   @Get()
   public async findProjects(
     @Res() res: Response,
-    @Req() req: Request,
     @Query() query: ProjectFilterDto,
+    @Req() req: Request,
   ): Promise<Response> {
     try {
-      const { role } = req.user as IUser;
+      const { position } = req.user as IUser<IProject[], Positions>;
       const projects: IProject[] = await this.projectService.findProjects(
         query,
-        role === 'admin' ? Roles.ADMIN : Roles.USER,
+        position,
       );
       return res.status(HttpStatus.OK).json({ data: projects, error: null });
     } catch (error) {

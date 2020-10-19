@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export interface IUser<P = Types.ObjectId[]> {
+export interface IUser<P = Types.ObjectId[], R = string> {
   _id: Types.ObjectId;
   email: string;
   name: string;
@@ -12,7 +12,7 @@ export interface IUser<P = Types.ObjectId[]> {
   github: string;
   initialLogin?: boolean;
   accessToken?: string;
-  position: string;
+  position: R;
   avatar: string;
   phone: string;
   skype: string;

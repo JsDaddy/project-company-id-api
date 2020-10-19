@@ -31,6 +31,9 @@ export class DateService {
   }
 
   public getLastDate(date: string): Date {
+    return new Date(new Date(date).setMonth(new Date(date).getMonth() + 1));
+  }
+  public getNextDay(date: string): Date {
     return new Date(new Date(date).setDate(new Date(date).getDate() + 1));
   }
   public sumTimeInMinutes(times: any[]): number {
