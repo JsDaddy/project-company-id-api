@@ -180,7 +180,7 @@ export async function main(): Promise<any> {
       // tslint:disable-next-line:no-any
       activeProjects = [...allProjects.map((project: any) => project._id)];
     }
-
+    userData.isActive = true;
     userData.projects = [...projects];
     userData.activeProjects = [...activeProjects];
     delete userData.uid;
