@@ -149,10 +149,18 @@ export class UserController {
     status: HttpStatus.NOT_FOUND,
     description: 'Record not found',
   })
-
-  // TODO
   @Get(':id')
-  public async findUser(@Param('id') id: string): Promise<IUser<IProject[]>> {
-    return this.userService.findUser(id);
+  public async findUser(
+    @Param('id') id: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const user: IUser<IProject[]> = await this.userService.findUser(id);
+      return res.status(HttpStatus.OK).json({ data: user, error: null });
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, e });
+    }
   }
 }
