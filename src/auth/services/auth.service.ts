@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   // public async createToken(user: SignUpDto): Promise<string> {
-  //   const secret: string = this._config.get('SECRET') as string;
+  //   const secret: string = process.env.secret as string;
   //   const { email } = user;
 
   //   const payload: { email: string } = {

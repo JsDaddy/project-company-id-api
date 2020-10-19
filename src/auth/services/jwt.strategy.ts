@@ -8,14 +8,11 @@ import { IProject } from 'src/project/interfaces/project.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  public constructor(
-    _configService: ConfigService,
-    private _authService: AuthService,
-  ) {
+  public constructor(private _authService: AuthService) {
     super({
       ignoreExpiration: false,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: _configService.get('SECRET'),
+      secretOrKey: process.env.secret,
     });
   }
 

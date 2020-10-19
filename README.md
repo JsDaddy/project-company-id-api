@@ -23,7 +23,7 @@ These documents provide instructions to install MongoDB Community Edition.
 ### Setting up the environment
 
 ```
-DATABASE_PATH=mongodb://127.0.0.1:27017 DATABASE_NAME=company-id
+DATABASE_PATH=db path DATABASE_NAME=db name SECRET=your secret
 ```
 
 ## Running the app

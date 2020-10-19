@@ -18,8 +18,8 @@ import { userSchema } from './schemas/user.schema';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('SECRET'),
+      useFactory: async () => ({
+        secret: process.env.secret,
       }),
     }),
   ],
