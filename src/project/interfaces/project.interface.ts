@@ -10,5 +10,6 @@ export interface IProject {
   endDate?: Date;
   status: ProjectStatus;
   isInternal: boolean;
+  isActivity: boolean;
   stack: Types.ObjectId[];
 }

@@ -1,3 +1,4 @@
+import { ProjectStatus } from './../src/project/enums/project-status.enum';
 import * as firebase from 'firebase-admin';
 import * as util from 'util';
 import * as fs from 'fs';
@@ -37,6 +38,7 @@ const asyncFileReader: (filename: string) => Promise<Buffer> = util.promisify(
   fs.readFile,
 );
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+// tslint:disable-next-line: cyclomatic-complexity
 export async function main(): Promise<any> {
   const buffer: Buffer = await asyncFileReader(`${__dirname}/${fileName}`);
   const bufferRules: Buffer = await asyncFileReader(
@@ -89,9 +91,17 @@ export async function main(): Promise<any> {
     delete project.methodology;
     delete project.nda;
     project.startDate = project.startDate.toDate();
+
     if (project.endDate) {
+      project.status = ProjectStatus.FINISHED;
       project.endDate = project.endDate.toDate();
+    } else {
+      project.status = ProjectStatus.ONGOING;
     }
+    if (project.isRejected) {
+      project.status = ProjectStatus.REJECTED;
+    }
+    delete project.isRejected;
     project._id = Types.ObjectId();
     project = { ...project, fbId: projectDoc.id };
     allProjects.push(project);

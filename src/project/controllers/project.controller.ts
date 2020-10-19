@@ -41,7 +41,7 @@ export class ProjectController {
     AuthGuard('jwt'),
     new RolesGuard({
       [Positions.OWNER]: [],
-      [Positions.DEVELOPER]: ['uid', 'stack', 'onGoing', 'isInternal'],
+      [Positions.DEVELOPER]: ['uid', 'stack', 'isInternal', 'status'],
     }),
   )
   @Get()

@@ -28,15 +28,12 @@ export class ProjectService {
     query: ProjectFilterDto,
     position: Positions,
   ): Promise<IProject[]> {
-    const { stack, uid, onGoing, isInternal } = query;
+    const { stack, uid, isInternal, status } = query;
     let filterByUser: IFilterProjects = {};
     let filterByStack: IFilterProjects = {};
     let filterByActivity: IFilterProjects = {};
     let filterByInternal: IFilterProjects = {};
-    let filterByOnGoing: IFilterProjects = {};
-    if (onGoing) {
-      filterByOnGoing = { endDate: { $exists: onGoing === 'false' } };
-    }
+    let filterByStatus: IFilterProjects = {};
     if (uid) {
       filterByUser = { 'users._id': Types.ObjectId(uid) };
     }
@@ -50,6 +47,9 @@ export class ProjectService {
     if (isInternal) {
       filterByInternal = { isInternal: isInternal.toLowerCase() === 'true' };
     }
+    if (status) {
+      filterByStatus = { status };
+    }
     return this.projectModel
       .aggregate([
         {
@@ -58,7 +58,7 @@ export class ProjectService {
               filterByStack,
               filterByActivity,
               filterByInternal,
-              filterByOnGoing,
+              filterByStatus,
             ],
           },
         },
@@ -78,7 +78,7 @@ export class ProjectService {
             endDate: 1,
             startDate: 1,
             isActivity: 1,
-            isGreyOut: 1,
+            status: 1,
             isInternal: 1,
             'users._id': 1,
             'stack._id': 1,
