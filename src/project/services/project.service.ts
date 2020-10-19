@@ -35,15 +35,7 @@ export class ProjectService {
     let filterByInternal: IFilterProjects = {};
     let filterByOnGoing: IFilterProjects = {};
     if (onGoing) {
-<<<<<<< HEAD
-      if (onGoing === 'true') {
-        filterByOnGoing = { endDate: { $exists: false } };
-      } else {
-        filterByOnGoing = { endDate: { $exists: true } };
-      }
-=======
       filterByOnGoing = { endDate: { $exists: onGoing === 'false' } };
->>>>>>> cfc74187b37408b9cb4e3016167178d4f1f605cd
     }
     if (uid) {
       filterByUser = { 'users._id': Types.ObjectId(uid) };
