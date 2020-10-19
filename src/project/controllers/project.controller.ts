@@ -98,11 +98,22 @@ export class ProjectController {
     status: HttpStatus.CREATED,
     description: 'Success add project',
   })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard('developer'))
   @Post()
   public async createProject(
-    @Body() project: CreateProjectDto,
-  ): Promise<IProject> {
-    return this.projectService.createProject(project);
+    @Res() res: Response,
+    @Body() createProjectDto: CreateProjectDto,
+  ): Promise<Response> {
+    try {
+      const project: IProject = await this.projectService.createProject(
+        createProjectDto,
+      );
+      return res.status(HttpStatus.OK).json({ data: project, error: null });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
   }
 }

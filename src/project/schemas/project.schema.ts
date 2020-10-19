@@ -31,10 +31,6 @@ export const projectSchema: Schema = new Schema(
       required: true,
       type: Boolean,
     },
-    isRejected: {
-      required: true,
-      type: Boolean,
-    },
   },
   {
     versionKey: false,
