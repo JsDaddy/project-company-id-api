@@ -18,4 +18,5 @@ export interface IUserFb {
   dob: any;
   password: string;
   accessToken: string;
+  isActive: boolean;
 }

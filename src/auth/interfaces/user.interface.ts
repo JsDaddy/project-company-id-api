@@ -18,4 +18,5 @@ export interface IUser<P = Types.ObjectId[], R = string> {
   skype: string;
   activeProjects?: P;
   projects?: P;
+  isActive?: boolean;
 }

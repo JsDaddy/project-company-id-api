@@ -9,9 +9,10 @@ import {
   Param,
   UseGuards,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
@@ -127,9 +128,13 @@ export class UserController {
     description: 'Record not found',
   })
   @Get('')
-  public async findUsers(@Res() res: Response): Promise<Response> {
+  public async findUsers(
+    @Res() res: Response,
+    @Req() req: Request,
+  ): Promise<Response> {
     try {
-      const users: Partial<IUser>[] = await this.userService.findUsers();
+      const { position } = req.user as IUser<IProject[], Positions>;
+      const users: Partial<IUser>[] = await this.userService.getUsers(position);
       return res.status(HttpStatus.OK).json({ data: users, error: null });
     } catch (e) {
       return res

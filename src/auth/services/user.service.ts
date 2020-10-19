@@ -1,3 +1,4 @@
+import { Positions } from 'src/auth/enums/positions.enum';
 import { SignUpDto } from './../dto/signup.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -50,6 +51,25 @@ export class UserService {
       },
     ]);
   }
+
+  public async getUsers(role: Positions): Promise<IUser[]> {
+    const filterByUser: Record<string, unknown> = {
+      $match: { isActive: true },
+    };
+
+    return this._userModel.aggregate([
+      role === Positions.DEVELOPER ? filterByUser : {},
+      {
+        $project: {
+          name: 1,
+          lastName: 1,
+          avatar: 1,
+          position: 1,
+        },
+      },
+    ]);
+  }
+
   public async addUserToTheProject(
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
