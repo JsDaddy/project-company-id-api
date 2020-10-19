@@ -1,3 +1,4 @@
+import { ProjectStatus } from './../enums/project-status.enum';
 import { Types } from 'mongoose';
 
 export interface IProject {
@@ -6,8 +7,8 @@ export interface IProject {
   industry: string;
   customer: string;
   startDate: Date;
-  isActivity: boolean;
-  stack: Types.ObjectId[];
+  endDate?: Date;
+  status: ProjectStatus;
   isInternal: boolean;
-  isRejected: boolean;
+  stack: Types.ObjectId[];
 }

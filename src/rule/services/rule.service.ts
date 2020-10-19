@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Document } from 'mongoose';
+import { IRule } from '../interfaces/rule.interface';
 
 @Injectable()
 export class RuleService {
   public constructor(
-    @InjectModel('rule') private readonly ruleModel: Model<any>,
+    @InjectModel('rule') private readonly ruleModel: Model<IRule & Document>,
   ) {}
-
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  public async findRules() {
-    return this.ruleModel
-      .find({})
-      .lean()
-      .exec();
+  public async findRules(): Promise<IRule[]> {
+    return await this.ruleModel.find().lean().exec();
   }
 }

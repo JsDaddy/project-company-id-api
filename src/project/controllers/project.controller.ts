@@ -13,13 +13,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProjectService } from '../services/project.service';
-import { CreateProjectDto } from 'src/rule/dto/rule.dto';
 import { Request, Response } from 'express';
 import { IProject } from '../interfaces/project.interface';
 import { ProjectFilterDto } from '../dto/filter-projects.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { IUser } from 'src/auth/interfaces/user.interface';
+import { CreateProjectDto } from '../dto/project.dto';
 
 @ApiTags('projects')
 @Controller('projects')

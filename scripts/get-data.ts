@@ -32,13 +32,18 @@ const asyncFileWriter: (
   encode: string,
 ) => Promise<void> = util.promisify(fs.writeFile);
 const fileName = 'holidays.json';
+const fileRules = 'rules.json';
 const asyncFileReader: (filename: string) => Promise<Buffer> = util.promisify(
   fs.readFile,
 );
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function main(): Promise<any> {
   const buffer: Buffer = await asyncFileReader(`${__dirname}/${fileName}`);
+  const bufferRules: Buffer = await asyncFileReader(
+    `${__dirname}/${fileRules}`,
+  );
   const json: any = JSON.parse(buffer.toString());
+  const jsonRules: any = JSON.parse(bufferRules.toString());
   const connection: mongodb.MongoClient = await mongodb.MongoClient.connect(
     dbPath,
     { useNewUrlParser: true },
@@ -65,6 +70,10 @@ export async function main(): Promise<any> {
     holiday._id = Types.ObjectId();
     holiday.date = new Date(holiday.date);
     await mongoDb.collection('holidays').insertOne(holiday);
+  }
+  for (const rule of jsonRules) {
+    rule._id = Types.ObjectId();
+    await mongoDb.collection('rules').insertOne(rule);
   }
   for (const stackDocument of stack.docs) {
     const stackDoc = stackDocument.data();
@@ -124,7 +133,7 @@ export async function main(): Promise<any> {
       const timelog = timelogDocument.data();
 
       timelog.project = allProjects.find(
-        item => item.fbId === timelog.project,
+        (item) => item.fbId === timelog.project,
       )._id;
       timelog._id = Types.ObjectId();
       timelog.date = timelog.date.toDate();
@@ -189,7 +198,7 @@ export async function main(): Promise<any> {
 
   for (const proj of allProjects) {
     proj.stack = proj.stack.map(
-      (project: any) => allStack.find(stack => stack.id === project)._id,
+      (project: any) => allStack.find((stack) => stack.id === project)._id,
     );
     delete proj.fbId;
     await mongoDb.collection('projects').insertOne(proj);
