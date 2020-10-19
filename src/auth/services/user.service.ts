@@ -81,7 +81,7 @@ export class UserService {
   public async findUser(_id: string): Promise<IUser<IProject[]>> {
     return (
       await this._userModel.aggregate([
-        { $match: { _id } },
+        { $match: { _id: Types.ObjectId(_id) } },
         {
           $lookup: {
             as: 'projects',
@@ -90,7 +90,16 @@ export class UserService {
             localField: 'projects',
           },
         },
+
         { $unwind: { path: '$projects', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'stack',
+            localField: 'projects.stack',
+            as: 'projects.stack',
+            foreignField: '_id',
+          },
+        },
         {
           $lookup: {
             as: 'activeProjects',
@@ -106,16 +115,36 @@ export class UserService {
           },
         },
         {
-          $group: {
-            _id: '$_id',
-            avatar: { $first: '$avatar' },
-            lastName: { $first: '$lastName' },
-            name: { $first: '$name' },
-            projects: { $push: '$projects' },
-            initialLogin: { $first: '$initialLogin' },
-            role: { $first: '$role' },
-            activeProjects: { $push: '$activeProjects' },
-            password: { $first: '$password' },
+          $lookup: {
+            from: 'stack',
+            localField: 'activeProjects.stack',
+            as: 'activeProjects.stack',
+            foreignField: '_id',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            avatar: 1,
+            lastName: 1,
+            name: 1,
+            position: 1,
+            phone: 1,
+            skype: 1,
+            dob: 1,
+            github: 1,
+            englishLevel: 1,
+            email: 1,
+            'projects._id': 1,
+            'projects.name': 1,
+            'projects.startDate': 1,
+            'projects.endDate': 1,
+            'projects.stack': 1,
+            'activeProjects.name': 1,
+            'activeProjects.stack': 1,
+            'activeProjects._id': 1,
+            'activeProjects.startDate': 1,
+            'activeProjects.endDate': 1,
           },
         },
       ])
