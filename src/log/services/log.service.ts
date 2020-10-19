@@ -37,14 +37,13 @@ export class LogService {
     private readonly _holidayModel: Model<IHoliday & Document>,
     private readonly _dateService: DateService,
   ) {}
-  // tslint:disable-next-line: no-any
+  // tslint:disable-next-line: cyclomatic-complexity
   public async findLogs(filterLog: FilterLogDto): Promise<any> {
     const date: Date = new Date(filterLog.first);
     const lastDate: Date = this._dateService.getLastDate(filterLog.first);
     let filterByProject: IFilterLog = {};
     let filterByUser: IFilterLog = {};
     let filterByType: IFilterLog = {};
-
     if (filterLog.type) {
       filterByType = { type: parseInt(VacationType[filterLog.type]) };
     }
@@ -66,7 +65,6 @@ export class LogService {
       date,
       lastDate,
     );
-
     holidays = await this._getHolidaysByDate(date, lastDate);
     if (
       !filterLog.type &&
@@ -86,17 +84,23 @@ export class LogService {
       ]);
     }
 
-    vacations = await this._vacationModel.aggregate([
-      {
-        $match: aggregationMatch,
-      },
-      {
-        $project: {
-          date: 1,
-          status: 1,
+    if (
+      !filterLog.type &&
+      (filterLog.logType === LogType.Vacations ||
+        filterLog.logType === LogType.All)
+    ) {
+      vacations = await this._vacationModel.aggregate([
+        {
+          $match: aggregationMatch,
         },
-      },
-    ]);
+        {
+          $project: {
+            date: 1,
+            status: 1,
+          },
+        },
+      ]);
+    }
     // }
     // tslint:disable-next-line: no-any
     let reducedLogs: any[] = [...timelogs, ...vacations, ...holidays];
@@ -202,8 +206,9 @@ export class LogService {
     if (filterLog.type) {
       filterByType = { type: parseInt(filterLog.type.toString()) };
     }
+
     const date: Date = new Date(filterLog.first);
-    const lastDate: Date = this._dateService.getLastDate(filterLog.first);
+    const lastDate: Date = this._dateService.getNextDay(filterLog.first);
     if (filterLog.uid) {
       filterByUser = { uid: Types.ObjectId(filterLog.uid) };
     }
@@ -213,6 +218,7 @@ export class LogService {
     holidays = await this._getHolidaysByDate(date, lastDate);
 
     if (
+      !filterLog.logType ||
       filterLog.logType === LogType.All ||
       filterLog.logType === LogType.Timelogs
     ) {
@@ -220,6 +226,7 @@ export class LogService {
     }
 
     if (
+      !filterLog.logType ||
       filterLog.logType === LogType.All ||
       filterLog.logType === LogType.Vacations
     ) {

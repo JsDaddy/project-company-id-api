@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Positions } from 'src/auth/enums/positions.enum';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document, Types } from 'mongoose';
-import { Roles } from 'src/auth/enums/role.enum';
 import { ProjectFilterDto } from '../dto/filter-projects.dto';
 import {
   IFilterProject,
@@ -26,31 +26,27 @@ export class ProjectService {
 
   public async findProjects(
     query: ProjectFilterDto,
-    role: Roles,
+    position: Positions,
   ): Promise<IProject[]> {
-    const { stack, uid, isActivity, isInternal } = query;
-    if (role === Roles.USER && Object.keys(query).length > 0) {
-      throw new HttpException(
-        'You dont have permissions',
-        HttpStatus.FORBIDDEN,
-      );
-    }
+    const { stack, uid, onGoing, isInternal } = query;
     let filterByUser: IFilterProjects = {};
     let filterByStack: IFilterProjects = {};
     let filterByActivity: IFilterProjects = {};
     let filterByInternal: IFilterProjects = {};
+    let filterByOnGoing: IFilterProjects = {};
+    if (onGoing) {
+      filterByOnGoing = { endDate: { $exists: onGoing === 'false' } };
+    }
     if (uid) {
       filterByUser = { 'users._id': Types.ObjectId(uid) };
     }
     if (stack) {
       filterByStack = { stack: Types.ObjectId(stack) };
     }
-    if (role === Roles.USER) {
+    if (position === Positions.DEVELOPER) {
       filterByActivity = { isActivity: false };
     }
-    if (isActivity) {
-      filterByActivity = { isActivity: isActivity.toLowerCase() === 'true' };
-    }
+
     if (isInternal) {
       filterByInternal = { isInternal: isInternal.toLowerCase() === 'true' };
     }
@@ -58,7 +54,12 @@ export class ProjectService {
       .aggregate([
         {
           $match: {
-            $and: [filterByStack, filterByActivity, filterByInternal],
+            $and: [
+              filterByStack,
+              filterByActivity,
+              filterByInternal,
+              filterByOnGoing,
+            ],
           },
         },
         {

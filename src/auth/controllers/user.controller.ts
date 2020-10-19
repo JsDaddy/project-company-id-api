@@ -1,3 +1,4 @@
+import { Positions } from 'src/auth/enums/positions.enum';
 import { Types } from 'mongoose';
 import {
   Controller,
@@ -7,6 +8,7 @@ import {
   Post,
   Param,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -15,12 +17,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
 import { IUser } from '../interfaces/user.interface';
 import { IProject } from 'src/project/interfaces/project.interface';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   public constructor(private readonly userService: UserService) {}
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
   @ApiOperation({
     summary: 'Add user to project.',
   })
@@ -32,7 +35,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'User has not been added to project',
   })
-  @Post('add-user-to-project/:uid/:projectId')
+  @Post(':uid/projects/:projectId')
   public async addUserToProject(
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
@@ -50,7 +53,7 @@ export class UserController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
   @ApiOperation({
     summary: 'Remove user from project.',
   })
@@ -62,7 +65,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'User has not been removed from project',
   })
-  @Post('remove-user-from-project/:uid/:projectId')
+  @Delete(':uid/projects/:projectId')
   public async removeUserFromProject(
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
@@ -80,7 +83,7 @@ export class UserController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
   @ApiOperation({
     summary: 'Remove user from active project.',
   })
@@ -92,7 +95,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'User has not been removed from active project',
   })
-  @Post('remove-user-from-active-project/:uid/:projectId')
+  @Post(':uid/active-project/:projectId')
   public async removeUserFromActiveProject(
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,

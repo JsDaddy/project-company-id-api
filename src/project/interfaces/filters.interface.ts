@@ -5,6 +5,7 @@ export interface IFilterProjects {
   isActivity?: boolean;
   isInternal?: boolean;
   stack?: Types.ObjectId;
+  endDate?: { $exists: boolean };
 }
 export interface IFilterProject {
   _id?: Types.ObjectId;
