@@ -121,6 +121,69 @@ export class UserService {
           },
         },
         {
+          $unwind: {
+            path: '$projects.stack',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        {
+          $group: {
+            _id: {
+              _id: '$_id',
+              projectId: '$projects._id',
+            },
+            name: { $first: '$name' },
+            avatar: { $first: '$avatar' },
+            lastName: { $first: '$lastName' },
+            position: { $first: '$position' },
+            phone: { $first: '$phone' },
+            skype: { $first: '$skype' },
+            dob: { $first: '$dob' },
+            github: { $first: '$github' },
+            englishLevel: { $first: '$englishLevel' },
+            email: { $first: '$email' },
+            activeProjects: { $first: '$activeProjects' },
+            project: {
+              $first: {
+                _id: '$projects._id',
+                name: '$projects.name',
+                startDate: '$projects.startDate',
+                endDate: '$projects.endDate',
+              },
+            },
+
+            stack: { $push: '$projects.stack' },
+          },
+        },
+
+        {
+          $group: {
+            _id: '$_id._id',
+            name: { $first: '$name' },
+            avatar: { $first: '$avatar' },
+            lastName: { $first: '$lastName' },
+            position: { $first: '$position' },
+            phone: { $first: '$phone' },
+            skype: { $first: '$skype' },
+            dob: { $first: '$dob' },
+            github: { $first: '$github' },
+            englishLevel: { $first: '$englishLevel' },
+            email: { $first: '$email' },
+            activeProjects: { $first: '$activeProjects' },
+            projects: {
+              $push: {
+                _id: '$project._id',
+                name: '$project.name',
+                startDate: '$project.startDate',
+                endDate: '$project.endDate',
+                stack: '$stack',
+              },
+            },
+          },
+        },
+
+        {
           $lookup: {
             as: 'activeProjects',
             foreignField: '_id',
@@ -128,12 +191,14 @@ export class UserService {
             localField: 'activeProjects',
           },
         },
+
         {
           $unwind: {
             path: '$activeProjects',
             preserveNullAndEmptyArrays: true,
           },
         },
+
         {
           $lookup: {
             from: 'stack',
@@ -143,28 +208,67 @@ export class UserService {
           },
         },
         {
-          $project: {
-            _id: 1,
-            avatar: 1,
-            lastName: 1,
-            name: 1,
-            position: 1,
-            phone: 1,
-            skype: 1,
-            dob: 1,
-            github: 1,
-            englishLevel: 1,
-            email: 1,
-            'projects._id': 1,
-            'projects.name': 1,
-            'projects.startDate': 1,
-            'projects.endDate': 1,
-            'projects.stack': 1,
-            'activeProjects.name': 1,
-            'activeProjects.stack': 1,
-            'activeProjects._id': 1,
-            'activeProjects.startDate': 1,
-            'activeProjects.endDate': 1,
+          $unwind: {
+            path: '$activeProjects.stack',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        {
+          $group: {
+            _id: {
+              _id: '$_id',
+              activeProjectId: '$activeProjects._id',
+            },
+            name: { $first: '$name' },
+            avatar: { $first: '$avatar' },
+            lastName: { $first: '$lastName' },
+            position: { $first: '$position' },
+            phone: { $first: '$phone' },
+            skype: { $first: '$skype' },
+            dob: { $first: '$dob' },
+            github: { $first: '$github' },
+            englishLevel: { $first: '$englishLevel' },
+            email: { $first: '$email' },
+            activeProjects: {
+              $first: {
+                _id: '$activeProjects._id',
+                name: '$activeProjects.name',
+                startDate: '$activeProjects.startDate',
+                endDate: '$activeProjects.endDate',
+              },
+            },
+            projects: {
+              $first: '$projects',
+            },
+
+            stack: { $push: '$activeProjects.stack' },
+          },
+        },
+
+        {
+          $group: {
+            _id: '$_id._id',
+            name: { $first: '$name' },
+            avatar: { $first: '$avatar' },
+            lastName: { $first: '$lastName' },
+            position: { $first: '$position' },
+            phone: { $first: '$phone' },
+            skype: { $first: '$skype' },
+            dob: { $first: '$dob' },
+            github: { $first: '$github' },
+            englishLevel: { $first: '$englishLevel' },
+            email: { $first: '$email' },
+            projects: { $first: '$projects' },
+            activeProjects: {
+              $push: {
+                _id: '$activeProjects._id',
+                name: '$activeProjects.name',
+                startDate: '$activeProjects.startDate',
+                endDate: '$activeProjects.endDate',
+                stack: '$stack',
+              },
+            },
           },
         },
       ])

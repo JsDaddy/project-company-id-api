@@ -19,7 +19,7 @@ import { userSchema } from './schemas/user.schema';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async () => ({
-        secret: process.env.secret,
+        secret: process.env.SECRET,
       }),
     }),
   ],
