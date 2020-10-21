@@ -15,7 +15,6 @@ import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
 // import { SignUpDto } from '../dto/signup.dto';
 import { IUser } from '../interfaces/user.interface';
-import { IProject } from 'src/project/interfaces/project.interface';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -79,9 +78,7 @@ export class AuthController {
   ): Promise<Response> {
     try {
       const { email, password } = loginUserDto;
-      const user: IUser<IProject[]> | null = await this._authService.getUser(
-        email,
-      );
+      const user: IUser | null = await this._authService.getUser(email);
       if (
         !user ||
         (user && !(await bcrypt.compare(password, user.password ?? '')))
