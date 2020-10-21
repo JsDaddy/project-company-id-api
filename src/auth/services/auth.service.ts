@@ -6,7 +6,6 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { IUser } from '../interfaces/user.interface';
 import { Document } from 'mongoose';
-import { IProject } from 'src/project/interfaces/project.interface';
 
 @Injectable()
 export class AuthService {
@@ -41,43 +40,18 @@ export class AuthService {
   //   return await this._userModel.create(createUserDto);
   // }
 
-  public async getUser(email: string): Promise<IUser<IProject[]> | null> {
+  public async getUser(email: string): Promise<IUser | null> {
     return (
       await this._userModel.aggregate([
         { $match: { email } },
-        {
-          $lookup: {
-            as: 'projects',
-            foreignField: '_id',
-            from: 'projects',
-            localField: 'projects',
-          },
-        },
-        { $unwind: { path: '$projects', preserveNullAndEmptyArrays: true } },
-        {
-          $lookup: {
-            as: 'activeProjects',
-            foreignField: '_id',
-            from: 'projects',
-            localField: 'activeProjects',
-          },
-        },
-        {
-          $unwind: {
-            path: '$activeProjects',
-            preserveNullAndEmptyArrays: true,
-          },
-        },
         {
           $group: {
             _id: '$_id',
             avatar: { $first: '$avatar' },
             lastName: { $first: '$lastName' },
             name: { $first: '$name' },
-            projects: { $push: '$projects' },
             initialLogin: { $first: '$initialLogin' },
             position: { $first: '$position' },
-            activeProjects: { $push: '$activeProjects' },
             password: { $first: '$password' },
             accessToken: { $first: '$accessToken' },
           },
