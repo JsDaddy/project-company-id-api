@@ -150,6 +150,7 @@ export class UserService {
                 name: '$projects.name',
                 startDate: '$projects.startDate',
                 endDate: '$projects.endDate',
+                isInternal: '$projects.isInternal',
               },
             },
 
@@ -177,6 +178,7 @@ export class UserService {
                 name: '$project.name',
                 startDate: '$project.startDate',
                 endDate: '$project.endDate',
+                isInternal: '$project.isInternal',
                 stack: '$stack',
               },
             },
@@ -236,6 +238,7 @@ export class UserService {
                 name: '$activeProjects.name',
                 startDate: '$activeProjects.startDate',
                 endDate: '$activeProjects.endDate',
+                isInternal: '$activeProjects.isInternal',
               },
             },
             projects: {
@@ -266,6 +269,7 @@ export class UserService {
                 name: '$activeProjects.name',
                 startDate: '$activeProjects.startDate',
                 endDate: '$activeProjects.endDate',
+                isInternal: '$activeProjects.isInternal',
                 stack: '$stack',
               },
             },
