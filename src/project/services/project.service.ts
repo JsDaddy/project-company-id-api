@@ -64,14 +64,6 @@ export class ProjectService {
             ...filterByStatus,
           },
         },
-        {
-          $lookup: {
-            from: 'users',
-            localField: '_id',
-            as: 'users',
-            foreignField: 'projects',
-          },
-        },
         this.stackLookup,
         {
           $project: {
@@ -82,7 +74,6 @@ export class ProjectService {
             isActivity: 1,
             status: 1,
             isInternal: 1,
-            'users._id': 1,
             'stack._id': 1,
             'stack.name': 1,
           },
@@ -90,7 +81,6 @@ export class ProjectService {
         {
           $match: filterByUser,
         },
-        { $unset: 'users' },
         {
           $sort: { endDate: 1, isInternal: 1, isActivity: 1 },
         },
