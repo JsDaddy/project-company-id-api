@@ -225,6 +225,8 @@ export async function main(): Promise<any> {
   await writeFile('vacations', allVacs);
 }
 
+console.log('FINISHED');
+
 async function writeFile(name: string, items: any[]): Promise<void> {
   if (!fs.existsSync(`${__dirname}/output`)) {
     fs.mkdirSync(`${__dirname}/output`);

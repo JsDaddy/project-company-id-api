@@ -58,12 +58,10 @@ export class ProjectService {
       .aggregate([
         {
           $match: {
-            $and: [
-              filterByStack,
-              filterByActivity,
-              filterByInternal,
-              filterByStatus,
-            ],
+            ...filterByStack,
+            ...filterByActivity,
+            ...filterByInternal,
+            ...filterByStatus,
           },
         },
         {
