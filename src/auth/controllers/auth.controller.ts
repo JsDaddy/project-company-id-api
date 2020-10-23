@@ -109,17 +109,23 @@ export class AuthController {
   public async setPassword(
     @Body() loginUserDto: { password: string },
     // tslint:disable-next-line:no-any
-    @Req() req: any,
+    @Req() req: Request,
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      const { email } = req.user;
+      const user: IUser = req.user as IUser;
+      const { email } = user;
+      const { avatar, ...userWithout } = user;
+      console.log(userWithout);
       const { password } = loginUserDto;
+      console.log(password);
       const hash: string = await bcrypt.hash(password, 10);
-      await this._authService.setPassword(email, hash);
-      return res
-        .status(HttpStatus.OK)
-        .json({ data: 'Your password has been changed', error: null });
+      const newUser: IUser | null = await this._authService.setPassword(
+        email,
+        hash,
+      );
+      console.log(email, hash);
+      return res.status(HttpStatus.OK).json({ data: newUser, error: null });
     } catch (error) {
       return res
         .status(HttpStatus.UNAUTHORIZED)
