@@ -50,6 +50,7 @@ export class AuthService {
         {
           $group: {
             _id: '$_id',
+            email: { $first: '$email' },
             avatar: { $first: '$avatar' },
             lastName: { $first: '$lastName' },
             name: { $first: '$name' },
