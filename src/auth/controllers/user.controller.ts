@@ -134,12 +134,14 @@ export class UserController {
   ): Promise<Response> {
     try {
       const { position } = req.user as IUser<IProject[], Positions>;
+
       const users: Partial<IUser>[] = await this.userService.getUsers(position);
       return res.status(HttpStatus.OK).json({ data: users, error: null });
-    } catch (e) {
+    } catch (error) {
+      console.log(error);
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ data: null, e });
+        .json({ data: null, error });
     }
   }
 
