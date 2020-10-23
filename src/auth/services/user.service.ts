@@ -53,12 +53,12 @@ export class UserService {
   }
 
   public async getUsers(role: Positions): Promise<IUser[]> {
-    const filterByUser: Record<string, unknown> = {
-      $match: { isActive: true },
+    const filterByUser: { isActive: boolean } = {
+      isActive: true,
     };
 
     return this._userModel.aggregate([
-      role === Positions.DEVELOPER ? filterByUser : {},
+      { $match: role === Positions.DEVELOPER ? filterByUser : {} },
       {
         $project: {
           name: 1,
