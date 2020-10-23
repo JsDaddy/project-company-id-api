@@ -28,8 +28,11 @@ export class AuthService {
   //   return accessToken;
   // }
 
-  public async setPassword(email: string, password: string): Promise<void> {
-    await this._userModel.findOneAndUpdate(
+  public async setPassword(
+    email: string,
+    password: string,
+  ): Promise<IUser | null> {
+    return await this._userModel.findOneAndUpdate(
       { email },
       { $set: { password, initialLogin: false } },
     );
