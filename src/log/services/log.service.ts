@@ -47,6 +47,7 @@ export class LogService {
     if (filterLog.type) {
       filterByType = { type: parseInt(VacationType[filterLog.type]) };
     }
+
     if (filterLog.project) {
       filterByProject = { project: Types.ObjectId(filterLog.project) };
     }
@@ -67,9 +68,8 @@ export class LogService {
     );
     holidays = await this._getHolidaysByDate(date, lastDate);
     if (
-      !filterLog.type &&
-      (filterLog.logType === LogType.Timelogs ||
-        filterLog.logType === LogType.All)
+      filterLog.logType === LogType.Timelogs ||
+      filterLog.logType === LogType.All
     ) {
       timelogs = await this._timelogModel.aggregate([
         {
@@ -85,9 +85,8 @@ export class LogService {
     }
 
     if (
-      !filterLog.type &&
-      (filterLog.logType === LogType.Vacations ||
-        filterLog.logType === LogType.All)
+      filterLog.logType === LogType.Vacations ||
+      filterLog.logType === LogType.All
     ) {
       vacations = await this._vacationModel.aggregate([
         {
@@ -218,7 +217,6 @@ export class LogService {
     holidays = await this._getHolidaysByDate(date, lastDate);
 
     if (
-      !filterLog.logType ||
       filterLog.logType === LogType.All ||
       filterLog.logType === LogType.Timelogs
     ) {
@@ -226,7 +224,6 @@ export class LogService {
     }
 
     if (
-      !filterLog.logType ||
       filterLog.logType === LogType.All ||
       filterLog.logType === LogType.Vacations
     ) {

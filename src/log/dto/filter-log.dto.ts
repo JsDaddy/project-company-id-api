@@ -1,9 +1,9 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 export enum VacationType {
   VacationPaid,
   VacationNonPaid,
   SickPaid,
-  SicktNonPaid,
+  SickNonPaid,
 }
 
 export enum LogType {
@@ -14,10 +14,10 @@ export enum LogType {
 }
 
 export class FilterLogDto {
-  @ApiProperty() public readonly first!: string;
+  @ApiPropertyOptional() public readonly first!: string;
   @ApiPropertyOptional() public readonly uid?: string;
   @ApiPropertyOptional() public readonly project?: string;
   @ApiPropertyOptional({ enum: VacationType })
   public readonly type?: VacationType;
-  @ApiProperty({ enum: LogType }) public readonly logType?: LogType;
+  @ApiPropertyOptional({ enum: LogType }) public readonly logType?: LogType;
 }
