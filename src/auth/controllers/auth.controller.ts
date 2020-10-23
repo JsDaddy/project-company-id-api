@@ -115,17 +115,12 @@ export class AuthController {
     try {
       const user: IUser = req.user as IUser;
       const { email } = user;
-      const { avatar, ...userWithout } = user;
-      console.log(userWithout);
       const { password } = loginUserDto;
-      console.log(password);
       const hash: string = await bcrypt.hash(password, 10);
-      const newUser: IUser | null = await this._authService.setPassword(
-        email,
-        hash,
-      );
-      console.log(email, hash);
-      return res.status(HttpStatus.OK).json({ data: newUser, error: null });
+      await this._authService.setPassword(email, hash);
+      return res
+        .status(HttpStatus.OK)
+        .json({ data: 'Password changed.', error: null });
     } catch (error) {
       return res
         .status(HttpStatus.UNAUTHORIZED)
