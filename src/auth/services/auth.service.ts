@@ -31,7 +31,7 @@ export class AuthService {
   public async setPassword(email: string, password: string): Promise<void> {
     await this._userModel.findOneAndUpdate(
       { email },
-      { password, initialLogin: false },
+      { $set: { password, initialLogin: false } },
     );
   }
   // public async createUser(
