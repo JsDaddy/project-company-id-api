@@ -67,46 +67,19 @@ export class LogController {
     AuthGuard('jwt'),
     new RolesGuard({ [Positions.OWNER]: [], [Positions.DEVELOPER]: ['uid'] }),
   )
-  @Get(':first')
+  @Get('solo/:first/:logType')
   public async findLogsByDate(
     @Res() res: Response,
     @Param('first') first: string,
+    @Param('logType') logType: LogType,
     @Query() query: FilterLogDto,
   ): Promise<Response> {
     try {
-      const params: FilterLogDto = { ...query, first };
+      const params: FilterLogDto = { ...query, first, logType };
       const logs: any = await this._logService.findLogByDate(params);
       return res.status(HttpStatus.OK).json({ data: logs, error: null });
     } catch (error) {
       return res.status(HttpStatus.NOT_FOUND).json({ data: null, error });
     }
   }
-  // @ApiOperation({
-  //   summary: 'Find timelogs by uid',
-  // })
-  // @ApiResponse({
-  //   status: HttpStatus.OK,
-  //   description: 'Found timelogs',
-  // })
-  // @ApiResponse({
-  //   status: HttpStatus.NOT_FOUND,
-  //   description: 'Record not found',
-  // })
-  // @UseGuards(AuthGuard('jwt'))
-  // @Get(':user')
-  // public async findByUser(
-  //   @Param('user') userId: string,
-  //   @Query('first') first: string,
-  //   @Res() res: Response,
-  // ): Promise<Response> {
-  //   try {
-  //     const timelogs: Partial<ITimelog[] = await this._timelogService.findUserLogs(userId, first);
-  //     return res.status(HttpStatus.OK).json({ data: timelogs, error: null });
-  //   } catch (error) {
-  //     console.log(error);
-  //     return res
-  //       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-  //       .json({ data: null, error });
-  //   }
-  // }
 }
