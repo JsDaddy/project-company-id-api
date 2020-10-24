@@ -40,7 +40,9 @@ export class LogService {
   // tslint:disable-next-line: cyclomatic-complexity
   public async findLogs(filterLog: FilterLogDto): Promise<any> {
     const date: Date = new Date(filterLog.first);
-    const lastDate: Date = this._dateService.getLastDate(filterLog.first);
+    const lastDate: Date = this._dateService.getLastDate(
+      new Date(filterLog.first),
+    );
     let filterByProject: IFilterLog = {};
     let filterByUser: IFilterLog = {};
     let filterByType: IFilterLog = {};
@@ -83,7 +85,6 @@ export class LogService {
         },
       ]);
     }
-
     if (
       filterLog.logType === LogType.Vacations ||
       filterLog.logType === LogType.All
@@ -115,6 +116,7 @@ export class LogService {
       }
       if (dateType === 3) {
         a[b.date.toISOString()][2] = [...a[b.date.toISOString()][2], name];
+        vacationDays++;
       }
       if (dateType === 1) {
         a[b.date.toISOString()][0] = [
@@ -167,6 +169,7 @@ export class LogService {
           return this._dateService.checkIfWeekDays(new Date(holiday.date));
         }).length * 8;
     }
+
     const toBeWorkedOut: number = !filterByUser.uid
       ? 0
       : filterLog.uid
@@ -202,10 +205,14 @@ export class LogService {
   public async findLogByDate(filterLog: FilterLogDto): Promise<any> {
     let filterByUser: Partial<IFilterLog> = {};
     let filterByType: Partial<IFilterLog> = {};
-    if (filterLog.type) {
-      filterByType = { type: parseInt(filterLog.type.toString()) };
-    }
+    let filterByProject: Partial<IFilterLog> = {};
 
+    if (filterLog.type) {
+      filterByType = { type: parseInt(VacationType[filterLog.type]) };
+    }
+    if (filterLog.project) {
+      filterByProject = { project: Types.ObjectId(filterLog.project) };
+    }
     const date: Date = new Date(filterLog.first);
     const lastDate: Date = this._dateService.getNextDay(filterLog.first);
     if (filterLog.uid) {
@@ -220,7 +227,12 @@ export class LogService {
       filterLog.logType === LogType.All ||
       filterLog.logType === LogType.Timelogs
     ) {
-      timelogs = await this._getTimelogsByDate(filterByUser, date, lastDate);
+      timelogs = await this._getTimelogsByDate(
+        filterByUser,
+        filterByProject,
+        date,
+        lastDate,
+      );
     }
 
     if (
@@ -254,12 +266,19 @@ export class LogService {
 
   private async _getTimelogsByDate(
     filterByUser: IFilterLog,
+    filterByProject: IFilterLog,
     date: Date,
     lastDate: Date,
   ): Promise<ITimelog[]> {
     return await this._timelogModel.aggregate([
       {
-        $match: this._matchPipe(filterByUser, {}, {}, date, lastDate),
+        $match: this._matchPipe(
+          filterByUser,
+          filterByProject,
+          {},
+          date,
+          lastDate,
+        ),
       },
       this._getUserLookUp,
       {

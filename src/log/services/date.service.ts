@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import moment from 'moment';
 
 @Injectable()
 export class DateService {
@@ -30,8 +31,16 @@ export class DateService {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() * 8;
   }
 
-  public getLastDate(date: string): Date {
-    return new Date(new Date(date).setMonth(new Date(date).getMonth() + 1));
+  public getLastDate(date: Date): Date {
+    return new Date(
+      moment(date)
+        .startOf('day')
+        .add(1, 'day')
+        .startOf('day')
+        .subtract(1, 'millisecond')
+        .endOf('month')
+        .format(),
+    );
   }
   public getNextDay(date: string): Date {
     return new Date(new Date(date).setDate(new Date(date).getDate() + 1));
