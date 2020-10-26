@@ -278,4 +278,19 @@ export class UserService {
       ])
     )[0];
   }
+
+  public async findUsersFor(projectId: string): Promise<Partial<IUser>[]> {
+    const _id: Types.ObjectId = Types.ObjectId(projectId);
+    const users: Partial<IUser>[] = await this._userModel.aggregate([
+      { $match: { projects: _id } },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          lastName: 1,
+        },
+      },
+    ]);
+    return users;
+  }
 }

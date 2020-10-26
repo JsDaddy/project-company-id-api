@@ -1,3 +1,4 @@
+import { ChangeTimelogDto } from './../dto/change-timelog.dto';
 import { ParseObjectIdPipe } from './../../shared/pipes/string-object-id.pipe';
 import { CreateTimelogDto } from './../dto/create-timelog.dto';
 import {
@@ -9,6 +10,9 @@ import {
   Req,
   HttpStatus,
   Param,
+  Get,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TimelogsService } from '../services/timelogs.service';
@@ -53,6 +57,106 @@ export class TimelogsController {
       });
 
       return res.status(HttpStatus.OK).json({ data: timelog, error: null });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':timelogId')
+  @ApiOperation({ description: 'Find timelog' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found timelog',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Timelog not found.',
+  })
+  public async findTimelog(
+    @Res() res: Response,
+    @Param('timelogId') timelogId: string,
+  ): Promise<Response> {
+    try {
+      const timelog: ITimelog | null = await this._timelogsService.findTimelog(
+        timelogId,
+      );
+      if (!timelog) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ data: null, error: 'Timelog not found.' });
+      }
+      return res.status(HttpStatus.OK).json({ data: timelog, error: null });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put(':timelogId')
+  @ApiOperation({ description: 'Change timelog' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Timelog changed',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Timelog not found.',
+  })
+  public async changeTimelog(
+    @Res() res: Response,
+    @Param('timelogId') timelogId: string,
+    @Body() changeTimelogDto: ChangeTimelogDto,
+  ): Promise<Response> {
+    try {
+      const timelog: ITimelog | null = await this._timelogsService.changeTimelog(
+        timelogId,
+        changeTimelogDto,
+      );
+      if (!timelog) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ data: null, error: 'Timelog not found.' });
+      }
+      return res.status(HttpStatus.OK).json({ data: timelog, error: null });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':timelogId')
+  @ApiOperation({ description: 'Delete timelog' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Timelog deleted',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Timelog not found.',
+  })
+  public async deleteTimelog(
+    @Res() res: Response,
+    @Param('timelogId') timelogId: string,
+  ): Promise<Response> {
+    try {
+      await this._timelogsService.deleteTimelog(timelogId);
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ data: 'Timelog successfully deleted.', error: null });
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
     }

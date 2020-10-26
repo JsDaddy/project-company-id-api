@@ -170,4 +170,31 @@ export class UserController {
         .json({ data: null, e });
     }
   }
+
+  @ApiOperation({
+    summary: 'Find users for projects.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found users',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'projects not found',
+  })
+  @Get('projects/:pid')
+  public async findUsersFor(
+    @Param('pid') pid: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      // tslint:disable-next-line:no-any
+      const users: Partial<IUser>[] = await this.userService.findUsersFor(pid);
+      return res.status(HttpStatus.OK).json({ data: users, error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
 }

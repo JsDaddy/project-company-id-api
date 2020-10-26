@@ -115,4 +115,63 @@ export class ProjectController {
         .json({ data: null, error });
     }
   }
+
+  @ApiOperation({
+    summary: 'Find projects for logs.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found projects',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'projects not found',
+  })
+  @Get('users/:uid')
+  public async findProjectsFor(
+    @Param('uid') uid: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      // tslint:disable-next-line:no-any
+      const projects: any = await this.projectService.findProjectFor(uid);
+      return res.status(HttpStatus.OK).json({ data: projects, error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
+
+  @ApiOperation({
+    summary: 'Find active projects for logs.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found active projects',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'active projects not found',
+  })
+  @Get('active/users/:uid')
+  public async findActiveProjectsFor(
+    @Param('uid') uid: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      // tslint:disable-next-line:no-any
+      const activeProjects: any = await this.projectService.findProjectFor(
+        uid,
+        true,
+      );
+      return res
+        .status(HttpStatus.OK)
+        .json({ data: activeProjects, error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
 }

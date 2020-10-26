@@ -167,4 +167,39 @@ export class ProjectService {
         .exec()
     )[0];
   }
+
+  public async findProjectFor(
+    userId: string,
+    isActive: boolean = false,
+  ): Promise<Partial<IProject>[]> {
+    const _id: Types.ObjectId = Types.ObjectId(userId);
+    const article: string = isActive ? 'activeProjects' : 'projects';
+    // tslint:disable-next-line:no-any
+    const aggregate: any = await this._userModel.aggregate([
+      { $match: { _id } },
+      {
+        $lookup: {
+          as: article,
+          foreignField: '_id',
+          from: 'projects',
+          localField: article,
+        },
+      },
+      { $unwind: { path: '$' + article, preserveNullAndEmptyArrays: true } },
+
+      {
+        $group: {
+          _id: '$_id',
+          [article]: {
+            $push: {
+              _id: '$' + article + '._id',
+              name: '$' + article + '.name',
+            },
+          },
+        },
+      },
+      { $unset: '_id' },
+    ]);
+    return aggregate[0][article];
+  }
 }
