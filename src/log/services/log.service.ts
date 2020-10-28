@@ -247,7 +247,7 @@ export class LogService {
       );
     }
 
-    return { logs: [...timelogs, ...vacations, ...holidays] };
+    return [...timelogs, ...vacations, ...holidays];
   }
   private async _getHolidaysByDate(
     date: Date,
