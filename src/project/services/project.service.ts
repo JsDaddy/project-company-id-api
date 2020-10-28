@@ -198,7 +198,6 @@ export class ProjectService {
           },
         },
       },
-      { $unset: '_id' },
     ]);
     return aggregate[0][article];
   }
