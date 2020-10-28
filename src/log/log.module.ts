@@ -1,3 +1,4 @@
+import { VacationsService } from './../vacations/services/vacations.service';
 import { DateService } from './services/date.service';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -15,6 +16,6 @@ import { holidaySchema } from './schemas/holiday.schema';
     MongooseModule.forFeature([{ name: 'holidays', schema: holidaySchema }]),
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
   ],
-  providers: [LogService, DateService],
+  providers: [LogService, DateService, VacationsService],
 })
 export class LogModule {}

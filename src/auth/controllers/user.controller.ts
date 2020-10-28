@@ -1,3 +1,4 @@
+import { VacationsService } from './../../vacations/services/vacations.service';
 import { Positions } from 'src/auth/enums/positions.enum';
 import { Types } from 'mongoose';
 import {
@@ -19,11 +20,15 @@ import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
 import { IUser } from '../interfaces/user.interface';
 import { IProject } from 'src/project/interfaces/project.interface';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { VacationType } from 'src/vacations/dto/create-vacation.dto';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  public constructor(private readonly userService: UserService) {}
+  public constructor(
+    private readonly userService: UserService,
+    private readonly _vacationService: VacationsService,
+  ) {}
   @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
   @ApiOperation({
     summary: 'Add user to project.',
@@ -163,7 +168,19 @@ export class UserController {
   ): Promise<Response> {
     try {
       const user: IUser<IProject[]> = await this.userService.findUser(id);
-      return res.status(HttpStatus.OK).json({ data: user, error: null });
+      const vacationAvailable: number = await this._vacationService.availableCount(
+        id,
+        VacationType.VacationPaid,
+      );
+      const sickAvailable: number = await this._vacationService.availableCount(
+        id,
+        VacationType.SickPaid,
+        5,
+      );
+      return res.status(HttpStatus.OK).json({
+        data: { ...user, vacationAvailable, sickAvailable },
+        error: null,
+      });
     } catch (e) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

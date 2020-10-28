@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Document, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { ChangeStatusDto, StatusType } from '../dto/change-status.dto';
+import moment from 'moment';
 
 @Injectable()
 export class VacationsService {
@@ -21,6 +22,25 @@ export class VacationsService {
       status: StatusType.PENDING,
       type,
     });
+  }
+
+  public async availableCount(
+    id: string,
+    type: VacationType,
+    maxCount: number = 18,
+  ): Promise<number> {
+    const now: Date = new Date();
+    const end: string = moment(now).endOf('year').toString();
+    const start: string = moment(now).startOf('year').toString();
+    const spentCount: number = await this._vacationModel
+      .find({
+        status: StatusType.APPROVED,
+        type,
+        uid: Types.ObjectId(id),
+        date: { $gte: start, $lt: end },
+      })
+      .count();
+    return spentCount > maxCount - 1 ? 0 : maxCount - spentCount;
   }
 
   public async statusChange(

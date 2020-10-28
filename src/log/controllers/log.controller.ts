@@ -1,4 +1,5 @@
-import { FilterLogDto, LogType } from './../dto/filter-log.dto';
+import { VacationsService } from './../../vacations/services/vacations.service';
+import { FilterLogDto, LogType, VacationType } from './../dto/filter-log.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   Controller,
@@ -19,7 +20,10 @@ import { Positions } from 'src/auth/enums/positions.enum';
 @ApiTags('logs')
 @Controller('logs')
 export class LogController {
-  public constructor(private readonly _logService: LogService) {}
+  public constructor(
+    private readonly _logService: LogService,
+    private readonly _vacationService: VacationsService,
+  ) {}
 
   @ApiOperation({
     summary: 'Find all logs.',
@@ -45,7 +49,8 @@ export class LogController {
   ): Promise<Response> {
     try {
       const params: FilterLogDto = { ...query, logType, first };
-      const logs = await this._logService.findLogs(params);
+      // tslint:disable-next-line:no-any
+      const logs: any = await this._logService.findLogs(params);
       return res.status(HttpStatus.OK).json({ data: logs, error: null });
     } catch (error) {
       return res.status(HttpStatus.NOT_FOUND).json({ data: null, error });
@@ -77,7 +82,23 @@ export class LogController {
     try {
       const params: FilterLogDto = { ...query, first, logType };
       const logs: any = await this._logService.findLogByDate(params);
-      return res.status(HttpStatus.OK).json({ data: logs, error: null });
+      let vacationAvailable: number | null = null;
+      let sickAvailable: number | null = null;
+      if (query.uid) {
+        vacationAvailable = await this._vacationService.availableCount(
+          query.uid,
+          VacationType.VacationPaid,
+        );
+        sickAvailable = await this._vacationService.availableCount(
+          query.uid,
+          VacationType.SickPaid,
+          5,
+        );
+      }
+      return res.status(HttpStatus.OK).json({
+        data: { logs, vacationAvailable, sickAvailable },
+        error: null,
+      });
     } catch (error) {
       return res.status(HttpStatus.NOT_FOUND).json({ data: null, error });
     }

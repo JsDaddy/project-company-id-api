@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateVacationDto } from '../dto/create-vacation.dto';
+import { CreateVacationDto, VacationType } from '../dto/create-vacation.dto';
 import { Request, Response } from 'express';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
 import { Types } from 'mongoose';
@@ -118,6 +118,53 @@ export class VacationsController {
       return res
         .status(HttpStatus.OK)
         .json({ data: [...vacations], error: null });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('count/:uid')
+  @ApiOperation({ description: 'Find count of available vacations.' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found vacations count.',
+  })
+  public async availableCount(
+    @Param('uid') uid: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      // tslint:disable-next-line:no-any
+      const count: number = await this._vacationsService.availableCount(
+        uid,
+        VacationType.VacationPaid,
+      );
+      return res.status(HttpStatus.OK).json({ data: count, error: null });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('sick/count/:uid')
+  @ApiOperation({ description: 'Find count of available sick leaves.' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found sick leaves count.',
+  })
+  public async availableSickCount(
+    @Param('uid') uid: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      // tslint:disable-next-line:no-any
+      const count: number = await this._vacationsService.availableCount(
+        uid,
+        VacationType.SickPaid,
+        5,
+      );
+      return res.status(HttpStatus.OK).json({ data: count, error: null });
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
     }
