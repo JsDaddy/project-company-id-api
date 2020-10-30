@@ -8,7 +8,7 @@ import * as mongodb from 'mongodb';
 import * as jwt from 'jsonwebtoken';
 import { Db } from 'mongodb';
 import { Types } from 'mongoose';
-
+import moment from 'moment';
 export const GOOGLE_APPLICATION_CREDENTIALS =
   'scripts/companyid-74562-firebase-adminsdk-85397-1dbc868ab2.json';
 
@@ -121,6 +121,10 @@ export async function main(): Promise<any> {
     userData.initialLogin = true;
     userData.accessToken = jwt.sign(payload, 'company-id');
     userData.dob = userData.dob.toDate();
+    userData.dob = moment(userData.dob)
+      .utcOffset(0)
+      .set({ hour: 12, minute: 0, second: 0, millisecond: 0 })
+      .toDate();
     const timelogs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
       .collection('timelogs')
       .where('uid', '==', user.data().uid)

@@ -1,3 +1,4 @@
+import { IBirthday } from './../interfaces/birthday.interface';
 import { DateService } from './date.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
@@ -7,6 +8,7 @@ import { IFilterLog } from '../interfaces/filters.interface';
 import { IHoliday } from '../interfaces/holiday.interface';
 import { ITimelog } from 'src/timelogs/interfaces/timelog.interface';
 import { IVacation } from 'src/vacations/interfaces/vacation.interface';
+import { IUser } from 'src/auth/interfaces/user.interface';
 
 @Injectable()
 export class LogService {
@@ -29,6 +31,8 @@ export class LogService {
   };
 
   public constructor(
+    @InjectModel('users')
+    private readonly _usersModel: Model<IUser & Document>,
     @InjectModel('timelog')
     private readonly _timelogModel: Model<ITimelog & Document>,
     @InjectModel('vacations')
@@ -60,6 +64,7 @@ export class LogService {
     let timelogs: ITimelog[] = [];
     let vacations: IVacation[] = [];
     let holidays: IHoliday[] = [];
+    let birthdays: IBirthday[] = [];
 
     const aggregationMatch: Record<string, unknown> = this._matchPipe(
       filterByUser,
@@ -69,6 +74,12 @@ export class LogService {
       lastDate,
     );
     holidays = await this._getHolidaysByDate(date, lastDate);
+    birthdays = await this._getBirthdaysByDate(date);
+    birthdays = birthdays.map((item: IBirthday) => {
+      item.date.setFullYear(date.getFullYear());
+      return item;
+    });
+
     if (
       filterLog.logType === LogType.Timelogs ||
       filterLog.logType === LogType.All
@@ -101,15 +112,31 @@ export class LogService {
         },
       ]);
     }
-    // }
     // tslint:disable-next-line: no-any
-    let reducedLogs: any[] = [...timelogs, ...vacations, ...holidays];
+    let reducedLogs: any[] = [
+      ...timelogs,
+      ...vacations,
+      ...holidays,
+      ...birthdays,
+    ];
     let vacationDays: number = 0;
     // tslint:disable-next-line: no-any
     reducedLogs = reducedLogs.reduce((a: any, b: any) => {
-      const { time, status, name } = b;
-      const dateType: number = time ? 1 : status ? 2 : name ? 3 : -1;
-      a[b.date.toISOString()] = a[b.date.toISOString()] || [[], 0, []];
+      const { time, status, name, fullName } = b;
+      const dateType: number = time
+        ? 1
+        : status
+        ? 2
+        : name
+        ? 3
+        : fullName
+        ? 4
+        : -1;
+
+      a[b.date.toISOString()] = a[b.date.toISOString()] || [[], 0, [], 0];
+      if (dateType === 4) {
+        a[b.date.toISOString()][3] = 1;
+      }
       if (dateType === 2) {
         a[b.date.toISOString()][1] += 1;
         vacationDays++;
@@ -126,8 +153,10 @@ export class LogService {
       }
       return a;
     }, {});
+
     // tslint:disable-next-line:no-any
     const resultObj: any = {};
+
     let workedOut: number = 0;
     for (const key in reducedLogs) {
       let indexes: number[] = [];
@@ -135,6 +164,7 @@ export class LogService {
         reducedLogs[key][0].length > 0 ? 1 : 0,
         (reducedLogs[key][1] > 0 ? 1 : 0) * 2,
         reducedLogs[key][2].length * 3,
+        (reducedLogs[key][3] > 0 ? 1 : 0) * 4,
       );
       indexes = indexes.filter((x: number) => x).map((x: number) => x - 1);
       if (indexes.includes(0)) {
@@ -151,6 +181,7 @@ export class LogService {
         LogType.Timelogs,
         LogType.Vacations,
         LogType.Holidays,
+        LogType.Birthdays,
       ];
 
       indexes.forEach((index: number) => {
@@ -215,12 +246,14 @@ export class LogService {
     }
     const date: Date = new Date(filterLog.first);
     const lastDate: Date = this._dateService.getNextDay(filterLog.first);
+
     if (filterLog.uid) {
       filterByUser = { uid: Types.ObjectId(filterLog.uid) };
     }
     let timelogs: ITimelog[] = [];
     let vacations: IVacation[] = [];
     let holidays: IHoliday[] = [];
+    let birthdays: IBirthday[] = [];
     holidays = await this._getHolidaysByDate(date, lastDate);
 
     if (
@@ -247,7 +280,14 @@ export class LogService {
       );
     }
 
-    return [...timelogs, ...vacations, ...holidays];
+    if (
+      filterLog.logType === LogType.All ||
+      filterLog.logType === LogType.Birthdays
+    ) {
+      birthdays = await this._getBirthdaysByDate(date, true);
+    }
+
+    return [...timelogs, ...vacations, ...holidays, ...birthdays];
   }
   private async _getHolidaysByDate(
     date: Date,
@@ -264,6 +304,39 @@ export class LogService {
       .exec();
   }
 
+  private async _getBirthdaysByDate(
+    _date: Date,
+    _isSolo: boolean = false,
+  ): Promise<IBirthday[]> {
+    const soloFilter: { day?: number } = _isSolo
+      ? { day: _date.getDate() }
+      : {};
+    return await this._usersModel.aggregate([
+      {
+        $project: {
+          dob: 1,
+          isActive: 1,
+          name: 1,
+          lastName: 1,
+          month: { $month: '$dob' },
+          day: { $dayOfMonth: '$dob' },
+        },
+      },
+      {
+        $match: {
+          month: _date.getMonth() + 1,
+          isActive: true,
+          ...soloFilter,
+        },
+      },
+      {
+        $project: {
+          date: '$dob',
+          fullName: { $concat: ['$name', ' ', '$lastName'] },
+        },
+      },
+    ]);
+  }
   private async _getTimelogsByDate(
     filterByUser: IFilterLog,
     filterByProject: IFilterLog,

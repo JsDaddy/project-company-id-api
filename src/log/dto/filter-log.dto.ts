@@ -11,6 +11,7 @@ export enum LogType {
   Timelogs = 'timelogs',
   Vacations = 'vacations',
   Holidays = 'holidays',
+  Birthdays = 'birthdays',
 }
 
 export class FilterLogDto {

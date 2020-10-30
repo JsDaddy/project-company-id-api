@@ -1,3 +1,4 @@
+import { userSchema } from './../auth/schemas/user.schema';
 import { VacationsService } from './../vacations/services/vacations.service';
 import { DateService } from './services/date.service';
 import { Module } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { holidaySchema } from './schemas/holiday.schema';
   controllers: [LogController],
   exports: [LogService, DateService],
   imports: [
+    MongooseModule.forFeature([{ name: 'users', schema: userSchema }]),
     MongooseModule.forFeature([{ name: 'timelog', schema: timelogSchema }]),
     MongooseModule.forFeature([{ name: 'holidays', schema: holidaySchema }]),
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
