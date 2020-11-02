@@ -73,10 +73,11 @@ export class UserService {
   public async addUserToTheProject(
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
-    isActive: boolean = false,
+    active: string,
   ): Promise<void> {
+    const isActive: boolean = active === 'true' ? true : false;
     // tslint:disable-next-line:no-any
-    const match: any = isActive ? { $ne: projectId } : projectId;
+    const match: any = !isActive ? { $ne: projectId } : projectId;
     // tslint:disable-next-line:no-any
     const push: any = isActive
       ? { activeProjects: projectId }

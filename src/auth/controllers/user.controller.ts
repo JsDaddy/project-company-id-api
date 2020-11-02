@@ -41,14 +41,15 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'User has not been added to project',
   })
-  @Post(':uid/projects/:projectId')
+  @Post(':uid/projects/:projectId/:isActive')
   public async addUserToProject(
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
+    @Param('isActive') isActive: string,
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
   ): Promise<Response> {
     try {
-      await this.userService.addUserToTheProject(uid, projectId);
+      await this.userService.addUserToTheProject(uid, projectId, isActive);
       return res
         .status(HttpStatus.OK)
         .json({ data: 'User has been added to project', error: null });
