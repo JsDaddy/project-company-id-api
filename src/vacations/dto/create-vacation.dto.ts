@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum VacationType {
-  VacationPaid,
   VacationNonPaid,
+  VacationPaid,
   SickNonPaid,
   SickPaid,
 }
