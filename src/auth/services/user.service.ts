@@ -73,10 +73,17 @@ export class UserService {
   public async addUserToTheProject(
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
+    isActive: boolean = false,
   ): Promise<void> {
+    // tslint:disable-next-line:no-any
+    const match: any = isActive ? { $ne: projectId } : projectId;
+    // tslint:disable-next-line:no-any
+    const push: any = isActive
+      ? { activeProjects: projectId }
+      : { activeProjects: projectId, projects: projectId };
     await this._userModel.updateOne(
-      { _id, activeProjects: { $ne: projectId }, projects: { $ne: projectId } },
-      { $push: { activeProjects: projectId, projects: projectId } },
+      { _id, activeProjects: { $ne: projectId }, projects: match },
+      { $push: push },
     );
   }
   public async removeUserFromProject(
