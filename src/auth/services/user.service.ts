@@ -168,7 +168,7 @@ export class UserService {
         { $unwind: { path: '$projects', preserveNullAndEmptyArrays: true } },
         {
           $lookup: {
-            from: 'stack',
+            from: 'stacks',
             localField: 'projects.stack',
             as: 'projects.stack',
             foreignField: '_id',
