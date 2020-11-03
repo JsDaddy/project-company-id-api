@@ -257,7 +257,7 @@ export class UserService {
 
         {
           $lookup: {
-            from: 'stack',
+            from: 'stacks',
             localField: 'activeProjects.stack',
             as: 'activeProjects.stack',
             foreignField: '_id',
