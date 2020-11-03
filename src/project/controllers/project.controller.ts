@@ -142,6 +142,32 @@ export class ProjectController {
         .json({ data: null, error });
     }
   }
+  @ApiOperation({
+    summary: 'Find absent projects.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found absent projects',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'absent projects not found',
+  })
+  @Get('absent/users/:uid')
+  public async findAbsentProjects(
+    @Param('uid') uid: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      // tslint:disable-next-line:no-any
+      const projects: any = await this.projectService.findAbsentProjects(uid);
+      return res.status(HttpStatus.OK).json({ data: projects, error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
 
   @ApiOperation({
     summary: 'Find active projects for logs.',

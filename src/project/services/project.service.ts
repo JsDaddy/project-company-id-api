@@ -168,6 +168,37 @@ export class ProjectService {
     )[0];
   }
 
+  public async findAbsentProjects(id: string): Promise<IProject> {
+    let filterById: Record<string, unknown> = {};
+    if (id) {
+      filterById = { 'users._id': { $ne: Types.ObjectId(id) } };
+    }
+    return await this.projectModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            as: 'users',
+            foreignField: 'projects',
+          },
+        },
+        this.stackLookup,
+        { $match: filterById },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            endDate: 1,
+            startDate: 1,
+            'stack._id': 1,
+            'stack.name': 1,
+          },
+        },
+      ])
+      .exec();
+  }
+
   public async findProjectFor(
     userId: string,
     isActive: boolean = false,
