@@ -50,10 +50,12 @@ export class UserController {
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
   ): Promise<Response> {
     try {
-      await this.userService.addUserToTheProject(uid, projectId, isActive);
-      return res
-        .status(HttpStatus.OK)
-        .json({ data: 'User has been added to project', error: null });
+      const user: IUser | null = await this.userService.addUserToTheProject(
+        uid,
+        projectId,
+        isActive,
+      );
+      return res.status(HttpStatus.OK).json({ data: user, error: null });
     } catch (e) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

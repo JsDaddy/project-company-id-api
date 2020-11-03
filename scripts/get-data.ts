@@ -227,9 +227,9 @@ export async function main(): Promise<any> {
   await writeFile('stack', allStack);
   await writeFile('json', json.holidays);
   await writeFile('vacations', allVacs);
-}
 
-console.log('FINISHED');
+  console.log('FINISHED');
+}
 
 async function writeFile(name: string, items: any[]): Promise<void> {
   if (!fs.existsSync(`${__dirname}/output`)) {

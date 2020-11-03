@@ -74,14 +74,14 @@ export class UserService {
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
     isActive: boolean,
-  ): Promise<void> {
+  ): Promise<IUser | null> {
     const match: Record<string, unknown> | Types.ObjectId = !isActive
       ? { $ne: projectId }
       : projectId;
     const push: Record<string, unknown> = isActive
       ? { activeProjects: projectId }
       : { activeProjects: projectId, projects: projectId };
-    await this._userModel.updateOne(
+    return await this._userModel.findOneAndUpdate(
       { _id, activeProjects: { $ne: projectId }, projects: match },
       { $push: push },
     );
@@ -284,7 +284,7 @@ export class UserService {
   ): Promise<Partial<IUser>[]> {
     const _id: Types.ObjectId = Types.ObjectId(projectId);
     const match: Record<string, unknown> = {
-      $match: isActive ? { activeProjects: { $ne: _id } } : { projects: _id },
+      $match: isActive ? { projects: { $ne: _id } } : { projects: _id },
     };
     const users: Partial<IUser>[] = await this._userModel.aggregate([
       match,
