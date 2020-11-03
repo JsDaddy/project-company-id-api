@@ -68,6 +68,7 @@ export class UserService {
           lastName: 1,
           avatar: 1,
           position: 1,
+          endDate: 1,
         },
       },
     ]);
