@@ -25,6 +25,8 @@ export class StackController {
       const stack: IStack[] = await this._stackService.findStack();
       return res.status(HttpStatus.OK).json({ data: stack, error: null });
     } catch (error) {
+      console.log(error);
+
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ data: null, error });

@@ -16,7 +16,7 @@ import { IUser } from 'src/auth/interfaces/user.interface';
 export class ProjectService {
   public stackLookup: Record<string, unknown> = {
     $lookup: {
-      from: 'stack',
+      from: 'stacks',
       localField: 'stack',
       as: 'stack',
       foreignField: '_id',
@@ -191,6 +191,7 @@ export class ProjectService {
             name: 1,
             endDate: 1,
             startDate: 1,
+            isInternal: 1,
             'stack._id': 1,
             'stack.name': 1,
           },

@@ -119,7 +119,7 @@ export class UserService {
           { $match: { _id: projectId } },
           {
             $lookup: {
-              from: 'stack',
+              from: 'stacks',
               localField: 'stack',
               as: 'stack',
               foreignField: '_id',
