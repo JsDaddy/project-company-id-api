@@ -98,9 +98,9 @@ export class UserService {
     projectId: Types.ObjectId,
     isActive: boolean,
   ): Promise<Partial<IProject> | null> {
-    const match: Record<string, unknown> | Types.ObjectId = !isActive
-      ? { $ne: projectId }
-      : projectId;
+    const match: Record<string, unknown> | Types.ObjectId = isActive
+      ? projectId
+      : { $ne: projectId };
     const push: Record<string, unknown> = isActive
       ? { activeProjects: projectId }
       : { activeProjects: projectId, projects: projectId };
