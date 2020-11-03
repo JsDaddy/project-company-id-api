@@ -55,12 +55,13 @@ export class UserService {
   }
 
   public async getUsers(role: Positions): Promise<IUser[]> {
-    const filterByUser: { isActive: boolean } = {
-      isActive: true,
+    const filterByUser: Record<string, unknown> = {
+      endDate: { $exists: false },
     };
 
     return this._userModel.aggregate([
       { $match: role === Positions.DEVELOPER ? filterByUser : {} },
+      { $sort: { endDate: 1 } },
       {
         $project: {
           name: 1,

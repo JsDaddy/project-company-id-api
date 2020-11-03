@@ -62,10 +62,9 @@ export const userSchema: Schema = new Schema({
     required: true,
     type: String,
   },
-  isActive: {
-    required: true,
-    type: String,
-    default: true,
+  endDate: {
+    required: false,
+    type: Date,
   },
   projects: { required: false, type: [Types.ObjectId], default: [] },
   activeProjects: {

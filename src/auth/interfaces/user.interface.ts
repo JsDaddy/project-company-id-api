@@ -19,4 +19,5 @@ export interface IUser<P = Types.ObjectId[], R = string> {
   activeProjects?: P;
   projects?: P;
   isActive?: boolean;
+  endDate?: Date;
 }
