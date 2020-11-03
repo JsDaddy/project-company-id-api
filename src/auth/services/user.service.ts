@@ -74,17 +74,22 @@ export class UserService {
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
     isActive: boolean,
-  ): Promise<IUser | null> {
+  ): Promise<Partial<IUser> | null> {
     const match: Record<string, unknown> | Types.ObjectId = !isActive
       ? { $ne: projectId }
       : projectId;
     const push: Record<string, unknown> = isActive
       ? { activeProjects: projectId }
       : { activeProjects: projectId, projects: projectId };
-    return await this._userModel.findOneAndUpdate(
+    const user: IUser | null = await this._userModel.findOneAndUpdate(
       { _id, activeProjects: { $ne: projectId }, projects: match },
       { $push: push },
     );
+    if (user) {
+      const { name, lastName, avatar, position } = user;
+      return { name, lastName, avatar, position };
+    }
+    return null;
   }
 
   public async removeUserFromActiveProject(

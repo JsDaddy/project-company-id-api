@@ -50,11 +50,18 @@ export class UserController {
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
   ): Promise<Response> {
     try {
-      const user: IUser | null = await this.userService.addUserToTheProject(
+      const user: Partial<
+        IUser
+      > | null = await this.userService.addUserToTheProject(
         uid,
         projectId,
         isActive,
       );
+      if (!user) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ data: null, error: 'User doesnt exist' });
+      }
       return res.status(HttpStatus.OK).json({ data: user, error: null });
     } catch (e) {
       return res
