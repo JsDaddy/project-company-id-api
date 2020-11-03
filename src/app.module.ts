@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TechnologyModule } from './technology/technology.module';
+import { StackModule } from './stack/stack.module';
 import { RuleModule } from './rule/rule.module';
 import { ProjectModule } from './project/project.module';
 import { AuthModule } from './auth/auth.module';
@@ -22,7 +22,7 @@ import { TimelogsModule } from './timelogs/timelogs.module';
     VacationsModule,
     TimelogsModule,
     LogModule,
-    TechnologyModule,
+    StackModule,
     RuleModule,
     ProjectModule,
   ],

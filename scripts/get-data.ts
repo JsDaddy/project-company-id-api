@@ -219,7 +219,7 @@ export async function main(): Promise<any> {
   }
   for (const stack of allStack) {
     delete stack.id;
-    await mongoDb.collection('stack').insertOne(stack);
+    await mongoDb.collection('stacks').insertOne(stack);
   }
   await writeFile('users', allUsers);
   await writeFile('projects', allProjects);

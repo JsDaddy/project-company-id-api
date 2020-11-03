@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export const technologySchema: mongoose.Schema = new mongoose.Schema(
+export const stackSchema: mongoose.Schema = new mongoose.Schema(
   {
     name: {
       required: true,
