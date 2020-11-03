@@ -10,6 +10,8 @@ import { IProject } from 'src/project/interfaces/project.interface';
 export class UserService {
   public constructor(
     @InjectModel('users') private readonly _userModel: Model<IUser & Document>,
+    @InjectModel('projects')
+    private readonly _projectsModel: Model<IProject & Document>,
   ) {}
 
   public async createUser(user: SignUpDto): Promise<IUser> {
@@ -90,6 +92,54 @@ export class UserService {
       return { name, lastName, avatar, position };
     }
     return null;
+  }
+  public async addUserToTheProjectWithReturn(
+    _id: Types.ObjectId,
+    projectId: Types.ObjectId,
+    isActive: boolean,
+  ): Promise<Partial<IProject> | null> {
+    const match: Record<string, unknown> | Types.ObjectId = !isActive
+      ? { $ne: projectId }
+      : projectId;
+    const push: Record<string, unknown> = isActive
+      ? { activeProjects: projectId }
+      : { activeProjects: projectId, projects: projectId };
+    const user: IUser | null = await this._userModel.findOneAndUpdate(
+      { _id, activeProjects: { $ne: projectId }, projects: match },
+      { $push: push },
+    );
+
+    if (!user) {
+      return null;
+    }
+
+    return (
+      await this._projectsModel
+        .aggregate([
+          { $match: { _id: projectId } },
+          {
+            $lookup: {
+              from: 'stack',
+              localField: 'stack',
+              as: 'stack',
+              foreignField: '_id',
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              endDate: 1,
+
+              startDate: 1,
+
+              'stack._id': 1,
+              'stack.name': 1,
+            },
+          },
+        ])
+        .exec()
+    )[0];
   }
 
   public async removeUserFromActiveProject(

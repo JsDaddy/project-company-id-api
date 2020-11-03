@@ -69,6 +69,47 @@ export class UserController {
         .json({ data: null, e });
     }
   }
+  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
+  @ApiOperation({
+    summary: 'Add user to project (return project).',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User has been added to project ',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'User has not been added to project',
+  })
+  @Post(':uid/projects-return/:projectId/:isActive')
+  public async addUserToProjectWithReturn(
+    @Res() res: Response,
+    @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
+    @Param('isActive', ParseBoolPipe) isActive: boolean,
+    @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
+  ): Promise<Response> {
+    try {
+      const project: Partial<
+        IProject
+      > | null = await this.userService.addUserToTheProjectWithReturn(
+        uid,
+        projectId,
+        isActive,
+      );
+      if (!project) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          data: null,
+          error:
+            'User or project doesnt exist / user already added to this project',
+        });
+      }
+      return res.status(HttpStatus.OK).json({ data: project, error: null });
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, e });
+    }
+  }
 
   @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
   @ApiOperation({

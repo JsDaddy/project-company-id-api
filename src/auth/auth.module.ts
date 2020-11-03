@@ -1,3 +1,4 @@
+import { projectSchema } from './../project/schemas/project.schema';
 import { Module } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { PassportModule } from '@nestjs/passport';
@@ -17,6 +18,7 @@ import { vacationSchema } from 'src/vacations/schemas/vacation.schema';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
     MongooseModule.forFeature([{ name: 'users', schema: userSchema }]),
+    MongooseModule.forFeature([{ name: 'projects', schema: projectSchema }]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
