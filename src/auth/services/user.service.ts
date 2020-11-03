@@ -73,13 +73,12 @@ export class UserService {
   public async addUserToTheProject(
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
-    active: string,
+    isActive: boolean,
   ): Promise<void> {
-    const isActive: boolean = active === 'true' ? true : false;
-    // tslint:disable-next-line:no-any
-    const match: any = !isActive ? { $ne: projectId } : projectId;
-    // tslint:disable-next-line:no-any
-    const push: any = isActive
+    const match: Record<string, unknown> | Types.ObjectId = !isActive
+      ? { $ne: projectId }
+      : projectId;
+    const push: Record<string, unknown> = isActive
       ? { activeProjects: projectId }
       : { activeProjects: projectId, projects: projectId };
     await this._userModel.updateOne(
@@ -87,15 +86,7 @@ export class UserService {
       { $push: push },
     );
   }
-  public async removeUserFromProject(
-    _id: Types.ObjectId,
-    projectId: Types.ObjectId,
-  ): Promise<void> {
-    await this._userModel.updateOne(
-      { _id },
-      { $pull: { activeProjects: projectId, projects: projectId } },
-    );
-  }
+
   public async removeUserFromActiveProject(
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
@@ -287,10 +278,16 @@ export class UserService {
     )[0];
   }
 
-  public async findUsersFor(projectId: string): Promise<Partial<IUser>[]> {
+  public async findUsersFor(
+    projectId: string,
+    isActive: boolean = false,
+  ): Promise<Partial<IUser>[]> {
     const _id: Types.ObjectId = Types.ObjectId(projectId);
+    const match: Record<string, unknown> = {
+      $match: isActive ? { activeProjects: { $ne: _id } } : { projects: _id },
+    };
     const users: Partial<IUser>[] = await this._userModel.aggregate([
-      { $match: { projects: _id } },
+      match,
       {
         $project: {
           _id: 1,

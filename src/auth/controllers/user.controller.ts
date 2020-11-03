@@ -9,8 +9,9 @@ import {
   Post,
   Param,
   UseGuards,
-  Delete,
   Req,
+  ParseBoolPipe,
+  Delete,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
@@ -45,7 +46,7 @@ export class UserController {
   public async addUserToProject(
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
-    @Param('isActive') isActive: string,
+    @Param('isActive', ParseBoolPipe) isActive: boolean,
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
   ): Promise<Response> {
     try {
@@ -53,36 +54,6 @@ export class UserController {
       return res
         .status(HttpStatus.OK)
         .json({ data: 'User has been added to project', error: null });
-    } catch (e) {
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ data: null, e });
-    }
-  }
-
-  @UseGuards(AuthGuard('jwt'), new RolesGuard(Positions.OWNER))
-  @ApiOperation({
-    summary: 'Remove user from project.',
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'User has been removed from project',
-  })
-  @ApiResponse({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'User has not been removed from project',
-  })
-  @Delete(':uid/projects/:projectId')
-  public async removeUserFromProject(
-    @Res() res: Response,
-    @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
-    @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
-  ): Promise<Response> {
-    try {
-      await this.userService.removeUserFromProject(uid, projectId);
-      return res
-        .status(HttpStatus.OK)
-        .json({ data: 'User has been removed from project', error: null });
     } catch (e) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -102,7 +73,7 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'User has not been removed from active project',
   })
-  @Post(':uid/active-project/:projectId')
+  @Delete(':uid/active-project/:projectId')
   public async removeUserFromActiveProject(
     @Res() res: Response,
     @Param('uid', ParseObjectIdPipe) uid: Types.ObjectId,
@@ -206,8 +177,35 @@ export class UserController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      // tslint:disable-next-line:no-any
       const users: Partial<IUser>[] = await this.userService.findUsersFor(pid);
+      return res.status(HttpStatus.OK).json({ data: users, error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
+  @ApiOperation({
+    summary: 'Find absent users for projects.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found absent users',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'projects not found',
+  })
+  @Get('absent/projects/:pid')
+  public async findAbsentUsersFor(
+    @Param('pid') pid: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const users: Partial<IUser>[] = await this.userService.findUsersFor(
+        pid,
+        true,
+      );
       return res.status(HttpStatus.OK).json({ data: users, error: null });
     } catch (error) {
       return res
