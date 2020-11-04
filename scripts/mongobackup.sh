@@ -6,9 +6,9 @@
 # Database Name to backup
 MONGO_DATABASE="company-id"
 # Database host name
-MONGO_HOST="127.0.0.1"
+MONGO_HOST="localhost:27222"
 # Database port
-MONGO_PORT="27222"
+MONGO_PORT=""
 # Backup directory
 BACKUPS_DIR="/var/backups/$MONGO_DATABASE"
 # Database user name
@@ -33,7 +33,7 @@ if ! mkdir -p $BACKUPS_DIR; then
 fi;
 # Create dump
 # mongodump -d $MONGO_DATABASE --username $DBUSERNAME --password $DBPASSWORD --authenticationDatabase $DBAUTHDB
-mongodump  –-host $MONGO_HOST –-port $MONGO_PORT --d $MONGO_DATABASE –-out $BACKUPS_DIR 
+mongodump  –-host $MONGO_HOST --db $MONGO_DATABASE –-out $BACKUPS_DIR 
 # Rename dump directory to backup name
 mv dump $BACKUP_NAME
 # Compress backup
