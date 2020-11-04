@@ -35,7 +35,7 @@ if ! mkdir -p $BACKUPS_DIR; then
 fi;
 # Create dump
 # mongodump -d $MONGO_DATABASE --username $DBUSERNAME --password $DBPASSWORD --authenticationDatabase $DBAUTHDB
-mongodump  --host $MONGO_HOST --port $MONGO_PORT --db $MONGO_DATABASE –o $BACKUPS_DIR 
+mongodump  --host $MONGO_HOST --port $MONGO_PORT --db $MONGO_DATABASE 
 # Rename dump directory to backup name
 mv dump $BACKUP_NAME
 # Compress backup
