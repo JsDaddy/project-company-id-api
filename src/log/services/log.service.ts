@@ -186,10 +186,11 @@ export class LogService {
 
       indexes.forEach((index: number) => {
         const str: string = indexType[index];
-        resultObj[key] = [
-          ...(resultObj[key] ?? []),
-          { [str]: reducedLogs[key][index] },
-        ];
+        resultObj[key] = resultObj[key] ?? [];
+        resultObj[key][0] = {
+          ...(resultObj[key][0] ?? {}),
+          ...{ [str]: reducedLogs[key][index] },
+        };
       });
     }
     const weekHours: number = this._dateService.getWeekDays(date) * 8;
