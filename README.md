@@ -26,6 +26,8 @@ These documents provide instructions to install MongoDB Community Edition.
 DATABASE_PATH=db path DATABASE_NAME=db name SECRET=your secret
 ```
 
+### Set Up Scheduled MongoDB Backups
+
 ## Running the app
 
 ```

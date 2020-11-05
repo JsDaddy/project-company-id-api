@@ -6,11 +6,11 @@
 # Database Name to backup
 MONGO_DATABASE="company-id"
 # Database URI
-MONGO_URI="mongodb://127.0.0.1:27222"
+MONGO_URI="mongodb://127.0.0.1:27017"
 # Database host name
 MONGO_HOST="localhost"
 # Database port
-MONGO_PORT="27222"
+MONGO_PORT="27017"
 # Backup directory
 BACKUPS_DIR="/var/backups/$MONGO_DATABASE"
 # Database user name
