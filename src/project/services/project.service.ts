@@ -88,6 +88,24 @@ export class ProjectService {
       .exec();
   }
 
+  public async archivateProject(
+    _id: string,
+    status: ProjectStatus,
+  ): Promise<IProject | null> {
+    return await this.projectModel.findOneAndUpdate(
+      { _id: Types.ObjectId(_id) },
+      [
+        {
+          $set: {
+            endDate: new Date(),
+          },
+        },
+        { $set: { status } },
+      ],
+      { upsert: true, new: true },
+    );
+  }
+
   public async createProject(project: CreateProjectDto): Promise<IProject> {
     const { users, ...projectDtoWithoutUsers } = project;
 

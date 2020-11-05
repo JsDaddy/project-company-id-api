@@ -1,3 +1,4 @@
+import { ProjectStatus } from './../enums/project-status.enum';
 import { Positions } from 'src/auth/enums/positions.enum';
 import {
   Controller,
@@ -10,6 +11,7 @@ import {
   Query,
   UseGuards,
   Req,
+  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProjectService } from '../services/project.service';
@@ -166,6 +168,44 @@ export class ProjectController {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ data: null, error });
+    }
+  }
+
+  @ApiOperation({
+    summary: 'Archivate project by id',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'project archived',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'project not found',
+  })
+  @Put(':id/:status')
+  public async archiveProject(
+    @Param('id') id: string,
+    @Param('status') status: ProjectStatus,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const project: IProject | null = await this.projectService.archivateProject(
+        id,
+        status,
+      );
+      if (!project) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ data: null, error: 'Project not found' });
+      }
+      return res.status(HttpStatus.OK).json({
+        data: project,
+        error: null,
+      });
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, e });
     }
   }
 
