@@ -132,9 +132,7 @@ export class UserService {
               _id: 1,
               name: 1,
               endDate: 1,
-
               startDate: 1,
-
               'stack._id': 1,
               'stack.name': 1,
             },

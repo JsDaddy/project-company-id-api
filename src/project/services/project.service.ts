@@ -40,7 +40,9 @@ export class ProjectService {
     let filterByStatus: IFilterProjects = {};
     if (uid) {
       filterByUser = { 'users._id': Types.ObjectId(uid) };
+      // { 'users._id': Types.ObjectId('5fa176420a74a88e2282c6d3') }
     }
+    console.log(filterByUser);
     if (stack) {
       filterByStack = { stack: Types.ObjectId(stack) };
     }
@@ -66,6 +68,17 @@ export class ProjectService {
         },
         this.stackLookup,
         {
+          $lookup: {
+            from: 'users',
+            localField: '_id',
+            as: 'users',
+            foreignField: 'projects',
+          },
+        },
+        {
+          $match: filterByUser,
+        },
+        {
           $project: {
             _id: 1,
             name: 1,
@@ -77,9 +90,6 @@ export class ProjectService {
             'stack._id': 1,
             'stack.name': 1,
           },
-        },
-        {
-          $match: filterByUser,
         },
         {
           $sort: { endDate: 1, isInternal: 1, isActivity: 1 },
