@@ -161,6 +161,7 @@ export class UserService {
     return await this._userModel.findOneAndUpdate(
       { _id: Types.ObjectId(_id) },
       { $set: { endDate: new Date() } },
+      { new: true },
     );
   }
   // TODO
