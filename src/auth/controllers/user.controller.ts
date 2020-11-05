@@ -12,6 +12,7 @@ import {
   Req,
   ParseBoolPipe,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
@@ -201,6 +202,40 @@ export class UserController {
       );
       return res.status(HttpStatus.OK).json({
         data: { ...user, vacationAvailable, sickAvailable },
+        error: null,
+      });
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, e });
+    }
+  }
+
+  @ApiOperation({
+    summary: 'Archivate user by id',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User archived',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found',
+  })
+  @Put(':id')
+  public async archiveUser(
+    @Param('id') id: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const user: IUser | null = await this.userService.archivateUser(id);
+      if (!user) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ data: null, error: 'User not found' });
+      }
+      return res.status(HttpStatus.OK).json({
+        data: user,
         error: null,
       });
     } catch (e) {

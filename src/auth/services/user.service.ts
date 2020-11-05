@@ -153,6 +153,16 @@ export class UserService {
       { $pull: { activeProjects: projectId } },
     );
   }
+
+  public async getUser(_id: string): Promise<IUser | null> {
+    return await this._userModel.findOne({ _id: Types.ObjectId(_id) });
+  }
+  public async archivateUser(_id: string): Promise<IUser | null> {
+    return await this._userModel.findOneAndUpdate(
+      { _id: Types.ObjectId(_id) },
+      { $set: { endDate: new Date() } },
+    );
+  }
   // TODO
   public async findUser(_id: string): Promise<IUser<IProject[]>> {
     return (
