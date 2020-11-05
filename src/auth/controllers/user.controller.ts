@@ -212,6 +212,34 @@ export class UserController {
   }
 
   @ApiOperation({
+    summary: 'Find users by stack',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found users',
+  })
+  @Get('stack/:sid')
+  public async findUsersByStack(
+    @Param('sid') id: string,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const users: Partial<IUser>[] = await this.userService.findUsersByStack(
+        id,
+      );
+
+      return res.status(HttpStatus.OK).json({
+        data: users,
+        error: null,
+      });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
+
+  @ApiOperation({
     summary: 'Archivate user by id',
   })
   @ApiResponse({

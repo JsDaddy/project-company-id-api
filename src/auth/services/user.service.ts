@@ -164,7 +164,28 @@ export class UserService {
       { new: true },
     );
   }
-  // TODO
+
+  public async findUsersByStack(_sid: string): Promise<Partial<IUser>[]> {
+    return await this._userModel.aggregate([
+      {
+        $lookup: {
+          as: 'projects',
+          foreignField: '_id',
+          from: 'projects',
+          localField: 'projects',
+        },
+      },
+      { $match: { 'projects.stack': Types.ObjectId(_sid) } },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          lastName: 1,
+        },
+      },
+    ]);
+  }
+
   public async findUser(_id: string): Promise<IUser<IProject[]>> {
     return (
       await this._userModel.aggregate([
