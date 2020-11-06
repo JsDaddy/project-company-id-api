@@ -12,9 +12,10 @@ import {
   ParseBoolPipe,
   Delete,
   Put,
+  Req,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
@@ -162,12 +163,14 @@ export class UserController {
   @Get('all/:isNotFired')
   public async findUsers(
     @Res() res: Response,
+    @Req() req: Request,
     @Param('isNotFired', ParseBoolPipe) isNofFired: boolean,
   ): Promise<Response> {
     try {
-      const users: Partial<IUser>[] = await this.userService.getUsers(
-        isNofFired,
-      );
+      const { position } = req.user as IUser<IProject[], Positions>;
+      const param: boolean =
+        position === Positions.DEVELOPER ? true : isNofFired;
+      const users: Partial<IUser>[] = await this.userService.getUsers(param);
       console.log(users.length);
 
       return res.status(HttpStatus.OK).json({ data: users, error: null });
