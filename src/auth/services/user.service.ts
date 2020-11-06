@@ -89,8 +89,8 @@ export class UserService {
       { $push: push },
     );
     if (user) {
-      const { name, lastName, avatar, position } = user;
-      return { name, lastName, avatar, position };
+      const { name, lastName, avatar, position, endDate } = user;
+      return { name, lastName, avatar, position, endDate };
     }
     return null;
   }
@@ -370,7 +370,9 @@ export class UserService {
   ): Promise<Partial<IUser>[]> {
     const _id: Types.ObjectId = Types.ObjectId(projectId);
     const match: Record<string, unknown> = {
-      $match: isActive ? { projects: { $ne: _id } } : { projects: _id },
+      $match: isActive
+        ? { endDate: null, projects: { $ne: _id } }
+        : { endDate: null, projects: _id },
     };
     const users: Partial<IUser>[] = await this._userModel.aggregate([
       match,

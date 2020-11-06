@@ -95,6 +95,14 @@ export class UserController {
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
   ): Promise<Response> {
     try {
+      const user: IUser | null = await this.userService.getUser(
+        uid.toHexString(),
+      );
+      if (user && user.hasOwnProperty('endDate')) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ data: null, error: 'User is fired.' });
+      }
       const project: Partial<
         IProject
       > | null = await this.userService.addUserToTheProjectWithReturn(

@@ -40,9 +40,7 @@ export class ProjectService {
     let filterByStatus: IFilterProjects = {};
     if (uid) {
       filterByUser = { 'users._id': Types.ObjectId(uid) };
-      // { 'users._id': Types.ObjectId('5fa176420a74a88e2282c6d3') }
     }
-    console.log(filterByUser);
     if (stack) {
       filterByStack = { stack: Types.ObjectId(stack) };
     }
@@ -182,10 +180,12 @@ export class ProjectService {
               'onboard.lastName': 1,
               'onboard.position': 1,
               'onboard.avatar': 1,
+              'onboard.endDate': 1,
               'history._id': 1,
               'history.name': 1,
               'history.lastName': 1,
               'history.position': 1,
+              'history.endDate': 1,
               'history.avatar': 1,
               'stack._id': 1,
               'stack.name': 1,
