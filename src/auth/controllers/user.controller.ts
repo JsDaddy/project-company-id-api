@@ -51,6 +51,15 @@ export class UserController {
     @Param('projectId', ParseObjectIdPipe) projectId: Types.ObjectId,
   ): Promise<Response> {
     try {
+      const oldUser: IUser | null = await this.userService.getUser(
+        uid.toHexString(),
+      );
+
+      if (oldUser && oldUser.hasOwnProperty('endDate')) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ data: null, error: 'User is fired.' });
+      }
       const user: Partial<
         IUser
       > | null = await this.userService.addUserToTheProject(
@@ -62,11 +71,6 @@ export class UserController {
         return res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .json({ data: null, error: 'User doesnt exist' });
-      }
-      if (user.hasOwnProperty('endDate')) {
-        return res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .json({ data: null, error: 'User is fired.' });
       }
       return res.status(HttpStatus.OK).json({ data: user, error: null });
     } catch (e) {
