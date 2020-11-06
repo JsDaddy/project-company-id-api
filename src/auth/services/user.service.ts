@@ -158,7 +158,7 @@ export class UserService {
   public async archivateUser(_id: string): Promise<IUser | null> {
     return await this._userModel.findOneAndUpdate(
       { _id: Types.ObjectId(_id) },
-      { $set: { endDate: new Date() } },
+      [{ $set: { endDate: new Date() } }, { $set: { activeProjects: [] } }],
       { new: true },
     );
   }
