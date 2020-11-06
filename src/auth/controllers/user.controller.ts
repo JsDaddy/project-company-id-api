@@ -9,13 +9,12 @@ import {
   Post,
   Param,
   UseGuards,
-  Req,
   ParseBoolPipe,
   Delete,
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ParseObjectIdPipe } from 'src/shared/pipes/string-object-id.pipe';
@@ -62,6 +61,11 @@ export class UserController {
         return res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .json({ data: null, error: 'User doesnt exist' });
+      }
+      if (user.hasOwnProperty('endDate')) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ data: null, error: 'User is fired.' });
       }
       return res.status(HttpStatus.OK).json({ data: user, error: null });
     } catch (e) {
@@ -155,15 +159,17 @@ export class UserController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Record not found',
   })
-  @Get('')
+  @Get('all/:isNotFired')
   public async findUsers(
     @Res() res: Response,
-    @Req() req: Request,
+    @Param('isNotFired', ParseBoolPipe) isNofFired: boolean,
   ): Promise<Response> {
     try {
-      const { position } = req.user as IUser<IProject[], Positions>;
+      const users: Partial<IUser>[] = await this.userService.getUsers(
+        isNofFired,
+      );
+      console.log(users.length);
 
-      const users: Partial<IUser>[] = await this.userService.getUsers(position);
       return res.status(HttpStatus.OK).json({ data: users, error: null });
     } catch (error) {
       console.log(error);

@@ -1,4 +1,3 @@
-import { Positions } from 'src/auth/enums/positions.enum';
 import { SignUpDto } from './../dto/signup.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -54,13 +53,13 @@ export class UserService {
     ]);
   }
 
-  public async getUsers(role: Positions): Promise<IUser[]> {
+  public async getUsers(isNotFired: boolean): Promise<IUser[]> {
     const filterByUser: Record<string, unknown> = {
       endDate: { $exists: false },
     };
 
     return this._userModel.aggregate([
-      { $match: role === Positions.DEVELOPER ? filterByUser : {} },
+      { $match: isNotFired ? filterByUser : {} },
       { $sort: { endDate: 1 } },
       {
         $project: {

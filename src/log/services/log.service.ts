@@ -313,6 +313,7 @@ export class LogService {
       ? { day: _date.getDate() }
       : {};
     return await this._usersModel.aggregate([
+      { $match: { endDate: null } },
       {
         $project: {
           dob: 1,
