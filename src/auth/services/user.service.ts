@@ -74,7 +74,7 @@ export class UserService {
   }
 
   public async addUserToTheProject(
-    _id: Types.ObjectId,
+    id: Types.ObjectId,
     projectId: Types.ObjectId,
     isActive: boolean,
   ): Promise<Partial<IUser> | null> {
@@ -85,12 +85,12 @@ export class UserService {
       ? { activeProjects: projectId }
       : { activeProjects: projectId, projects: projectId };
     const user: IUser | null = await this._userModel.findOneAndUpdate(
-      { _id, activeProjects: { $ne: projectId }, projects: match },
+      { _id: id, activeProjects: { $ne: projectId }, projects: match },
       { $push: push },
     );
     if (user) {
-      const { name, lastName, avatar, position, endDate } = user;
-      return { name, lastName, avatar, position, endDate };
+      const { _id, name, lastName, avatar, position, endDate } = user;
+      return { _id, name, lastName, avatar, position, endDate };
     }
     return null;
   }
