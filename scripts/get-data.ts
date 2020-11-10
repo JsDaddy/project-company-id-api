@@ -134,8 +134,7 @@ export async function main(): Promise<any> {
     for (const vacationDocument of vacation.docs) {
       const vacDoc = vacationDocument.data();
       vacDoc._id = Types.ObjectId();
-      vacDoc.type =
-        vacDoc.type === '0' ? 1 : vacDoc.type === '2' ? 3 : vacDoc.type;
+      vacDoc.type = vacDoc.type === 0 ? 1 : vacDoc.type === 2 ? 3 : vacDoc.type;
       vacDoc.uid = userData._id;
       vacDoc.date = vacDoc.date.toDate();
       vacDoc.date = normalizeDate(vacDoc.date);
