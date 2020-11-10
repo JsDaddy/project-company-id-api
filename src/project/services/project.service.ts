@@ -167,7 +167,7 @@ export class ProjectService {
               foreignField: 'activeProjects',
             },
           },
-          { $sort: { 'history.endDate': 1 } },
+
           {
             $project: {
               _id: 1,
@@ -192,6 +192,7 @@ export class ProjectService {
               'stack.name': 1,
             },
           },
+          { $sort: { 'history.endDate': 1 } },
         ])
         .exec()
     )[0];
