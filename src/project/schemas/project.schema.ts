@@ -1,3 +1,4 @@
+import { StatusType } from './../../vacations/dto/change-status.dto';
 import { Schema, Types } from 'mongoose';
 
 export const projectSchema: Schema = new Schema(
@@ -27,7 +28,15 @@ export const projectSchema: Schema = new Schema(
       required: true,
       type: [Types.ObjectId],
     },
+    status: {
+      required: true,
+      type: StatusType,
+    },
     isInternal: {
+      required: true,
+      type: Boolean,
+    },
+    isActivity: {
       required: true,
       type: Boolean,
     },
