@@ -191,6 +191,7 @@ export class ProjectService {
               'stack.name': 1,
             },
           },
+          { $sort: { 'onboard.endDate': 1, 'history.endDate': 1 } },
         ])
         .exec()
     )[0];
