@@ -338,11 +338,6 @@ export class UserService {
           },
         },
         {
-          $sort: {
-            'activeProjects.endDate': 1,
-          },
-        },
-        {
           $group: {
             _id: '$_id._id',
             name: { $first: '$name' },
@@ -366,6 +361,11 @@ export class UserService {
                 stack: '$stack',
               },
             },
+          },
+        },
+        {
+          $sort: {
+            'activeProjects.isInternal': 1,
           },
         },
       ])
