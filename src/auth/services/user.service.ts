@@ -266,6 +266,10 @@ export class UserService {
                 isInternal: '$project.isInternal',
                 stack: '$stack',
               },
+              $sort: {
+                endDate: 1,
+                isInternal: 1,
+              },
             },
           },
         },
@@ -357,15 +361,11 @@ export class UserService {
                 isInternal: '$activeProjects.isInternal',
                 stack: '$stack',
               },
+              $sort: {
+                endDate: 1,
+                isInternal: 1,
+              },
             },
-          },
-        },
-        {
-          $sort: {
-            'activeProjects.endDate': 1,
-            'activeProjects.isInternal': 1,
-            'projects.endDate': 1,
-            'projects.isInternal': 1,
           },
         },
       ])
