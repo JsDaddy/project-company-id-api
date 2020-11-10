@@ -360,6 +360,14 @@ export class UserService {
             },
           },
         },
+        {
+          $sort: {
+            'activeProjects.endDate': 1,
+            'activeProjects.isInternal': 1,
+            'projects.endDate': 1,
+            'projects.isInternal': 1,
+          },
+        },
       ])
     )[0];
   }
