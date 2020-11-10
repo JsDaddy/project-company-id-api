@@ -14,20 +14,6 @@ export class AuthService {
     private readonly _userModel: Model<IUser & Document>, //  private readonly _config: ConfigService,
   ) {}
 
-  // public async createToken(user: SignUpDto): Promise<string> {
-  //   const secret: string = process.env.secret as string;
-  //   const { email } = user;
-
-  //   const payload: { email: string } = {
-  //     email,
-  //   };
-
-  //   let accessToken: string = '';
-  //   accessToken = jwt.sign(payload, secret);
-
-  //   return accessToken;
-  // }
-
   public async setPassword(
     email: string,
     password: string,

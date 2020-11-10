@@ -1,3 +1,4 @@
+import { normalizeDate } from 'scripts/get-data';
 import { Positions } from 'src/auth/enums/positions.enum';
 import { ChangeStatusDto } from './../dto/change-status.dto';
 import { IVacation } from 'src/vacations/interfaces/vacation.interface';
@@ -53,9 +54,11 @@ export class VacationsController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
+      const { date } = createVacationDto;
       const { _id: uid } = req.user as IUser;
       const vacation: IVacation = await this._vacationsService.createVacation({
         ...createVacationDto,
+        date: normalizeDate(new Date(date)),
         uid,
       });
       return res.status(HttpStatus.OK).json({ data: vacation, error: null });

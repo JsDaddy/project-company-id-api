@@ -22,6 +22,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { IUser } from 'src/auth/interfaces/user.interface';
 import { CreateProjectDto } from '../dto/project.dto';
+import { normalizeDate } from 'scripts/get-data';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -107,9 +108,11 @@ export class ProjectController {
     @Body() createProjectDto: CreateProjectDto,
   ): Promise<Response> {
     try {
-      const project: IProject = await this.projectService.createProject(
-        createProjectDto,
-      );
+      const { startDate } = createProjectDto;
+      const project: IProject = await this.projectService.createProject({
+        ...createProjectDto,
+        startDate: normalizeDate(startDate),
+      });
       return res.status(HttpStatus.OK).json({ data: project, error: null });
     } catch (error) {
       return res

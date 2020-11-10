@@ -121,10 +121,7 @@ export async function main(): Promise<any> {
     userData.initialLogin = true;
     userData.accessToken = jwt.sign(payload, 'company-id');
     userData.dob = userData.dob.toDate();
-    userData.dob = moment(userData.dob)
-      .utcOffset(0)
-      .set({ hour: 12, minute: 0, second: 0, millisecond: 0 })
-      .toDate();
+    userData.dob = normalizeDate(userData.dob);
     const timelogs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db
       .collection('timelogs')
       .where('uid', '==', user.data().uid)
@@ -139,6 +136,7 @@ export async function main(): Promise<any> {
       vacDoc._id = Types.ObjectId();
       vacDoc.uid = userData._id;
       vacDoc.date = vacDoc.date.toDate();
+      vacDoc.date = normalizeDate(vacDoc.date);
       await mongoDb.collection('vacations').insertOne(vacDoc);
       allVacs.push(vacDoc);
     }
@@ -151,6 +149,7 @@ export async function main(): Promise<any> {
       )._id;
       timelog._id = Types.ObjectId();
       timelog.date = timelog.date.toDate();
+      timelog.date = normalizeDate(timelog.date);
       timelog.uid = userData._id;
       await mongoDb.collection('timelogs').insertOne(timelog);
       allTimelogs.push(timelog);
@@ -246,3 +245,10 @@ async function writeFile(name: string, items: any[]): Promise<void> {
   }
 }
 main();
+
+export function normalizeDate(date: Date): Date {
+  return moment(date)
+    .utcOffset(0)
+    .set({ hour: 12, minute: 0, second: 0, millisecond: 0 })
+    .toDate();
+}

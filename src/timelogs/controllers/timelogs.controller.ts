@@ -1,3 +1,4 @@
+import { normalizeDate } from 'scripts/get-data';
 import { ChangeTimelogDto } from './../dto/change-timelog.dto';
 import { ParseObjectIdPipe } from './../../shared/pipes/string-object-id.pipe';
 import { CreateTimelogDto } from './../dto/create-timelog.dto';
@@ -49,9 +50,11 @@ export class TimelogsController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
+      const { date } = createTimelogDto;
       const { _id: uid } = req.user as IUser;
       const timelog: ITimelog = await this._timelogsService.createTimelog({
         ...createTimelogDto,
+        date: normalizeDate(new Date(date)),
         uid,
         project,
       });

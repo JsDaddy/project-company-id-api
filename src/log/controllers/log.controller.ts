@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LogService } from '../services/log.service';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { Positions } from 'src/auth/enums/positions.enum';
+import { normalizeDate } from 'scripts/get-data';
 
 @ApiTags('logs')
 @Controller('logs')
@@ -48,7 +49,11 @@ export class LogController {
     @Query() query: FilterLogDto,
   ): Promise<Response> {
     try {
-      const params: FilterLogDto = { ...query, logType, first };
+      const params: FilterLogDto = {
+        ...query,
+        logType,
+        first: normalizeDate(new Date(first)),
+      };
       // tslint:disable-next-line:no-any
       const logs: any = await this._logService.findLogs(params);
       return res.status(HttpStatus.OK).json({ data: logs, error: null });
@@ -80,7 +85,11 @@ export class LogController {
     @Query() query: FilterLogDto,
   ): Promise<Response> {
     try {
-      const params: FilterLogDto = { ...query, first, logType };
+      const params: FilterLogDto = {
+        ...query,
+        first: normalizeDate(new Date(first)),
+        logType,
+      };
       const logs: any = await this._logService.findLogByDate(params);
       let vacationAvailable: number | null = null;
       let sickAvailable: number | null = null;
