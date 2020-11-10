@@ -56,4 +56,11 @@ export class DateService {
     }
     return h * 60 + m;
   }
+
+  public normalizeDate(date: Date): Date {
+    return moment(date)
+      .utcOffset(0)
+      .set({ hour: 12, minute: 0, second: 0, millisecond: 0 })
+      .toDate();
+  }
 }

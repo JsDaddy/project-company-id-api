@@ -1,3 +1,4 @@
+import { DateService } from './../services/date.service';
 import { VacationsService } from './../../vacations/services/vacations.service';
 import { FilterLogDto, LogType, VacationType } from './../dto/filter-log.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -16,7 +17,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { LogService } from '../services/log.service';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { Positions } from 'src/auth/enums/positions.enum';
-import { normalizeDate } from 'scripts/get-data';
 
 @ApiTags('logs')
 @Controller('logs')
@@ -24,6 +24,7 @@ export class LogController {
   public constructor(
     private readonly _logService: LogService,
     private readonly _vacationService: VacationsService,
+    private readonly _dateSerice: DateService,
   ) {}
 
   @ApiOperation({
@@ -52,7 +53,7 @@ export class LogController {
       const params: FilterLogDto = {
         ...query,
         logType,
-        first: normalizeDate(new Date(first)),
+        first: this._dateSerice.normalizeDate(new Date(first)),
       };
       // tslint:disable-next-line:no-any
       const logs: any = await this._logService.findLogs(params);
@@ -87,7 +88,7 @@ export class LogController {
     try {
       const params: FilterLogDto = {
         ...query,
-        first: normalizeDate(new Date(first)),
+        first: this._dateSerice.normalizeDate(new Date(first)),
         logType,
       };
       const logs: any = await this._logService.findLogByDate(params);

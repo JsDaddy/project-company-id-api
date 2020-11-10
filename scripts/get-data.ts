@@ -246,7 +246,7 @@ async function writeFile(name: string, items: any[]): Promise<void> {
 }
 main();
 
-export function normalizeDate(date: Date): Date {
+function normalizeDate(date: Date): Date {
   return moment(date)
     .utcOffset(0)
     .set({ hour: 12, minute: 0, second: 0, millisecond: 0 })

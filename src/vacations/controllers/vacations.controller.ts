@@ -1,4 +1,4 @@
-import { normalizeDate } from 'scripts/get-data';
+import { DateService } from './../../log/services/date.service';
 import { Positions } from 'src/auth/enums/positions.enum';
 import { ChangeStatusDto } from './../dto/change-status.dto';
 import { IVacation } from 'src/vacations/interfaces/vacation.interface';
@@ -27,7 +27,10 @@ import { IUser } from 'src/auth/interfaces/user.interface';
 @Controller('vacations')
 @ApiTags('vacations')
 export class VacationsController {
-  public constructor(private readonly _vacationsService: VacationsService) {}
+  public constructor(
+    private readonly _vacationsService: VacationsService,
+    private readonly _dateService: DateService,
+  ) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post('')
@@ -58,7 +61,7 @@ export class VacationsController {
       const { _id: uid } = req.user as IUser;
       const vacation: IVacation = await this._vacationsService.createVacation({
         ...createVacationDto,
-        date: normalizeDate(new Date(date)),
+        date: this._dateService.normalizeDate(new Date(date)),
         uid,
       });
       return res.status(HttpStatus.OK).json({ data: vacation, error: null });

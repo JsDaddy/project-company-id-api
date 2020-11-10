@@ -1,4 +1,4 @@
-import { normalizeDate } from 'scripts/get-data';
+import { DateService } from './../../log/services/date.service';
 import { ChangeTimelogDto } from './../dto/change-timelog.dto';
 import { ParseObjectIdPipe } from './../../shared/pipes/string-object-id.pipe';
 import { CreateTimelogDto } from './../dto/create-timelog.dto';
@@ -26,7 +26,10 @@ import { IUser } from 'src/auth/interfaces/user.interface';
 @Controller('timelogs')
 @ApiTags('timelogs')
 export class TimelogsController {
-  public constructor(private readonly _timelogsService: TimelogsService) {}
+  public constructor(
+    private readonly _timelogsService: TimelogsService,
+    private readonly _dateService: DateService,
+  ) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post(':project')
@@ -54,7 +57,7 @@ export class TimelogsController {
       const { _id: uid } = req.user as IUser;
       const timelog: ITimelog = await this._timelogsService.createTimelog({
         ...createTimelogDto,
-        date: normalizeDate(new Date(date)),
+        date: this._dateService.normalizeDate(new Date(date)),
         uid,
         project,
       });

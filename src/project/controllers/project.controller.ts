@@ -1,3 +1,4 @@
+import { DateService } from './../../log/services/date.service';
 import { ProjectStatus } from './../enums/project-status.enum';
 import { Positions } from 'src/auth/enums/positions.enum';
 import {
@@ -22,12 +23,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { IUser } from 'src/auth/interfaces/user.interface';
 import { CreateProjectDto } from '../dto/project.dto';
-import { normalizeDate } from 'scripts/get-data';
 
 @ApiTags('projects')
 @Controller('projects')
 export class ProjectController {
-  public constructor(private readonly projectService: ProjectService) {}
+  public constructor(
+    private readonly projectService: ProjectService,
+    private readonly _dateService: DateService,
+  ) {}
 
   @ApiOperation({
     summary: 'Find all projects.',
@@ -111,7 +114,7 @@ export class ProjectController {
       const { startDate } = createProjectDto;
       const project: IProject = await this.projectService.createProject({
         ...createProjectDto,
-        startDate: normalizeDate(startDate),
+        startDate: this._dateService.normalizeDate(startDate),
       });
       return res.status(HttpStatus.OK).json({ data: project, error: null });
     } catch (error) {
