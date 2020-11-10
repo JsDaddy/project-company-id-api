@@ -190,9 +190,10 @@ export class ProjectService {
               'history.avatar': 1,
               'stack._id': 1,
               'stack.name': 1,
+              nlt: { $ifNull: ['$history.endDate', new Date()] },
             },
           },
-          { $sort: { 'history.endDate': 1 } },
+          { $sort: { nlt: 1 } },
         ])
         .exec()
     )[0];
