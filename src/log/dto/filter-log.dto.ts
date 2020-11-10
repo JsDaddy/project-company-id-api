@@ -15,7 +15,7 @@ export enum LogType {
 }
 
 export class FilterLogDto {
-  @ApiPropertyOptional() public readonly first!: string | Date;
+  @ApiPropertyOptional() public readonly first!: Date;
   @ApiPropertyOptional() public readonly uid?: string;
   @ApiPropertyOptional() public readonly project?: string;
   @ApiPropertyOptional({ enum: VacationType })

@@ -42,8 +42,8 @@ export class DateService {
         .format(),
     );
   }
-  public getNextDay(date: string): Date {
-    return new Date(new Date(date).setDate(new Date(date).getDate() + 1));
+  public getNextDay(date: Date): Date {
+    return new Date(date.setDate(new Date(date).getDate() + 1));
   }
   public sumTimeInMinutes(times: any[]): number {
     let h: number = 0;

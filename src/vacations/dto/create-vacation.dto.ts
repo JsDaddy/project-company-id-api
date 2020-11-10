@@ -8,7 +8,7 @@ export enum VacationType {
 }
 
 export class CreateVacationDto {
-  @ApiProperty() public readonly date!: string | Date;
+  @ApiProperty() public readonly date!: Date;
   @ApiProperty() public readonly desc!: string;
   @ApiProperty({ enum: VacationType })
   public readonly type!: VacationType;
