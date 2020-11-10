@@ -242,7 +242,11 @@ export class UserService {
             stack: { $push: '$projects.stack' },
           },
         },
-
+        {
+          $sort: {
+            'projects.endDate': 1,
+          },
+        },
         {
           $group: {
             _id: '$_id._id',
@@ -269,11 +273,7 @@ export class UserService {
             },
           },
         },
-        {
-          $sort: {
-            'projects.endDate': 1,
-          },
-        },
+
         {
           $lookup: {
             as: 'activeProjects',
@@ -337,7 +337,11 @@ export class UserService {
             stack: { $push: '$activeProjects.stack' },
           },
         },
-
+        {
+          $sort: {
+            'activeProjects.endDate': 1,
+          },
+        },
         {
           $group: {
             _id: '$_id._id',
@@ -362,11 +366,6 @@ export class UserService {
                 stack: '$stack',
               },
             },
-          },
-        },
-        {
-          $sort: {
-            'activeProjects.endDate': 1,
           },
         },
       ])
