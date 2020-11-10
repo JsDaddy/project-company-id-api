@@ -167,7 +167,7 @@ export class ProjectService {
               foreignField: 'activeProjects',
             },
           },
-          { $sort: { 'onboard.endDate': 1, 'history.endDate': 1 } },
+          { $sort: { 'history.endDate': 1 } },
           {
             $project: {
               _id: 1,
