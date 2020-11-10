@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { timelogSchema } from 'src/timelogs/schemas/timelog.schema';
 import { TimelogsController } from './controllers/timelogs.controller';
+import { DateService } from 'src/log/services/date.service';
 
 @Module({
   controllers: [TimelogsController],
@@ -10,6 +11,6 @@ import { TimelogsController } from './controllers/timelogs.controller';
   imports: [
     MongooseModule.forFeature([{ name: 'timelog', schema: timelogSchema }]),
   ],
-  providers: [TimelogsService],
+  providers: [TimelogsService, DateService],
 })
 export class TimelogsModule {}

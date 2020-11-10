@@ -4,6 +4,7 @@ import { ProjectController } from './controllers/project.controller';
 import { ProjectService } from './services/project.service';
 import { projectSchema } from './schemas/project.schema';
 import { userSchema } from 'src/auth/schemas/user.schema';
+import { DateService } from 'src/log/services/date.service';
 
 @Module({
   controllers: [ProjectController],
@@ -12,6 +13,6 @@ import { userSchema } from 'src/auth/schemas/user.schema';
     MongooseModule.forFeature([{ name: 'project', schema: projectSchema }]),
     MongooseModule.forFeature([{ name: 'users', schema: userSchema }]),
   ],
-  providers: [ProjectService],
+  providers: [ProjectService, DateService],
 })
 export class ProjectModule {}

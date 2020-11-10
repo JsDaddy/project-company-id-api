@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { vacationSchema } from './schemas/vacation.schema';
 import { VacationsService } from './services/vacations.service';
 import { VacationsController } from './controllers/vacations.controller';
+import { DateService } from 'src/log/services/date.service';
 
 @Module({
   controllers: [VacationsController],
@@ -10,6 +11,6 @@ import { VacationsController } from './controllers/vacations.controller';
   imports: [
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
   ],
-  providers: [VacationsService],
+  providers: [VacationsService, DateService],
 })
 export class VacationsModule {}
