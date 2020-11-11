@@ -74,7 +74,15 @@ To schedule tasks just add them to your crontab. Since crontab is a special conf
 
 #### Editing a crontab file
 
+Сrontab file looks like this:
+
 ![alt text](http://helpexe.ru/wp-content/uploads/2018/8/kak-planirovat-zadachi-v-linux-s-pomoshhju-cron-i_2_1.png)
+
+After filling in the file, you need to restart `сron`:
+
+```
+sudo service cron reload
+```
 
 ## Running the app
 
