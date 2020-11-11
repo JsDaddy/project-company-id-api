@@ -44,6 +44,7 @@ export class VacationsService {
     console.log(start + 'start');
     console.log(end + 'end');
     console.log(now + 'now');
+    console.log(type + 'type');
 
     return spentCount > maxCount - 1 ? 0 : maxCount - spentCount;
   }
