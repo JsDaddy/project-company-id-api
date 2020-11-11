@@ -224,6 +224,9 @@ export class ProjectService {
             'stack.name': 1,
           },
         },
+        {
+          $sort: { endDate: 1, isInternal: 1 },
+        },
       ])
       .exec();
   }
@@ -246,7 +249,9 @@ export class ProjectService {
         },
       },
       { $unwind: { path: '$' + article, preserveNullAndEmptyArrays: true } },
-
+      {
+        $sort: { endDate: 1, isInternal: 1 },
+      },
       {
         $group: {
           _id: '$_id',

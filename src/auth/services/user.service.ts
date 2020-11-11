@@ -173,6 +173,7 @@ export class UserService {
         },
       },
       { $match: { 'projects.stack': Types.ObjectId(_sid) } },
+
       {
         $project: {
           _id: 1,
