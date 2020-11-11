@@ -1,6 +1,6 @@
+import { Positions } from './../../auth/enums/positions.enum';
 import { DateService } from './../../log/services/date.service';
 import { ProjectStatus } from './../enums/project-status.enum';
-import { Positions } from 'src/auth/enums/positions.enum';
 import {
   Controller,
   HttpStatus,
@@ -143,14 +143,20 @@ export class ProjectController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'projects not found',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get('users/:uid')
   public async findProjectsFor(
     @Param('uid') uid: string,
     @Res() res: Response,
+    @Req() req: Request,
   ): Promise<Response> {
     try {
+      const { position } = req.user as IUser;
       // tslint:disable-next-line:no-any
-      const projects: any = await this.projectService.findProjectFor(uid);
+      const projects: any = await this.projectService.findProjectFor(
+        uid,
+        position === Positions.OWNER,
+      );
       return res.status(HttpStatus.OK).json({ data: projects, error: null });
     } catch (error) {
       return res
