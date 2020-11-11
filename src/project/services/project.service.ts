@@ -250,18 +250,20 @@ export class ProjectService {
       },
       { $unwind: { path: '$' + article, preserveNullAndEmptyArrays: true } },
       {
-        $sort: { endDate: 1, isInternal: 1 },
-      },
-      {
         $group: {
           _id: '$_id',
           [article]: {
             $push: {
               _id: '$' + article + '._id',
               name: '$' + article + '.name',
+              endDate: '$' + article + '.endDate',
+              isInternal: '$' + article + '.isInternal',
             },
           },
         },
+      },
+      {
+        $sort: { endDate: 1, isInternal: 1 },
       },
     ]);
     return aggregate[0][article];
