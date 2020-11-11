@@ -172,6 +172,7 @@ export class ProjectService {
               _id: 1,
               name: 1,
               endDate: 1,
+              isInternal: 1,
               industry: 1,
               customer: 1,
               startDate: 1,
@@ -190,6 +191,9 @@ export class ProjectService {
               'stack._id': 1,
               'stack.name': 1,
             },
+          },
+          {
+            $sort: { endDate: 1, isInternal: 1, isActivity: 1 },
           },
         ])
         .exec()
