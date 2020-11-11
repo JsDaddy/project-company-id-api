@@ -271,6 +271,12 @@ export class ProjectService {
         $sort: { endDate: 1, isInternal: 1 },
       },
     ]);
+    aggregate[0][article].sort((a: IProject, b: IProject) =>
+      a.endDate ? 1 : b.endDate ? -1 : 0,
+    );
+    aggregate[0][article].sort((a: IProject, b: IProject) =>
+      a.isInternal ? 1 : b.isInternal ? -1 : 0,
+    );
     return aggregate[0][article];
   }
 }
