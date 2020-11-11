@@ -46,10 +46,12 @@ export class UserService {
           avatar: { $first: '$avatar' },
           lastName: { $first: '$lastName' },
           name: { $first: '$name' },
+          endDate: { $first: '$endDate' },
           projects: { $push: '$projects' },
           activeProjects: { $push: '$activeProjects' },
         },
       },
+      { $sort: { endDate: 1 } },
     ]);
   }
 
@@ -178,9 +180,11 @@ export class UserService {
         $project: {
           _id: 1,
           name: 1,
+          endDate: 1,
           lastName: 1,
         },
       },
+      { $sort: { endDate: 1 } },
     ]);
   }
 

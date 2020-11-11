@@ -213,6 +213,7 @@ export class ProjectService {
         },
         this.stackLookup,
         { $match: filterById },
+
         {
           $project: {
             _id: 1,
