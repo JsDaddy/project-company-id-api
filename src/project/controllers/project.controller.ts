@@ -88,7 +88,15 @@ export class ProjectController {
     @Param('id') id: string,
   ): Promise<Response> {
     try {
-      const project: IProject = await this.projectService.findById(id);
+      // tslint:disable-next-line:no-any
+      const project: any = await this.projectService.findById(id);
+
+      project.history?.sort((a: IUser, b: IUser) =>
+        a.endDate ? 1 : b.endDate ? -1 : 0,
+      );
+      project.history?.sort((a: IUser, b: IUser) =>
+        a.endDate ? 1 : b.endDate ? -1 : 0,
+      );
       return res.status(HttpStatus.OK).json({ data: project, error: null });
     } catch (error) {
       return res

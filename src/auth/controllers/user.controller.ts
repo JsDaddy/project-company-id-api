@@ -212,6 +212,18 @@ export class UserController {
   ): Promise<Response> {
     try {
       const user: IUser<IProject[]> = await this.userService.findUser(id);
+      user.activeProjects?.sort((a: IProject, b: IProject) =>
+        a.isInternal ? 1 : b.isInternal ? -1 : 0,
+      );
+      user.projects?.sort((a: IProject, b: IProject) =>
+        a.isInternal ? 1 : b.isInternal ? -1 : 0,
+      );
+      user.activeProjects?.sort((a: IProject, b: IProject) =>
+        a.endDate ? 1 : b.endDate ? -1 : 0,
+      );
+      user.projects?.sort((a: IProject, b: IProject) =>
+        a.endDate ? 1 : b.endDate ? -1 : 0,
+      );
       const vacationAvailable: number = await this._vacationService.availableCount(
         id,
         VacationType.VacationPaid,
