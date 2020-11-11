@@ -30,8 +30,8 @@ export class VacationsService {
     maxCount: number = 18,
   ): Promise<number> {
     const now: Date = new Date();
-    const end: string = moment(now).endOf('year').toString();
-    const start: string = moment(now).startOf('year').toString();
+    const end: Date = moment(now).endOf('year').toDate();
+    const start: Date = moment(now).startOf('year').toDate();
     const spentCount: number = await this._vacationModel
       .find({
         status: StatusType.APPROVED,
