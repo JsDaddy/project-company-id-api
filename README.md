@@ -28,6 +28,54 @@ DATABASE_PATH=db path DATABASE_NAME=db name SECRET=your secret
 
 ### Set Up Scheduled MongoDB Backups
 
+#### Script for create backup
+
+```
+MONGO_DATABASE="company-id"
+MONGO_HOST="localhost"
+MONGO_PORT="27017"
+BACKUPS_DIR="/var/backups/$MONGO_DATABASE"
+# DBUSERNAME="username"
+# DBPASSWORD="password"
+# DBAUTHDB="admin"
+DAYSTORETAINBACKUP="14"
+
+TIMESTAMP=`date +%F-%H%M`
+BACKUP_NAME="$MONGO_DATABASE-$TIMESTAMP"
+
+echo "Performing backup of $MONGO_DATABASE"
+echo "--------------------------------------------"
+
+
+if ! mkdir -p $BACKUPS_DIR; then
+  echo "Can't create backup directory in $BACKUPS_DIR. Go and fix it!" 1>&2
+  exit 1;
+fi;
+
+# mongodump -d $MONGO_DATABASE --username $DBUSERNAME --password $DBPASSWORD --authenticationDatabase $DBAUTHDB
+mongodump  --host $MONGO_HOST --port $MONGO_PORT --db $MONGO_DATABASE
+
+mv dump $BACKUP_NAME
+
+tar -zcvf $BACKUPS_DIR/$BACKUP_NAME.tgz $BACKUP_NAME
+
+rm -rf $BACKUP_NAME
+
+find $BACKUPS_DIR -type f -mtime +$DAYSTORETAINBACKUP -exec rm {} +
+echo "--------------------------------------------"
+echo "Database backup complete!"
+```
+
+### Backup scheduling
+
+#### Introduce tasks to be run by cron
+
+To schedule tasks just add them to your crontab. Since crontab is a special configuration file, manual editing is not recommended. Use the `crontab -e command` instead.
+
+#### Editing a crontab file
+
+![alt text](http://helpexe.ru/wp-content/uploads/2018/8/kak-planirovat-zadachi-v-linux-s-pomoshhju-cron-i_2_1.png)
+
 ## Running the app
 
 ```
