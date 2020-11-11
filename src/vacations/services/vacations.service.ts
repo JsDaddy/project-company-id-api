@@ -40,7 +40,6 @@ export class VacationsService {
         date: { $gte: start, $lt: end },
       })
       .count();
-    console.log('type' + type);
 
     return spentCount > maxCount - 1 ? 0 : maxCount - spentCount;
   }
