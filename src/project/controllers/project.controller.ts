@@ -240,16 +240,19 @@ export class ProjectController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'active projects not found',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get('active/users/:uid')
   public async findActiveProjectsFor(
     @Param('uid') uid: string,
     @Res() res: Response,
+    @Req() req: Request,
   ): Promise<Response> {
     try {
+      const { position } = req.user as IUser;
       // tslint:disable-next-line:no-any
       const activeProjects: any = await this.projectService.findProjectFor(
         uid,
-        true,
+        position === Positions.DEVELOPER,
       );
       return res
         .status(HttpStatus.OK)
