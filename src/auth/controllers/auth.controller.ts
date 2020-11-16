@@ -88,7 +88,7 @@ export class AuthController {
           error: 'Invalid email and/or password',
         });
       }
-      if (user && user.endDate !== null) {
+      if (user && user.endDate) {
         return res.status(HttpStatus.BAD_REQUEST).json({
           data: null,
           error: 'User is fired.',
@@ -145,7 +145,7 @@ export class AuthController {
   ): Promise<Response> {
     try {
       const user: IUser = req.user as IUser;
-      if (user && user.endDate !== null) {
+      if (user && user.endDate) {
         return res.status(HttpStatus.BAD_REQUEST).json({
           data: null,
           error: 'User is fired.',
