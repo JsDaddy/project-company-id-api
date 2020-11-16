@@ -88,6 +88,12 @@ export class AuthController {
           error: 'Invalid email and/or password',
         });
       }
+      if (user && user.endDate !== null) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          data: null,
+          error: 'User is fired.',
+        });
+      }
       delete user.password;
       return res.status(HttpStatus.OK).json({ data: user, error: null });
     } catch (error) {
@@ -138,6 +144,13 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
+      const user: IUser = req.user as IUser;
+      if (user && user.endDate !== null) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          data: null,
+          error: 'User is fired.',
+        });
+      }
       return res.status(HttpStatus.OK).json({ data: req.user, error: null });
     } catch (error) {
       return res
