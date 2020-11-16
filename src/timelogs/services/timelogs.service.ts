@@ -4,14 +4,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model, Document, Types } from 'mongoose';
 import { ITimelog } from './../interfaces/timelog.interface';
-import { DateService } from './../../log/services/date.service';
 
 @Injectable()
 export class TimelogsService {
   public constructor(
     @InjectModel('timelog')
     private readonly _timelogModel: Model<ITimelog & Document>,
-    private readonly _dateService: DateService,
   ) {}
 
   public async createTimelog(
