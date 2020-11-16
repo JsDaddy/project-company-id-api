@@ -4,12 +4,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { Model, Document, Types } from 'mongoose';
 import { ITimelog } from './../interfaces/timelog.interface';
+import { DateService } from './../../log/services/date.service';
 
 @Injectable()
 export class TimelogsService {
   public constructor(
     @InjectModel('timelog')
     private readonly _timelogModel: Model<ITimelog & Document>,
+    private readonly _dateService: DateService,
   ) {}
 
   public async createTimelog(
@@ -31,10 +33,12 @@ export class TimelogsService {
     id: string,
     changeTimelogDto: ChangeTimelogDto,
   ): Promise<ITimelog | null> {
+    const { date, ...Dto } = changeTimelogDto;
+
     return await this._timelogModel
       .findOneAndUpdate(
         { _id: Types.ObjectId(id) },
-        { $set: changeTimelogDto },
+        { $set: Dto },
         { new: true },
       )
       .lean()
