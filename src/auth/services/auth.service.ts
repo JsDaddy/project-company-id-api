@@ -44,6 +44,7 @@ export class AuthService {
             position: { $first: '$position' },
             password: { $first: '$password' },
             accessToken: { $first: '$accessToken' },
+            endDate: { $first: '$endDate' },
           },
         },
       ])
