@@ -43,6 +43,10 @@ export const userSchema: Schema = new Schema({
     required: true,
     type: String,
   },
+  slack: {
+    required: false,
+    type: String,
+  },
   phone: {
     required: true,
     type: String,

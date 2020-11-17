@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class SignUpDto {
   @ApiProperty() public readonly name!: string;
   @ApiProperty() public readonly lastName!: string;
@@ -12,4 +12,5 @@ export class SignUpDto {
   @ApiProperty() public readonly position!: string;
   @ApiProperty() public readonly role!: string;
   @ApiProperty() public readonly skype!: string;
+  @ApiPropertyOptional() public readonly slack!: string;
 }
