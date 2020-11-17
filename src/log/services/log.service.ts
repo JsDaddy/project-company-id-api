@@ -392,6 +392,7 @@ export class LogService {
       'user.name': 1,
       'user.lastName': 1,
       'user.avatar': 1,
+      'user.slack': 1,
       date: 1,
       desc: 1,
     };
