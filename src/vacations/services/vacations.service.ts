@@ -84,6 +84,7 @@ export class VacationsService {
           'user.lastName': 1,
           'user.avatar': 1,
           'user._id': 1,
+          'user.slack': 1,
         },
       },
     ]);
