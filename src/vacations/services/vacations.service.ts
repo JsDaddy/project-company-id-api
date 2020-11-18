@@ -1,3 +1,4 @@
+import { StatusType } from './../dto/change-status.dto';
 import { Positions } from './../../auth/enums/positions.enum';
 import { SlackService } from './../../shared/services/slack.service';
 import { CreateVacationDto, VacationType } from './../dto/create-vacation.dto';
@@ -107,7 +108,9 @@ export class VacationsService {
     const slackOwners: string[] = owners.map(
       (userOwner: IUser) => userOwner.slack,
     );
-    const message: string = `Your request for ${this.getType(
+    const message: string = `${this.getEmojiFromType(
+      status,
+    )}Your request for ${this.getType(
       updatedVacation?.type,
     )} has been ${status.toLowerCase()}\n
 *Date*: ${updatedVacation?.date.toLocaleString('en-US', {
@@ -182,6 +185,13 @@ export class VacationsService {
       return ':beach_with_umbrella:';
     }
     return ':pill:';
+  }
+
+  private getEmojiFromType(type: StatusType = StatusType.APPROVED): string {
+    if (type === StatusType.REJECTED) {
+      return ':negative_squared_cross_mark:';
+    }
+    return ':white_check_mark:';
   }
 }
 
