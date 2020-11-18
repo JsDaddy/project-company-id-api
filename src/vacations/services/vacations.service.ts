@@ -74,9 +74,14 @@ export class VacationsService {
     if (user && user.slack) {
       this._slackService.sendMessage(
         user.slack,
-        `Your vacation (${vacationTypes[updatedVacation?.type ?? 0]}) on ${
-          updatedVacation?.date
-        } has been ${status.toLowerCase()}`,
+        `Your vacation (${
+          vacationTypes[updatedVacation?.type ?? 0]
+        }) on ${updatedVacation?.date.toLocaleString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+        })} has been ${status.toLowerCase()}`,
       );
     }
     return updatedVacation;
