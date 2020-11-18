@@ -47,7 +47,7 @@ export class VacationsService {
         this._slackService.sendMessage(
           slack,
           `You have request for vacation (${this.getType(type)}) \n
-          *Date*: ${createVacationDto.date.toLocaleString('en-US', {
+*Date*: ${createVacationDto.date.toLocaleString('en-US', {
             weekday: 'long',
             year: 'numeric',
             month: 'numeric',
