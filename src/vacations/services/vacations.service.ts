@@ -23,7 +23,10 @@ export class VacationsService {
     createVacationDto: CreateVacationDto & { uid: Types.ObjectId },
   ): Promise<IVacation> {
     // tslint:disable-next-line:no-any
-    const owners: any = await this._usersModel.aggregate([
+    const user: IUser | null = await this._usersModel.findOne({
+      _id: createVacationDto.uid,
+    });
+    const owners: ISlack[] = await this._usersModel.aggregate([
       { $match: { position: Positions.OWNER } },
       {
         $project: {
@@ -31,16 +34,34 @@ export class VacationsService {
         },
       },
     ]);
-    console.log(owners);
-    // tslint:disable-next-line:no-any
-    console.log(owners.map((item: any) => item.slack));
 
+    const slackOwners: string[] = owners.map((item: ISlack) => item.slack);
     const type: number = parseInt(VacationType[createVacationDto.type]);
-    return await this._vacationModel.create({
+    const vacation: IVacation = await this._vacationModel.create({
       ...createVacationDto,
       status: StatusType.PENDING,
       type,
     });
+    for (const slack of slackOwners) {
+      if (user && slack && process.env.BOT_TOKEN) {
+        this._slackService.sendMessage(
+          slack,
+          `You have request for vacation (${this.getType(type)}) from ${
+            user.name
+          } ${user.lastName} on ${createVacationDto.date.toLocaleString(
+            'en-US',
+            {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            },
+          )}. Description: ${createVacationDto.desc}}`,
+        );
+      }
+    }
+
+    return vacation;
   }
 
   public async availableCount(
@@ -68,12 +89,7 @@ export class VacationsService {
     changeStatusDto: ChangeStatusDto,
   ): Promise<IVacation | null> {
     const { status } = changeStatusDto;
-    const vacationTypes: string[] = [
-      'non-paid',
-      'paid',
-      'sick non-paid',
-      'sick paid',
-    ];
+
     const updatedVacation: IVacation | null = await this._vacationModel
       .findOneAndUpdate(
         { _id },
@@ -88,9 +104,9 @@ export class VacationsService {
     if (user && user.slack && process.env.BOT_TOKEN) {
       this._slackService.sendMessage(
         user.slack,
-        `Your vacation (${
-          vacationTypes[updatedVacation?.type ?? 0]
-        }) on ${updatedVacation?.date.toLocaleString('en-US', {
+        `Your vacation (${this.getType(
+          updatedVacation?.type,
+        )}) on ${updatedVacation?.date.toLocaleString('en-US', {
           weekday: 'long',
           year: 'numeric',
           month: 'numeric',
@@ -130,4 +146,22 @@ export class VacationsService {
       },
     ]);
   }
+
+  private getType(num: number = 0): string {
+    const vacationTypes: string[] = [
+      'non-paid',
+      'paid',
+      'sick non-paid',
+      'sick paid',
+    ];
+    if (!vacationTypes[num]) {
+      return vacationTypes[0];
+    }
+    return vacationTypes[num];
+  }
+}
+
+interface ISlack {
+  _id: Types.ObjectId;
+  slack: string;
 }
