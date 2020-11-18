@@ -56,7 +56,7 @@ export class VacationsService {
               month: 'numeric',
               day: 'numeric',
             },
-          )}. Description: ${createVacationDto.desc}}`,
+          )}. Reason: ${createVacationDto.desc}.`,
         );
       }
     }
