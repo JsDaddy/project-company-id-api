@@ -1,3 +1,4 @@
+import { Positions } from './../../auth/enums/positions.enum';
 import { SlackService } from './../../shared/services/slack.service';
 import { CreateVacationDto, VacationType } from './../dto/create-vacation.dto';
 import { IVacation } from 'src/vacations/interfaces/vacation.interface';
@@ -21,6 +22,19 @@ export class VacationsService {
   public async createVacation(
     createVacationDto: CreateVacationDto & { uid: Types.ObjectId },
   ): Promise<IVacation> {
+    // tslint:disable-next-line:no-any
+    const owners: any = await this._usersModel.aggregate([
+      { $match: { position: Positions.OWNER } },
+      {
+        $project: {
+          slack: 1,
+        },
+      },
+    ]);
+    console.log(owners);
+    // tslint:disable-next-line:no-any
+    console.log(owners.map((item: any) => item.slack));
+
     const type: number = parseInt(VacationType[createVacationDto.type]);
     return await this._vacationModel.create({
       ...createVacationDto,
@@ -71,7 +85,7 @@ export class VacationsService {
     const user: IUser | null = await this._usersModel.findOne({
       _id: updatedVacation?.uid,
     });
-    if (user && user.slack) {
+    if (user && user.slack && process.env.BOT_TOKEN) {
       this._slackService.sendMessage(
         user.slack,
         `Your vacation (${
