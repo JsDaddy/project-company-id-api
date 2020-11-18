@@ -85,6 +85,7 @@ export class VacationsService {
   public async statusChange(
     _id: Types.ObjectId,
     changeStatusDto: ChangeStatusDto,
+    owner: IUser,
   ): Promise<IVacation | null> {
     const { status } = changeStatusDto;
 
@@ -99,18 +100,36 @@ export class VacationsService {
     const user: IUser | null = await this._usersModel.findOne({
       _id: updatedVacation?.uid,
     });
+    const owners: IUser[] = await this._usersModel
+      .find({ _id: { $ne: owner._id } })
+      .lean()
+      .exec();
+    const slackOwners: string[] = owners.map(
+      (userOwner: IUser) => userOwner.slack,
+    );
+    const message: string = `Your request for ${this.getType(
+      updatedVacation?.type,
+    )} has been ${status.toLowerCase()}\n
+*Date*: ${updatedVacation?.date.toLocaleString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    })}\n
+*Approved by*: ${owner.name} ${owner.lastName}`;
     if (user && user.slack && process.env.BOT_TOKEN) {
-      this._slackService.sendMessage(
-        user.slack,
-        `Your vacation (${this.getType(
-          updatedVacation?.type,
-        )}) on ${updatedVacation?.date.toLocaleString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-        })} has been ${status.toLowerCase()}`,
-      );
+      this._slackService.sendMessage(user.slack, message);
+    }
+    for (const slack of slackOwners) {
+      if (slack && process.env.BOT_TOKEN) {
+        this._slackService.sendMessage(
+          slack,
+          message.replace(
+            'Your request',
+            `Request from ${user?.name} ${user?.lastName}`,
+          ),
+        );
+      }
     }
     return updatedVacation;
   }

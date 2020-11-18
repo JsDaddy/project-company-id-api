@@ -93,11 +93,14 @@ export class VacationsController {
     @Body() changeStatusDto: ChangeStatusDto,
     @Res() res: Response,
     @Param('vacationId', ParseObjectIdPipe) vacationId: Types.ObjectId,
+    @Req() req: Request,
   ): Promise<Response> {
     try {
+      const owner: IUser = req.user as IUser;
       const vacation: IVacation | null = await this._vacationsService.statusChange(
         vacationId,
         changeStatusDto,
+        owner,
       );
       if (!vacation) {
         return res

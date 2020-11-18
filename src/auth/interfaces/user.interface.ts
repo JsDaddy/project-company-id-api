@@ -20,5 +20,5 @@ export interface IUser<P = Types.ObjectId[], R = string> {
   projects?: P;
   isActive?: boolean;
   endDate?: Date;
-  slack?: string;
+  slack: string;
 }
