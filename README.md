@@ -26,7 +26,7 @@ These documents provide instructions to install MongoDB Community Edition.
 DATABASE_PATH=db path DATABASE_NAME=db name SECRET=your secret BOT_TOKEN=your slack bot token
 ```
 
-## Slack notifications
+### Slack notifications
 
 ### Create and set up a Slack bot user
 
