@@ -5,6 +5,9 @@ export class SlackService {
   public constructor(private readonly _http: HttpService) {}
   public async sendMessage(channel: string, message: string): Promise<boolean> {
     // tslint:disable-next-line:no-any
+    if (!process.env.BOT_TOKEN) {
+      return false;
+    }
     const res: any = await this._http
       .post(
         'https://slack.com/api/chat.postMessage',
@@ -13,12 +16,12 @@ export class SlackService {
           responseType: 'json',
           timeout: 5000,
           headers: {
-            Authorization:
-              'Bearer xoxb-200421297187-1530498242480-YIwExJ5JTvRVBe5btwXg9qgN',
+            Authorization: `Bearer ${process.env.BOT_TOKEN}`,
           },
         },
       )
       .toPromise();
-    return res.date['ok'] === 'true';
+
+    return res.data['ok'] === 'true';
   }
 }
