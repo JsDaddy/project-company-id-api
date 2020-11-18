@@ -1,3 +1,4 @@
+import { SlackModule } from './../shared/slack.module';
 import { projectSchema } from './../project/schemas/project.schema';
 import { Module } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
@@ -15,6 +16,7 @@ import { vacationSchema } from 'src/vacations/schemas/vacation.schema';
   controllers,
   exports: [AuthService],
   imports: [
+    SlackModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
     MongooseModule.forFeature([{ name: 'users', schema: userSchema }]),

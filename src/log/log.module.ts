@@ -8,6 +8,7 @@ import { vacationSchema } from 'src/vacations/schemas/vacation.schema';
 import { LogService } from './services/log.service';
 import { LogController } from './controllers/log.controller';
 import { holidaySchema } from './schemas/holiday.schema';
+import { SlackModule } from 'src/shared/slack.module';
 
 @Module({
   controllers: [LogController],
@@ -17,6 +18,7 @@ import { holidaySchema } from './schemas/holiday.schema';
     MongooseModule.forFeature([{ name: 'timelog', schema: timelogSchema }]),
     MongooseModule.forFeature([{ name: 'holidays', schema: holidaySchema }]),
     MongooseModule.forFeature([{ name: 'vacations', schema: vacationSchema }]),
+    SlackModule,
   ],
   providers: [LogService, DateService, VacationsService],
 })

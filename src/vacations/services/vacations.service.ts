@@ -1,3 +1,4 @@
+import { SlackService } from './../../shared/services/slack.service';
 import { CreateVacationDto, VacationType } from './../dto/create-vacation.dto';
 import { IVacation } from 'src/vacations/interfaces/vacation.interface';
 import { InjectModel } from '@nestjs/mongoose';
@@ -5,12 +6,16 @@ import { Model, Document, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { ChangeStatusDto, StatusType } from '../dto/change-status.dto';
 import moment from 'moment';
+import { IUser } from 'src/auth/interfaces/user.interface';
 
 @Injectable()
 export class VacationsService {
   public constructor(
     @InjectModel('vacations')
     private readonly _vacationModel: Model<IVacation & Document>,
+    @InjectModel('users')
+    private readonly _usersModel: Model<IUser & Document>,
+    private readonly _slackService: SlackService,
   ) {}
 
   public async createVacation(
@@ -49,8 +54,13 @@ export class VacationsService {
     changeStatusDto: ChangeStatusDto,
   ): Promise<IVacation | null> {
     const { status } = changeStatusDto;
-
-    return await this._vacationModel
+    const vacationTypes: string[] = [
+      'non-paid',
+      'paid',
+      'sick non-paid',
+      'sick paid',
+    ];
+    const updatedVacation: IVacation | null = await this._vacationModel
       .findOneAndUpdate(
         { _id },
         { $set: { status: status.toLowerCase() } },
@@ -58,6 +68,18 @@ export class VacationsService {
       )
       .lean()
       .exec();
+    const user: IUser | null = await this._usersModel.findOne({
+      _id: updatedVacation?.uid,
+    });
+    if (user && user.slack) {
+      this._slackService.sendMessage(
+        user.slack,
+        `Your vacation (${vacationTypes[updatedVacation?.type ?? 0]}) on ${
+          updatedVacation?.date
+        } has been ${status.toLowerCase()}`,
+      );
+    }
+    return updatedVacation;
   }
 
   // tslint:disable-next-line:no-any
