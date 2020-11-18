@@ -109,7 +109,7 @@ export class VacationsService {
     );
     const message: string = `${this.getEmojiFromStatus(
       status,
-    )}Your request for ${this.getType(
+    )} Your request for ${this.getType(
       updatedVacation?.type,
     )} has been ${status.toLowerCase()}\n
 *Date*: ${updatedVacation?.date.toLocaleString('en-US', {
