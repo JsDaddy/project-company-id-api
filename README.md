@@ -23,7 +23,7 @@ These documents provide instructions to install MongoDB Community Edition.
 ### Setting up the environment
 
 ```
-DATABASE_PATH=db path DATABASE_NAME=db name SECRET=your secret
+DATABASE_PATH=db path DATABASE_NAME=db name SECRET=your secret BOT_TOKEN=your slack bot token
 ```
 
 ### Set Up Scheduled MongoDB Backups

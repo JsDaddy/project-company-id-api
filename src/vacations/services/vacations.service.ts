@@ -195,7 +195,7 @@ export class VacationsService {
 
   private getEmojiFromStatus(type: StatusType = StatusType.APPROVED): string {
     if (type === StatusType.REJECTED) {
-      return ':negative_squared_cross_mark:';
+      return ':no_entry_sign:';
     }
     return ':white_check_mark:';
   }
