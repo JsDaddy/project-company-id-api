@@ -161,7 +161,7 @@ ${this.getEmoji(type)[1]}`,
   }
 
   private getEmoji(num: number = 0): string[] {
-    if (num % 2 === 1) {
+    if (num < 2) {
       return [':beach_with_umbrella:', ':desert_island:'];
     }
     return [':pill:', ':thermometer:'];
