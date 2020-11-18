@@ -11,7 +11,7 @@ export class SlackService {
     const res: any = await this._http
       .post(
         'https://slack.com/api/chat.postMessage',
-        { channel, text: message },
+        { channel, text: ` \`\`\`${message}\`\`\`` },
         {
           responseType: 'json',
           timeout: 5000,
