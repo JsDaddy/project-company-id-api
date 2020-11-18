@@ -26,6 +26,30 @@ These documents provide instructions to install MongoDB Community Edition.
 DATABASE_PATH=db path DATABASE_NAME=db name SECRET=your secret BOT_TOKEN=your slack bot token
 ```
 
+### Slack notification
+
+### Create and set up a Slack bot user
+
+```
+https://codelabs.developers.google.com/codelabs/cloud-slack-bot#3
+```
+
+### Example of request for send message to slack
+
+```
+this._http.post(
+        'https://slack.com/api/chat.postMessage',
+        { channel: 'your channel id or IM channel id', text: 'your message' },
+        {
+          responseType: 'json',
+          timeout: 5000,
+          headers: {
+            Authorization: `Bearer ${process.env.BOT_TOKEN}`,
+          },
+        },
+      );
+```
+
 ### Set Up Scheduled MongoDB Backups
 
 #### Script for create backup
