@@ -1,4 +1,3 @@
-import { StatusType } from './../dto/change-status.dto';
 import { Positions } from './../../auth/enums/positions.enum';
 import { SlackService } from './../../shared/services/slack.service';
 import { CreateVacationDto, VacationType } from './../dto/create-vacation.dto';
