@@ -46,7 +46,8 @@ export class VacationsService {
       if (user && slack && process.env.BOT_TOKEN) {
         this._slackService.sendMessage(
           slack,
-          `You have request for vacation (${this.getType(type)}) \n
+          `${this.getEmoji(type)[0]} \n
+You have request for vacation (${this.getType(type)}) \n
 *Date*: ${createVacationDto.date.toLocaleString('en-US', {
             weekday: 'long',
             year: 'numeric',
@@ -54,7 +55,8 @@ export class VacationsService {
             day: 'numeric',
           })}. \n
 *From*: ${user.name} ${user.lastName}.\n
-*Reason*: ${createVacationDto.desc}.`,
+*Reason*: ${createVacationDto.desc}.\n
+${this.getEmoji(type)[1]}`,
         );
       }
     }
@@ -156,6 +158,13 @@ export class VacationsService {
       return vacationTypes[0];
     }
     return vacationTypes[num];
+  }
+
+  private getEmoji(num: number = 0): string[] {
+    if (num % 2 === 1) {
+      return [':beach_with_umbrella:', ':desert_island:'];
+    }
+    return [':pill:', ':thermometer:'];
   }
 }
 
