@@ -107,7 +107,7 @@ export class VacationsService {
     const slackOwners: string[] = owners.map(
       (userOwner: IUser) => userOwner.slack,
     );
-    const message: string = `${this.getEmojiFromType(
+    const message: string = `${this.getEmojiFromStatus(
       status,
     )}Your request for ${this.getType(
       updatedVacation?.type,
@@ -118,7 +118,7 @@ export class VacationsService {
       month: 'numeric',
       day: 'numeric',
     })}\n
-*Approved by*: ${owner.name} ${owner.lastName}`;
+*${this.statusToString(status)} by*: ${owner.name} ${owner.lastName}`;
     if (user && user.slack && process.env.BOT_TOKEN) {
       this._slackService.sendMessage(user.slack, message);
     }
@@ -186,7 +186,14 @@ export class VacationsService {
     return ':pill:';
   }
 
-  private getEmojiFromType(type: StatusType = StatusType.APPROVED): string {
+  private statusToString(type: StatusType = StatusType.APPROVED): string {
+    if (type === StatusType.REJECTED) {
+      return 'Rejected';
+    }
+    return 'Approved';
+  }
+
+  private getEmojiFromStatus(type: StatusType = StatusType.APPROVED): string {
     if (type === StatusType.REJECTED) {
       return ':negative_squared_cross_mark:';
     }
