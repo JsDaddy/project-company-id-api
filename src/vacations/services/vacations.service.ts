@@ -101,7 +101,7 @@ export class VacationsService {
       _id: updatedVacation?.uid,
     });
     const owners: IUser[] = await this._usersModel
-      .find({ _id: { $ne: owner._id } })
+      .find({ _id: { $ne: owner._id }, position: Positions.OWNER })
       .lean()
       .exec();
     const slackOwners: string[] = owners.map(
