@@ -46,16 +46,14 @@ export class VacationsService {
       if (user && slack && process.env.BOT_TOKEN) {
         this._slackService.sendMessage(
           slack,
-          `${this.getEmoji(type)} You have request for vacation (${this.getType(
-            type,
-          )}) \n
+          `${this.getEmoji(type)} You have request for ${this.getType(type)}\n
+*From*: ${user.name} ${user.lastName}.\n
 *Date*: ${createVacationDto.date.toLocaleString('en-US', {
             weekday: 'long',
             year: 'numeric',
             month: 'numeric',
             day: 'numeric',
           })}. \n
-*From*: ${user.name} ${user.lastName}.\n
 *Reason*: ${createVacationDto.desc}.`,
         );
       }
@@ -149,10 +147,10 @@ export class VacationsService {
 
   private getType(num: number = 0): string {
     const vacationTypes: string[] = [
-      'non-paid',
-      'paid',
-      'sick non-paid',
-      'sick paid',
+      'vacation (non-paid)',
+      'vacation (paid)',
+      'sick (non-paid)',
+      'sick (paid)',
     ];
     if (!vacationTypes[num]) {
       return vacationTypes[0];
