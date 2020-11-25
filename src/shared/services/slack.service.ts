@@ -5,7 +5,7 @@ export class SlackService {
   public constructor(private readonly _http: HttpService) {}
   public async sendMessage(channel: string, message: string): Promise<boolean> {
     // tslint:disable-next-line:no-any
-    if (!process.env.BOT_TOKEN) {
+    if (process.env.BOT_TOKEN) {
       return false;
     }
     const res: any = await this._http
