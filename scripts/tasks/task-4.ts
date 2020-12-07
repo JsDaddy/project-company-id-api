@@ -47,7 +47,7 @@ export async function task(): Promise<ITask | null> {
     .toArray();
   return {
     ids: vacations.map((user: any) => user.slack),
-    message: `Today your last day before vacation, please finished all tasks, commit to repository and contact your manager`,
+    message: `:man-surfing: Today your last day before vacation, please finished all tasks, commit to repository and contact your manager`,
     delay: 1000 * 3600 * 8,
   };
 }

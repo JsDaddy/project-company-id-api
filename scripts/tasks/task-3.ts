@@ -54,7 +54,7 @@ export async function task(): Promise<ITask | null> {
 
   return {
     ids: slacks,
-    message: `Today is the birthday of ${birthdayPeople
+    message: `:birthday: Today is the birthday of ${birthdayPeople
       .map((user: any) => user.fullName)
       .toString()}`,
     delay: 0,

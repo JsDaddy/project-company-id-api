@@ -19,7 +19,8 @@ export async function task(): Promise<ITask | null> {
   ).map((user: any) => (user.endDate === null ? user.slack : null));
   return {
     ids: slacks,
-    message: 'The week is over please check your timelogs',
+    message:
+      ':spiral_calendar_pad: The week is over please check your timelogs',
     delay: 1000 * 3600 * 8,
   };
 }

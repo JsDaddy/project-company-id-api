@@ -20,7 +20,7 @@ export async function task(): Promise<ITask | null> {
   return {
     ids: slacks,
     message:
-      'If you have external repository for your project please synchronize it with company repository',
+      ':spiral_calendar_pad: If you have external repository for your project please synchronize it with company repository',
     delay: 1000 * 3600 * 8,
   };
 }
