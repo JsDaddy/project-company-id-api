@@ -15,7 +15,7 @@ export async function task(): Promise<ITask | null> {
   );
   const mongoDb: Db = connection.db(dbName);
   const slacks: string[] = (
-    await mongoDb.collection('users').find({ position: 'developer' }).toArray()
+    await mongoDb.collection('users').find().toArray()
   ).map((user: any) => (user.endDate === null ? user.slack : null));
   return {
     ids: slacks,

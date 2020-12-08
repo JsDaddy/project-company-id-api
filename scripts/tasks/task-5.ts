@@ -1,10 +1,11 @@
-import { ITask } from './../tasksRunner';
+import { ITask } from '../tasksRunner';
 import * as mongodb from 'mongodb';
 import { Db } from 'mongodb';
 
-// SYNC REPO
+// STATUS UPDATE
 export async function task(): Promise<ITask | null> {
-  if (new Date().getDay() !== 5) {
+  const nowDay: number = new Date().getDay();
+  if (nowDay === 0 || nowDay === 6) {
     return null;
   }
   const dbName: string = process.env.DATABASE_NAME as string;
@@ -19,8 +20,7 @@ export async function task(): Promise<ITask | null> {
   ).map((user: any) => (user.endDate === null ? user.slack : null));
   return {
     ids: slacks,
-    message:
-      ':spiral_calendar_pad: If you have external repository for your project please synchronize it with company repository',
+    message: ':calendar: Don`t forget to leave your status update',
     delay: 1000 * 3600 * 8,
   };
 }
