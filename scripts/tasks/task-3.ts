@@ -11,7 +11,7 @@ export async function task(): Promise<ITask | null> {
     { useNewUrlParser: true },
   );
   const mongoDb: Db = connection.db(dbName);
-  const birthdayPeople: any = await mongoDb
+  const birthdayUsers: IBirthday[] = await mongoDb
     .collection('users')
     .aggregate([
       { $match: { endDate: null } },
@@ -39,7 +39,7 @@ export async function task(): Promise<ITask | null> {
       },
     ])
     .toArray();
-  if (!birthdayPeople?.length) {
+  if (!birthdayUsers?.length) {
     return null;
   }
   const slacks: string[] = (
@@ -47,16 +47,26 @@ export async function task(): Promise<ITask | null> {
       .collection('users')
       .find({
         endDate: null,
-        slack: { $nin: birthdayPeople.map((user: any) => user.slack) },
+        slack: {
+          $nin: birthdayUsers.map(
+            (birthdayUser: IBirthday) => birthdayUser.slack,
+          ),
+        },
       })
       .toArray()
   ).map((user: any) => user.slack);
 
   return {
     ids: slacks,
-    message: `:birthday: Today is the birthday of ${birthdayPeople
-      .map((user: any) => user.fullName)
+    message: `:birthday: Today is the birthday of ${birthdayUsers
+      .map((birthdayUser: IBirthday) => birthdayUser.fullName)
       .toString()}`,
     delay: 0,
   };
+}
+
+interface IBirthday {
+  _id: string;
+  fullName: string;
+  slack: string;
 }

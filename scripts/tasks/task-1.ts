@@ -14,7 +14,7 @@ export async function task(): Promise<ITask | null> {
     { useNewUrlParser: true },
   );
   const mongoDb: Db = connection.db(dbName);
-  const slacks: any = (
+  const slacks: string[] = (
     await mongoDb.collection('users').find({ position: 'developer' }).toArray()
   ).map((user: any) => (user.endDate === null ? user.slack : null));
   return {

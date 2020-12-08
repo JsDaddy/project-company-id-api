@@ -20,7 +20,7 @@ export async function task(): Promise<ITask | null> {
     ? now.setDate(now.getDate() + 3)
     : now.setDate(now.getDate() + 1);
 
-  const vacations: any = await mongoDb
+  const vacationSlacks: ISlack[] = await mongoDb
     .collection('vacations')
     .aggregate([
       {
@@ -46,7 +46,7 @@ export async function task(): Promise<ITask | null> {
     ])
     .toArray();
   return {
-    ids: vacations.map((user: any) => user.slack),
+    ids: vacationSlacks.map((user: ISlack) => user.slack),
     message: `:man-surfing: Today your last day before vacation, please finished all tasks, commit to repository and contact your manager`,
     delay: 1000 * 3600 * 8,
   };
@@ -57,4 +57,9 @@ function normalizeDate(date: Date): Date {
     .utcOffset(0)
     .set({ hour: 12, minute: 0, second: 0, millisecond: 0 })
     .toDate();
+}
+
+interface ISlack {
+  _id: string;
+  slack: string;
 }
