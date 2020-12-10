@@ -1,3 +1,4 @@
+import { UserService } from './../auth/services/user.service';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectController } from './controllers/project.controller';
@@ -10,9 +11,9 @@ import { DateService } from 'src/log/services/date.service';
   controllers: [ProjectController],
   exports: [ProjectService],
   imports: [
-    MongooseModule.forFeature([{ name: 'project', schema: projectSchema }]),
+    MongooseModule.forFeature([{ name: 'projects', schema: projectSchema }]),
     MongooseModule.forFeature([{ name: 'users', schema: userSchema }]),
   ],
-  providers: [ProjectService, DateService],
+  providers: [ProjectService, DateService, UserService],
 })
 export class ProjectModule {}

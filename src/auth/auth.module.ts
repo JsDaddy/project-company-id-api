@@ -11,10 +11,11 @@ import { services } from './services';
 import { controllers } from './controllers';
 import { userSchema } from './schemas/user.schema';
 import { vacationSchema } from 'src/vacations/schemas/vacation.schema';
+import { UserService } from './services/user.service';
 
 @Module({
   controllers,
-  exports: [AuthService],
+  exports: [AuthService, UserService],
   imports: [
     SlackModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),

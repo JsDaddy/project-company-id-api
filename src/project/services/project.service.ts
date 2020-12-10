@@ -23,7 +23,7 @@ export class ProjectService {
     },
   };
   public constructor(
-    @InjectModel('project')
+    @InjectModel('projects')
     private readonly projectModel: Model<IProject & Document>,
     @InjectModel('users') private readonly _userModel: Model<IUser & Document>,
   ) {}

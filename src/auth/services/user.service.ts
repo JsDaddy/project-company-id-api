@@ -144,13 +144,12 @@ export class UserService {
   }
 
   public async removeUserFromActiveProject(
-    _id: Types.ObjectId,
+    _id: Types.ObjectId | null,
     projectId: Types.ObjectId,
   ): Promise<void> {
-    await this._userModel.updateOne(
-      { _id },
-      { $pull: { activeProjects: projectId } },
-    );
+    await this._userModel.updateMany(_id ? { _id } : {}, {
+      $pull: { activeProjects: projectId },
+    });
   }
 
   public async getUser(_id: string): Promise<IUser | null> {

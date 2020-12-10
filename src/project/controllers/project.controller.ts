@@ -1,3 +1,4 @@
+import { UserService } from './../../auth/services/user.service';
 import { Positions } from './../../auth/enums/positions.enum';
 import { DateService } from './../../log/services/date.service';
 import { ProjectStatus } from './../enums/project-status.enum';
@@ -29,6 +30,7 @@ import { CreateProjectDto } from '../dto/project.dto';
 export class ProjectController {
   public constructor(
     private readonly projectService: ProjectService,
+    private readonly _userService: UserService,
     private readonly _dateService: DateService,
   ) {}
 
@@ -213,6 +215,9 @@ export class ProjectController {
         id,
         status,
       );
+      if (project) {
+        await this._userService.removeUserFromActiveProject(null, project._id);
+      }
       if (!project) {
         return res
           .status(HttpStatus.NOT_FOUND)
