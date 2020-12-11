@@ -21,11 +21,7 @@ async function readTasks(): Promise<void> {
       if (!task) {
         continue;
       }
-      setTimeout(
-        () => sentToSlack(task),
-        0,
-        // task.delay
-      );
+      setTimeout(() => sentToSlack(task), task.delay);
     }
   } catch (e) {
     console.log(e);
