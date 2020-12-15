@@ -23,6 +23,6 @@ export async function task(): Promise<ITask | null> {
   return {
     ids: slacks,
     message: ':calendar: Don`t forget to leave your status update',
-    delay: 1000 * 3600 * 8,
+    delay: 1000 * 3600 * 9.5,
   };
 }
