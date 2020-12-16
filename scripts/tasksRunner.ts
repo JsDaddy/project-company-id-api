@@ -8,10 +8,12 @@ const promisedReadDir: Function = util.promisify(fs.readdir);
 readTasks();
 
 async function readTasks(): Promise<void> {
+  let delays: number[] = [];
   try {
     const tasksFileList: string[] = await promisedReadDir(
       path.resolve(__dirname, 'tasks'),
     );
+
     for (const tasksFile of tasksFileList) {
       const getTask: Promise<ITask | null> = await import(
         path.resolve(__dirname, 'tasks', tasksFile)
@@ -21,8 +23,13 @@ async function readTasks(): Promise<void> {
       if (!task) {
         continue;
       }
+      if (task.delay) {
+        delays.push(task.delay);
+      }
       setTimeout(() => sentToSlack(task), task.delay);
     }
+    const delay: number = Math.max(...delays);
+    setTimeout(() => process.exit(-1), delay + 60000);
   } catch (e) {
     console.log(e);
   }
