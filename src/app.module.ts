@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { LogModule } from './log/log.module';
 import { VacationsModule } from './vacations/vacations.module';
 import { TimelogsModule } from './timelogs/timelogs.module';
+import { FacilitiesModule } from './facilities/facilities.module';
+import { FeedbacksModule } from './feedbacks/feedbacks.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { TimelogsModule } from './timelogs/timelogs.module';
     StackModule,
     RuleModule,
     ProjectModule,
+    FacilitiesModule,
+    FeedbacksModule,
   ],
   providers: [AppService],
 })

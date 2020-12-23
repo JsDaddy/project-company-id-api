@@ -7,6 +7,10 @@ export const stackSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    image: {
+      required: false,
+      type: String,
+    },
   },
   {
     versionKey: false,
