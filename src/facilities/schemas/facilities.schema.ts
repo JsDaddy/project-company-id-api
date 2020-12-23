@@ -28,11 +28,11 @@ export const facilitiesSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    feedbacks: {
+    feedback: {
       required: false,
-      type: [Types.ObjectId],
+      type: Types.ObjectId,
     },
-    stuck: {
+    stack: {
       required: false,
       type: [Types.ObjectId],
     },
