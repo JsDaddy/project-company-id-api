@@ -7,5 +7,5 @@ export interface IFacilities {
   text: string;
   content_title: string;
   content: string;
-  feedbacks: Types.ObjectId[];
+  feedback: Types.ObjectId;
 }
