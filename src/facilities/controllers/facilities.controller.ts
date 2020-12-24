@@ -1,4 +1,4 @@
-import { IFacilities } from './../interfaces/facilities.interface';
+import { IFacilities } from '../interfaces/facilities.interface';
 import { Controller, HttpStatus, Get, Res, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -21,14 +21,16 @@ export class FacilitiesController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Facility not found',
   })
-  @Get(':facility')
+  @Get('')
   public async findFacility(
     @Res() res: Response,
     @Param('facility') name: string,
   ): Promise<Response> {
     try {
+      console.log(name);
+
       const facility: IFacilities | null = await this._facilitiesService.findFacility(
-        name,
+        'web-development',
       );
       if (!facility) {
         return res
