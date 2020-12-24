@@ -6,6 +6,7 @@ import { facilitiesSchema } from './schemas/facilities.schema';
 
 @Module({
   controllers: [FacilitiesController],
+  exports: [FacilitiesService],
   imports: [
     MongooseModule.forFeature([
       { name: 'facilities', schema: facilitiesSchema },
