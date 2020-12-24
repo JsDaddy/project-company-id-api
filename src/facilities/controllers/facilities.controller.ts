@@ -21,16 +21,14 @@ export class FacilitiesController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Facility not found',
   })
-  @Get('')
+  @Get(':facility')
   public async findFacility(
     @Res() res: Response,
     @Param('facility') name: string,
   ): Promise<Response> {
     try {
-      console.log(name);
-
       const facility: IFacilities | null = await this._facilitiesService.findFacility(
-        'web-development',
+        name,
       );
       if (!facility) {
         return res
