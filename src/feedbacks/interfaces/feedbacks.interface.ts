@@ -3,4 +3,5 @@ export interface IFeedback {
   name: string;
   position: string;
   text: string;
+  linkedin: string;
 }

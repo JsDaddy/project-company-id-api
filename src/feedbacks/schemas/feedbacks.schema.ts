@@ -19,6 +19,10 @@ export const feedbacksSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       type: String,
     },
+    linkedin: {
+      required: true,
+      type: String,
+    },
   },
   {
     versionKey: false,
