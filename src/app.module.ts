@@ -10,6 +10,7 @@ import { VacationsModule } from './vacations/vacations.module';
 import { TimelogsModule } from './timelogs/timelogs.module';
 import { FacilitiesModule } from './facilities/facilities.module';
 import { FeedbacksModule } from './feedbacks/feedbacks.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { FeedbacksModule } from './feedbacks/feedbacks.module';
     ProjectModule,
     FacilitiesModule,
     FeedbacksModule,
+    MailModule,
   ],
   providers: [AppService],
 })
