@@ -9,7 +9,7 @@ export class FeedbacksService {
     private readonly feedbacksModel: Model<IFeedback & Document>,
   ) {}
 
-  public async findFeedback(feedback: string): Promise<IFeedback | null> {
-    return await this.feedbacksModel.findOne({ name: feedback });
+  public async findFeedbacks(): Promise<IFeedback[]> {
+    return await this.feedbacksModel.find().lean().exec();
   }
 }

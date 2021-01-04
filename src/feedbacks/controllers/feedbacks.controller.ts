@@ -1,5 +1,5 @@
 import { IFeedback } from './../interfaces/feedbacks.interface';
-import { Controller, HttpStatus, Get, Res, Param } from '@nestjs/common';
+import { Controller, HttpStatus, Get, Res } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { FeedbacksService } from '../services/feedbacks.service';
@@ -9,7 +9,6 @@ import { FeedbacksService } from '../services/feedbacks.service';
 export class FeedbacksController {
   public constructor(private readonly _feedbacksService: FeedbacksService) {}
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   @ApiOperation({
     summary: 'Find feedbacks.',
   })
@@ -17,25 +16,11 @@ export class FeedbacksController {
     status: HttpStatus.OK,
     description: 'Found feedbacks',
   })
-  @ApiResponse({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'feedbacks not found',
-  })
-  @Get(':feedback')
-  public async findFacility(
-    @Res() res: Response,
-    @Param('feedback') name: string,
-  ): Promise<Response> {
+  @Get()
+  public async findFeedbacks(@Res() res: Response): Promise<Response> {
     try {
-      const feedback: IFeedback | null = await this._feedbacksService.findFeedback(
-        name,
-      );
-      if (!feedback) {
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ data: null, error: 'feedback not found' });
-      }
-      return res.status(HttpStatus.OK).json({ data: feedback, error: null });
+      const feedbacks: IFeedback[] = await this._feedbacksService.findFeedbacks();
+      return res.status(HttpStatus.OK).json({ data: feedbacks, error: null });
     } catch (e) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
