@@ -10,7 +10,18 @@ export class FacilitiesService {
   ) {}
 
   public async findFacilities(): Promise<IFacilities[]> {
-    return await this.facilitiesModel.find().lean().exec();
+    // return await this.facilitiesModel.find().lean().exec();
+    return await this.facilitiesModel.aggregate([
+      { $match: {} },
+      {
+        $project: {
+          image: 1,
+          name: 1,
+          title: 1,
+          text: 1,
+        },
+      },
+    ]);
   }
   public async findFacility(facility: string): Promise<IFacilities | null> {
     // tslint:disable-next-line:no-any
