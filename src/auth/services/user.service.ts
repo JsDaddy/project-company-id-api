@@ -79,11 +79,10 @@ export class UserService {
       { $match: { isShown: true } },
       {
         $project: {
-          name: 1,
-          lastName: 1,
           avatar: 1,
           skype: 1,
           email: 1,
+          fullName: { $concat: ['$name', ' ', '$lastName'] },
         },
       },
     ]);
