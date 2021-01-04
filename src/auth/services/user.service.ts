@@ -82,6 +82,7 @@ export class UserService {
           avatar: 1,
           skype: 1,
           email: 1,
+          post: 1,
           fullName: { $concat: ['$name', ' ', '$lastName'] },
         },
       },
