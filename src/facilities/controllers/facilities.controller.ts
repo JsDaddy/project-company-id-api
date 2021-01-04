@@ -42,4 +42,22 @@ export class FacilitiesController {
         .json({ data: null, e });
     }
   }
+  @ApiOperation({
+    summary: 'Find facilities.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found facilities',
+  })
+  @Get()
+  public async findFacilities(@Res() res: Response): Promise<Response> {
+    try {
+      const facilities: IFacilities[] = await this._facilitiesService.findFacilities();
+      return res.status(HttpStatus.OK).json({ data: facilities, error: null });
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, e });
+    }
+  }
 }

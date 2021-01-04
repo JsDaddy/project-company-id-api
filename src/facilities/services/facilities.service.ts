@@ -9,9 +9,9 @@ export class FacilitiesService {
     private readonly facilitiesModel: Model<IFacilities & Document>,
   ) {}
 
-  // public async findFacility(facility: string): Promise<IFacilities | null> {
-  //   return await this.facilitiesModel.findOne({ name: facility });
-  // }
+  public async findFacilities(): Promise<IFacilities[]> {
+    return await this.facilitiesModel.find().lean().exec();
+  }
   public async findFacility(facility: string): Promise<IFacilities | null> {
     // tslint:disable-next-line:no-any
     const service: IFacilities[] = await this.facilitiesModel.aggregate([
