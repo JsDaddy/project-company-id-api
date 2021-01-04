@@ -70,6 +70,14 @@ export const userSchema: Schema = new Schema({
     required: false,
     type: Date,
   },
+  post: {
+    required: false,
+    type: String,
+  },
+  isShown: {
+    required: false,
+    type: Boolean,
+  },
   projects: { required: false, type: [Types.ObjectId], default: [] },
   activeProjects: {
     required: false,

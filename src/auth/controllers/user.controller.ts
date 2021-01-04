@@ -183,11 +183,9 @@ export class UserController {
       const param: boolean =
         position === Positions.DEVELOPER ? true : isNofFired;
       const users: Partial<IUser>[] = await this.userService.getUsers(param);
-      console.log(users.length);
 
       return res.status(HttpStatus.OK).json({ data: users, error: null });
     } catch (error) {
-      console.log(error);
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ data: null, error });
@@ -235,6 +233,31 @@ export class UserController {
       );
       return res.status(HttpStatus.OK).json({
         data: { ...user, vacationAvailable, sickAvailable },
+        error: null,
+      });
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, e });
+    }
+  }
+  @ApiOperation({
+    summary: 'Find management users',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found users',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Users not found',
+  })
+  @Get('management/all')
+  public async findManagement(@Res() res: Response): Promise<Response> {
+    try {
+      const users: IUser[] = await this.userService.getManagement();
+      return res.status(HttpStatus.OK).json({
+        data: users,
         error: null,
       });
     } catch (e) {

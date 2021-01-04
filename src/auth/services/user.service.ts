@@ -74,6 +74,20 @@ export class UserService {
       },
     ]);
   }
+  public async getManagement(): Promise<IUser[]> {
+    return this._userModel.aggregate([
+      { $match: { isShown: true } },
+      {
+        $project: {
+          name: 1,
+          lastName: 1,
+          avatar: 1,
+          skype: 1,
+          email: 1,
+        },
+      },
+    ]);
+  }
 
   public async addUserToTheProject(
     id: Types.ObjectId,
