@@ -5,12 +5,14 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class MailService {
   private readonly _transporter: nodemailer.Transporter;
-  private readonly _user: string = 'info.jsdaddy@gmail.com';
+  private readonly _user: string = 'jsdaddy.notify@gmail.com';
   private readonly _pass: string = process.env.MAIL_PASS ?? '';
 
   public constructor() {
     this._transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: this._user,
         pass: this._pass,
