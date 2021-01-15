@@ -24,7 +24,7 @@ export class MailService {
     return new Promise((res: Function, rej: Function) => {
       this._transporter.sendMail(
         {
-          to: ['juncker8888@gmail.com', 'inepipenko@jsdaddy.com', this._user],
+          to: ['juncker8888@gmail.com', 'igornepipenko@gmail.com', this._user],
           subject: 'JSDaddy',
           text: `Name:  ${mail.name}\nEmail: ${mail.email}\nText: ${mail.message}`,
           from: this._user,
