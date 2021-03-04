@@ -143,7 +143,6 @@ export class LogService {
       }
       if (dateType === 3) {
         a[b.date.toISOString()][2] = [...a[b.date.toISOString()][2], name];
-        vacationDays++;
       }
       if (dateType === 1) {
         a[b.date.toISOString()][0] = [
@@ -198,10 +197,9 @@ export class LogService {
     if (holidays.length > 0) {
       holidaysHours =
         holidays.filter((holiday: IHoliday) => {
-          return this._dateService.checkIfWeekDays(new Date(holiday.date));
+          return !this._dateService.checkIfWeekDays(new Date(holiday.date));
         }).length * 8;
     }
-
     const toBeWorkedOut: number = !filterByUser.uid
       ? 0
       : filterLog.uid
@@ -210,6 +208,7 @@ export class LogService {
         holidaysHours -
         vacationDays * 8
       : 0;
+
     const overtime: number = !filterByUser.uid
       ? 0
       : workedOut > toBeWorkedOut && filterLog.uid
