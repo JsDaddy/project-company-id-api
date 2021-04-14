@@ -6,6 +6,8 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { IUser } from '../interfaces/user.interface';
 import { Document } from 'mongoose';
+import { SignUpDto } from '../dto/signup.dto';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -23,11 +25,16 @@ export class AuthService {
       { $set: { password, initialLogin: false } },
     );
   }
-  // public async createUser(
-  //   createUserDto: SignUpDto & { accessToken: string },
-  // ): Promise<IUser> {
-  //   return await this._userModel.create(createUserDto);
-  // }
+
+  public async createToken(payload: SignUpDto) {
+    return jwt.sign(payload.email, process.env.SECRET ?? 'secret');
+  }
+
+  public async createUser(
+    createUserDto: SignUpDto & { accessToken: string },
+  ): Promise<IUser> {
+    return await this._userModel.create(createUserDto);
+  }
 
   public async getUser(email: string): Promise<IUser | null> {
     return (

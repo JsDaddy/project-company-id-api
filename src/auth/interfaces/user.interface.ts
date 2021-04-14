@@ -22,5 +22,5 @@ export interface IUser<P = Types.ObjectId[], R = string> {
   endDate?: Date;
   slack: string;
   post?: string;
-  isShown: boolean;
+  isShown?: boolean;
 }

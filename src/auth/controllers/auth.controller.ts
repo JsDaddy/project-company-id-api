@@ -13,56 +13,66 @@ import * as bcrypt from 'bcrypt';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
-// import { SignUpDto } from '../dto/signup.dto';
 import { IUser } from '../interfaces/user.interface';
+import { SignUpDto } from '../dto/signup.dto';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { Positions } from '../enums/positions.enum';
+
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   public constructor(private readonly _authService: AuthService) {}
-  // @Post('signup')
-  // @ApiOperation({ description: 'User sign up (create user)' })
-  // @ApiResponse({
-  //   status: HttpStatus.OK,
-  //   description: 'The record has been successfully created.',
-  // })
-  // @ApiResponse({
-  //   status: HttpStatus.BAD_REQUEST,
-  //   description: 'The record already exists',
-  // })
-  // public async signUp(
-  //   @Body() createUserDto: SignUpDto,
-  //   @Res() res: Response,
-  // ): Promise<Response> {
-  //   try {
-  //     const { email, password } = createUserDto;
-  //     const user: IUser<IProject[]> | null = await this._authService.getUser(
-  //       email,
-  //     );
-  //     if (user) {
-  //       return res.status(HttpStatus.CONFLICT).json({
-  //         data: null,
-  //         error: 'Invalid username or email already exists',
-  //       });
-  //     }
-  //     const hash: string = await bcrypt.hash(password, 10);
-  //     const userForCreate: SignUpDto = {
-  //       ...createUserDto,
-  //       password: hash,
-  //     };
-  //     const accessToken: string = await this._authService.createToken(
-  //       userForCreate,
-  //     );
-  //     const createdUser: IUser = await this._authService.createUser({
-  //       accessToken,
-  //       ...userForCreate,
-  //     });
-  //     delete createdUser.password;
-  //     return res.status(HttpStatus.OK).json({ data: createdUser, error: null });
-  //   } catch (error) {
-  //     return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
-  //   }
-  // }
+
+  @UseGuards(
+    AuthGuard('jwt'),
+    new RolesGuard({
+      [Positions.OWNER]: [],
+    }),
+  )
+  @Post('signup')
+  @ApiOperation({ description: 'User sign up (create user)' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The record has been successfully created.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'The record already exists',
+  })
+  public async signUp(
+    @Body() createUserDto: SignUpDto,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      const { email, password } = createUserDto;
+      const user: IUser<any> | null = await this._authService.getUser(
+        email,
+      );
+      if (user) {
+        return res.status(HttpStatus.CONFLICT).json({
+          data: null,
+          error: 'Invalid username or email already exists',
+        });
+      }
+      const hash: string = await bcrypt.hash(password, 10);
+      const userForCreate: SignUpDto = {
+        ...createUserDto,
+        password: hash,
+      };
+      const accessToken: string = await this._authService.createToken(
+        userForCreate,
+      );
+      const createdUser: IUser = await this._authService.createUser({
+        accessToken,
+        ...userForCreate,
+      });
+      delete createdUser.password;
+      return res.status(HttpStatus.OK).json({ data: createdUser, error: null });
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ data: null, error });
+    }
+  }
 
   @Post('signin')
   @ApiOperation({ description: 'User sign in' })
