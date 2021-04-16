@@ -26,8 +26,8 @@ export class AuthService {
     );
   }
 
-  public async createToken(payload: SignUpDto) {
-    return jwt.sign(payload.email, process.env.SECRET ?? 'secret');
+  public async createToken(payload: SignUpDto): Promise<string> {
+    return jwt.sign({ email: payload.email }, process.env.SECRET ?? 'secret');
   }
 
   public async createUser(
