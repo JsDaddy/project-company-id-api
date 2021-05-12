@@ -18,7 +18,6 @@ import { SignUpDto } from '../dto/signup.dto';
 import { RolesGuard } from 'src/shared/guards/roles.guard';
 import { Positions } from '../enums/positions.enum';
 
-
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -46,9 +45,7 @@ export class AuthController {
   ): Promise<Response> {
     try {
       const { email, password } = createUserDto;
-      const user: IUser<any> | null = await this._authService.getUser(
-        email,
-      );
+      const user: IUser<any> | null = await this._authService.getUser(email);
       if (user) {
         return res.status(HttpStatus.CONFLICT).json({
           data: null,
@@ -88,6 +85,9 @@ export class AuthController {
   ): Promise<Response> {
     try {
       const { email, password } = loginUserDto;
+      console.log(email);
+      console.log(password);
+
       const user: IUser | null = await this._authService.getUser(email);
       if (
         !user ||

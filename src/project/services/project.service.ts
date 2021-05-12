@@ -95,6 +95,51 @@ export class ProjectService {
       ])
       .exec();
   }
+  public async findPortfolio(): Promise<any> {
+    return await this.projectModel
+      .aggregate([
+        { $match: { isPortfolio: true } },
+        {
+          $project: {
+            _id: 1,
+            images: 1,
+          },
+        },
+      ])
+      .exec();
+  }
+  public async findPortfolioId(id: string): Promise<any> {
+    return await this.projectModel
+      .aggregate([
+        { $match: { _id: Types.ObjectId(id) } },
+        {
+          $lookup: {
+            from: 'stacks',
+            localField: 'stack',
+            as: 'stack',
+            foreignField: '_id',
+          },
+        },
+        {
+          $lookup: {
+            from: 'feedbacks',
+            localField: 'feedback',
+            as: 'feedback',
+            foreignField: '_id',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            images: 1,
+            feedback: { $arrayElemAt: ['$feedback', 0] },
+            stack: 1,
+          },
+        },
+      ])
+      .exec();
+  }
 
   public async archivateProject(
     _id: string,
@@ -238,6 +283,7 @@ export class ProjectService {
 
   public async findProjectFor(
     userId: string,
+    // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     isActive: boolean = false,
   ): Promise<Partial<IProject>[]> {
     const _id: Types.ObjectId = Types.ObjectId(userId);

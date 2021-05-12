@@ -73,6 +73,62 @@ export class ProjectController {
   }
 
   @ApiOperation({
+    summary: 'Find all portfolio.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found portfolio',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'portfolio not found',
+  })
+  @Get('portfolio/all')
+  public async findPortfolio(@Res() res: Response): Promise<Response> {
+    try {
+      const portfolio: {
+        _id: string;
+        images: string[];
+      } = await this.projectService.findPortfolio();
+      return res.status(HttpStatus.OK).json({ data: portfolio, error: null });
+    } catch (error) {
+      console.log(error);
+
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
+
+  @ApiOperation({
+    summary: 'Find  portfolio by id.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Found portfolio ',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'portfolio  not found',
+  })
+  @Get('portfolio/id/:id')
+  public async findPortfolioId(
+    @Res() res: Response,
+    @Param('id') id: string,
+  ): Promise<Response> {
+    try {
+      const portfolio: any = await this.projectService.findPortfolioId(id);
+      return res
+        .status(HttpStatus.OK)
+        .json({ data: portfolio[0], error: null });
+    } catch (error) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ data: null, error });
+    }
+  }
+
+  @ApiOperation({
     summary: 'Find projects by uid',
   })
   @ApiResponse({

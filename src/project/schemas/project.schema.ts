@@ -40,6 +40,23 @@ export const projectSchema: Schema = new Schema(
       required: true,
       type: Boolean,
     },
+    isPortfolio: {
+      required: true,
+      type: Boolean,
+      default: false,
+    },
+    images: {
+      required: false,
+      type: [String],
+    },
+    description: {
+      required: false,
+      type: String,
+    },
+    feedback: {
+      required: false,
+      type: Types.ObjectId,
+    },
   },
   {
     versionKey: false,
