@@ -135,6 +135,7 @@ export class ProjectService {
             images: 1,
             feedback: { $arrayElemAt: ['$feedback', 0] },
             stack: 1,
+            description: 1,
           },
         },
       ])
