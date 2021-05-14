@@ -28,6 +28,10 @@ export const projectSchema: Schema = new Schema(
       required: true,
       type: [Types.ObjectId],
     },
+    techId: {
+      required: true,
+      type: String,
+    },
     status: {
       required: true,
       type: StatusType,

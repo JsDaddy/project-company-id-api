@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 export interface IProject {
   _id: Types.ObjectId;
   name: string;
+  techId: string;
   industry: string;
   customer: string;
   startDate: Date;

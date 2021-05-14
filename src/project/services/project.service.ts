@@ -102,16 +102,17 @@ export class ProjectService {
         {
           $project: {
             _id: 1,
-            images: 1,
+            image: { $arrayElemAt: ['$images', 0] },
+            techId: 1,
           },
         },
       ])
       .exec();
   }
-  public async findPortfolioId(id: string): Promise<any> {
+  public async findPortfolioId(techId: string): Promise<any> {
     return await this.projectModel
       .aggregate([
-        { $match: { _id: Types.ObjectId(id) } },
+        { $match: { techId } },
         {
           $lookup: {
             from: 'stacks',
@@ -165,6 +166,7 @@ export class ProjectService {
 
     const createdProject: IProject & Document = new this.projectModel({
       ...projectDtoWithoutUsers,
+      techId: projectDtoWithoutUsers.name.replace(/\W/g, '').toLowerCase(),
       status: ProjectStatus.ONGOING,
     });
     if (users) {
