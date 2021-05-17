@@ -38,13 +38,10 @@ export class FacilitiesService {
       {
         $lookup: {
           from: 'feedbacks',
-          localField: 'feedback',
-          as: 'feedback',
+          localField: 'feedbacks',
+          as: 'feedbacks',
           foreignField: '_id',
         },
-      },
-      {
-        $unwind: '$feedback',
       },
     ]);
     return service[0];
