@@ -43,9 +43,6 @@ export class FacilitiesService {
           foreignField: '_id',
         },
       },
-      {
-        $unwind: '$feedbacks',
-      },
     ]);
     return service[0];
     // return await this.facilitiesModel.findOne({ name: facility });
