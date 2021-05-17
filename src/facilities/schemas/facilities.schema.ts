@@ -28,7 +28,7 @@ export const facilitiesSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    feedback: {
+    feedbacks: {
       required: false,
       type: [Types.ObjectId],
     },
