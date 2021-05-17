@@ -30,7 +30,7 @@ export const facilitiesSchema: mongoose.Schema = new mongoose.Schema(
     },
     feedback: {
       required: false,
-      type: Types.ObjectId,
+      type: [Types.ObjectId],
     },
     stack: {
       required: false,
